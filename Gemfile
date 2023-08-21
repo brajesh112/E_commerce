@@ -35,6 +35,11 @@ gem "jbuilder"
  gem 'dotenv-rails'
  gem "devise" 
  gem 'cloudinary'
+ gem "jquery-rails"
+ gem "bootstrap"
+ gem "sassc-rails"
+ gem "font-awesome-sass", "~> 6.4.2"
+
 
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"

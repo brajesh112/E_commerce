@@ -1,0 +1,31 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">Images</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Price</th>
+      <th scope="col">Stock</th>
+      <th scope="col">Description</th>
+      <th scope="col">Add To Cart</th>
+    </tr>
+  </thead>
+  <tbody>
+  	<% @product.each do | product| %>
+    <tr>
+      <th scope="row"><%= "#{product.id}" %></th>
+      <td>
+      <% product.images.each do |image| %>
+      	<%= image_tag image, size: "50x50" %>
+			<% end %>
+			</td>
+
+      <td><%= product.product_name %></td>
+      <td><%= product.price %></td>
+      <td><%= product.stock %></td>
+      <td><%= product.description %></td>
+      <td><%= link_to "AddToCart", cart_path(product.id) %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

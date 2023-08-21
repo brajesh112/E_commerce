@@ -1,0 +1,15 @@
+<h1>Add Product</h1>
+
+<%= form_for @product, url_for: products_path, method: :post  do |f| %>
+<%= f.label :product_name %><br />
+<%= f.text_field :product_name , autocomplete: "product_name" %><br />
+<%= f.label :stock %><br />
+<%= f.number_field :stock , autocomplete: "stock" %><br />
+<%= f.label :price %><br />
+<%= f.number_field :price , autocomplete: "price" %><br />
+<%= f.label :description %><br />
+<%= f.text_area :description , autocomplete: "description", size: "25x2"%><br />
+<%= f.label :images %> <br />
+<%= f.file_field :images, multiple: true %><br />
+<%= f.submit %>
+<% end %>

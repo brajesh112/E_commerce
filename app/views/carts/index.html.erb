@@ -1,0 +1,57 @@
+<table class="table">
+	<% price_total = 0 %>
+  <thead>
+    <tr>
+      <th scope="col">Item id</th>
+      <th scope="col">User Name</th>
+      <th scope="col">Item quantity</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Price</th>
+      <th scope="col">Description</th>
+      <th colspan = "2">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+  	<% @items.each do |item| %>
+    <tr>
+      <th scope="row"><%= "#{item.id}" %></th>
+      <td>
+      	<%= Cart.find(item.cart_id).user.name %>
+			</td>
+      <td>
+      	<button class="btn-sm btn btn-outline-success">+</button> 
+      	<%= item.quantity %>
+      	<button class="btn-sm btn btn-outline-success">-</button>
+      </td>
+      <td><%= Product.find(item.product_id).product_name %></td>
+      <% price_total += Product.find(item.product_id).price %>
+      <td><%= Product.find(item.product_id).price %></td>
+      <td><%= Product.find(item.product_id).description %></td>
+      <td>
+      <%= button_to "Remove", line_item_path(item), method: :delete, class: "btn btn-outline-success" %>
+    </td>
+    <td>
+      <button class="btn btn-outline-success">Buy</button>
+    </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table> 
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Total Items </th>
+      <th scope="col">Total Price</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+      	<%= "#{@items.count}" %>
+			</td>
+      <td><%= "#{price_total}" %></td>
+      <td><%=link_to "Buy All", products_path%></td>
+    </tr>
+  </tbody>
+</table> 

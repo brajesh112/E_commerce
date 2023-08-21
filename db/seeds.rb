@@ -5,5 +5,6 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 		 u = User.new(name: "Brajesh", email: "sahubrajesh112@gmail.com", phone_number: "7869309851", password: "brajesh112", password_confirmation: "brajesh112", role: "admin" )
+		 u.avatar.attach(io: File.open("#{Rails.root}/app/assets/images/profile.png"), filename: 'profile.png', content_type: 'image/png')
 		 u.save!
 #   Character.create(name: "Luke", movie: movies.first)

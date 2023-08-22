@@ -1,0 +1,15 @@
+<%= form_for @order, url_for: orders_path(@order), method: :post  do |f| %>
+<div class="form-check">
+	<%= f.radio_button :payment_method, "cash" , class: "form-check-input" %>
+	<%= f.label :payment_method_cash, "Cash",  class: "form-check-label" %>
+</div>
+<div class="form-check">
+	<%= f.radio_button :payment_method, "card" , class: "form-check-input" %>
+	<%= f.label :payment_method_card, "Card",  class: "form-check-label" %>
+</div>
+<div class="form-check">
+	<%= f.radio_button :payment_method, "upi"  , class: "form-check-input"%>
+	<%= f.label :payment_method_upi, "Upi",  class: "form-check-label" %>
+</div>
+<%= f.submit %>
+<% end %>

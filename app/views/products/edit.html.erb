@@ -1,0 +1,37 @@
+<div class="d-flex justify-content-center form-group">
+ <h1>Update Product</h1>
+</div>
+
+<div class="d-flex justify-content-center form-group">
+ <%= form_for @product, url_for: product_path(@product), method: :put  do |f| %>
+	<div class="field ">
+		<%= f.label :product_name %><br />
+		<%= f.text_field :product_name , class: "form-control", autocomplete: "product_name" %><br />
+	</div>
+
+	<div class="field ">
+		<%= f.label :stock %><br />
+		<%= f.number_field :stock , class: "form-control", autocomplete: "stock" %><br />
+	</div>
+
+	<div class="field ">
+		<%= f.label :price %><br />
+		<%= f.number_field :price , class: "form-control", autocomplete: "price" %><br />
+	</div>
+
+	<div class="field ">
+		<%= f.label :description %><br />
+		<%= f.text_area :description , class: "form-control", autocomplete: "description", size: "25x2"%><br />
+	</div>
+
+	<div class="field ">
+		<%= f.label :images %> <br />
+		<%= f.file_field :images, multiple: true, class: "form-control" %><br />
+	</div>
+
+	 <div class= "field">
+		<%= f.submit, class: "btn btn-primary btn-lg btn-block" %>
+	</div>
+
+ <% end %>
+</div>

@@ -5,11 +5,13 @@ class User < ApplicationRecord
   enum :role, [:admin, :buyer, :seller]
   validates :role, presence: true
   has_one_attached :avatar
-  has_one :cart
+  has_one :cart, dependent: :destroy
   after_create :insert_avatar
-  has_many :orders
-  has_many :products
+  has_many :orders, dependent: :destroy
+  has_many :products, dependent: :destroy
   after_create :create_cart
+  has_many :addresses, inverse_of: :user, dependent: :destroy
+  accepts_nested_attributes_for :addresses, allow_destroy: true
 
   def insert_avatar
       unless self.avatar.attached? 

@@ -1,0 +1,16 @@
+<%= form_for @order, url_for: order_path(@order), method: :put  do |f| %>
+<%= f.label :description %><br />
+<%= f.text_area :description , autocomplete: "description", disabled: true, size: "25x3" %><br />
+<%= f.radio_button :payment_method, "cash" %>
+<%= f.label :payment_method_cash, "Cash" %>
+<br />
+<%= f.radio_button :payment_method, "card" %>
+<%= f.label :payment_method_card, "Card" %>
+<br />
+<%= f.radio_button :payment_method, "upi" %>
+<%= f.label :payment_method_upi, "Upi" %>
+<br />
+<%= f.label :status %><br />
+<%= f.number_field :status , autocomplete: "status" %><br />
+<%= f.submit %>
+<% end %>

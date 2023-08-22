@@ -1,4 +1,5 @@
 class HomesController < ApplicationController
+	
 	def index
 		if user_signed_in? 
 			if current_user.buyer? 
@@ -10,4 +11,5 @@ class HomesController < ApplicationController
 	  redirect_to products_path
 		end 
 	end
+
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_21_110009) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_22_111409) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -39,6 +39,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_21_110009) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "addresses", force: :cascade do |t|
+    t.string "city"
+    t.string "house_no"
+    t.string "street"
+    t.string "landmark"
+    t.string "state"
+    t.string "pin"
+    t.string "country"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_addresses_on_user_id"
+  end
+
   create_table "carts", force: :cascade do |t|
     t.integer "user_id"
     t.datetime "created_at", null: false
@@ -47,7 +61,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_21_110009) do
   end
 
   create_table "items", force: :cascade do |t|
-    t.string "quantity"
+    t.bigint "quantity"
     t.integer "cart_id"
     t.integer "product_id"
     t.datetime "created_at", null: false
@@ -57,10 +71,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_21_110009) do
   end
 
   create_table "orders", force: :cascade do |t|
-    t.string "description"
-    t.string "payment_method"
-    t.string "status"
-    t.string "track_id"
+    t.text "description"
+    t.integer "payment_method"
+    t.integer "status"
+    t.bigint "track_id"
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

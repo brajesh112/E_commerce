@@ -1,0 +1,41 @@
+<% if @address.count > 0 %>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">id</th>
+        <th scope="col">House No</th>
+        <th scope="col">Street</th>
+        <th scope="col">LandMark</th>
+        <th scope="col">City</th>
+        <th scope="col">State</th>
+        <th scope="col">PinCode</th>
+        <th scope="col">Country</th>
+        <th scope= "col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @address.each do |address| %>
+        <tr>
+          <th scope="row"><%= address.id %></th>
+          <td><%= address.house_no %></td>
+          <td><%= address.street %></td>
+          <td><%= address.landmark %></td>
+          <td><%= address.city %></td>
+          <td><%= address.state %></td>
+          <td><%= address.pin %></td>
+          <td><%= address.country %></td>
+          <td>
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <%= button_to "Remove", address_path(address), method: :delete, class: "btn btn-outline-success" %>
+            <%= button_to "Edit", edit_address_path(address), method: :get, class: "btn btn-outline-success" %>
+          </td>
+          </div>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+<h1>You Have Not Added Any Address At</h1>
+<% end %>
+
+<%= button_to "ADD", new_address_path, method: :get, class: "btn btn-primary btn-lg" %>

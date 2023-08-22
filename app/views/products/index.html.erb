@@ -8,6 +8,10 @@
       <th scope="col">Stock</th>
       <th scope="col">Description</th>
       <th scope="col">Add To Cart</th>
+      <% if user_signed_in? && current_user.admin?%>
+      	<th>Edit Product</th> 
+      	<th>Delete Product</th>
+      <% end %>
     </tr>
   </thead>
   <tbody>
@@ -25,6 +29,14 @@
       <td><%= product.stock %></td>
       <td><%= product.description %></td>
       <td><%= link_to "AddToCart", cart_path(product.id) %></td>
+      <% if user_signed_in? && current_user.admin?  %>
+      	<td>
+      		<%= link_to "EditProduct", edit_product_path(product) %>
+      	</td>
+      	<td>
+      		<%= link_to "DeleteProduct", product_path(product), method: :delete %>
+      	</td>
+      <% end %>
     </tr>
     <% end %>
   </tbody>

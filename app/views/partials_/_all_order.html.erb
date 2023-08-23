@@ -1,0 +1,43 @@
+<div class="container">
+	<div class="row">
+		<% @cart.line_items.each do |item| %>
+			<div class="col">
+				<div class="card" style= "width: 18rem;">
+					<%= image_tag item.product.images.first, size: "250x250" ,class: "picture" ,class: "card-img-top"%>
+					<div class="card-body">
+						<b class="card-text">Product:</b>  <%= item.product.product_name %><br />
+						<b class="card-text">Price:</b>   Rs.<%= item.product.price * item.quantity %><br />
+						<b class="card-text">Quantity:</b>   <%= item.quantity %><br />
+						<b class="card-text">Status:</b>   Pending <br />
+					</div>
+				</div>
+			</div>
+		<% end %>	
+		<div class="col-sm-6">	
+			<%= form_for @order, url_for: orders_path do |f| %>
+				<%= f.hidden_field :payment_method, :value => "cash" %>
+				<h3>Select Order Address:</h3>
+				<% @address.each do |address| %>
+					<div class="card my-4" style= "width: 25rem;">
+						<div class= "row">
+							<div class = "col">
+								<%= f.radio_button :address_id, "#{address.id}"%>
+							</div>
+							<div class = "col">
+								<b>House Number:</b> <%= address.house_no%><br />
+								<b>Street Number:</b> <%= address.street%><br />
+								<b>Landmark :</b> <%= address.landmark%><br />
+								<b>City :</b> <%= address.city%><br />
+								<b>state :</b> <%= address.state%><br />
+								<b>Pincode:</b> <%= address.pin%><br />
+								<b>Country:</b> <%= address.country%><br />
+							</div>
+						</div>
+					</div>		
+				<% end %>
+				<%= link_to "Add New Address", new_address_path, method: :get, class: "btn btn-primary btn-lg my-2" %><br />
+				<%= f.submit "Place Order", class: "btn btn-primary btn-lg my-2" %>
+			<% end %>
+		</div>
+	</div>
+</div>

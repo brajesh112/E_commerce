@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_22_111409) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_23_045842) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -74,10 +74,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_22_111409) do
     t.text "description"
     t.integer "payment_method"
     t.integer "status"
-    t.bigint "track_id"
+    t.string "track_id"
     t.integer "user_id"
+    t.integer "product_id"
+    t.integer "address_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["address_id"], name: "index_orders_on_address_id"
+    t.index ["product_id"], name: "index_orders_on_product_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
@@ -86,10 +90,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_22_111409) do
     t.bigint "stock"
     t.decimal "price"
     t.string "description"
+    t.integer "categories"
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_products_on_user_id"
+  end
+
+  create_table "shipments", force: :cascade do |t|
+    t.integer "status"
+    t.datetime "expected_delivery"
+    t.integer "order_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_shipments_on_order_id"
   end
 
   create_table "users", force: :cascade do |t|

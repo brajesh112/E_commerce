@@ -12,8 +12,10 @@
 
   <body>
     <%= render "partials_/header" %>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
+    <% if flash.any? %>
+      <p class="notice"><%= notice %></p>
+      <p class="alert alert-info"><%= alert %></p>
+    <% end %>
     <%= yield %>
     <%#= render "partials_/footer" %>
   </body>

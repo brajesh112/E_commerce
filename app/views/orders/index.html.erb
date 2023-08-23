@@ -1,0 +1,45 @@
+<div class="container">
+	<h1><%= current_user.name %>'s Orders </h1>
+	<% @orders.each do |order| %>
+		<div class="card my-3" style= "width: 25rem;">
+			<div class="row">
+				<div class="col">
+					<b>Description:</b>
+				</div>
+				<div class="col">
+					<%= order.description%>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<b>Payment Method:</b>
+				</div> 
+				<div class="col">
+					<%= order.payment_method %>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<b>Status:</b>
+			 	</div>
+			 	<div class="col">
+			 		<%= order.status %>
+			 	</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<b>Delivery Address:</b>
+				</div>
+				<div class="col">
+					<b>House Number:</b> <%= order.address.house_no%>
+					<b>Street Number:</b> <%= order.address.street%>
+					<b>Landmark :</b> <%= order.address.landmark%>
+					<b>City :</b> <%= order.address.city%>	
+					<b>state :</b> <%= order.address.state%>
+					<b>Pincode:</b> <%= order.address.pin%>
+					<b>Country:</b> <%= order.address.country%>
+				</div>
+			</div>
+	 </div>
+	<% end %>
+</div>

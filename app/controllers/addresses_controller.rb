@@ -30,9 +30,6 @@ class AddressesController < ApplicationController
 		redirect_to addresses_path
 	end
 
-	def show
-	end
-
 	def address_params
 		params.require(:address).permit(:house_no, :street, :landmark, :city, :state, :pin, :state, :country)
 	end

@@ -4,8 +4,10 @@ class CreateOrders < ActiveRecord::Migration[7.0]
       t.text :description
       t.integer :payment_method
       t.integer :status
-      t.bigint :track_id
+      t.string :track_id
       t.references :user
+      t.references :product
+      t.references :address
       t.timestamps
     end
   end

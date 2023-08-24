@@ -5,3 +5,8 @@ import "jquery"
 import "jquery_ujs"
 import "popper"
 import "bootstrap"
+
+window.addEventListener('popstate', function(event) 
+{
+    window.location.href = '/';
+});

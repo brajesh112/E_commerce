@@ -1,17 +1,22 @@
 class AddressesController < ApplicationController
 	before_action :authenticate_user!
 	def index
-		@address = Address.all
+		@address = current_user.addresses.all
 	end
 
 	def new
+		@param = params[:id]
 		@address = Address.new
 	end
 
 	def create
 		@address = current_user.addresses.new(address_params)
 		@address.save
-		redirect_to addresses_path
+		if params[:address][:order_id].present?
+			redirect_to new_order_path
+		else
+			redirect_to addresses_path
+		end
 	end
 
 	def destroy

@@ -1,0 +1,22 @@
+<div class="container">
+	<h1><%= current_user.name %>'s Shipments </h1>
+	<div class="card my-3" style= "width: 30rem; height: 5rem;">
+		<div class="row">
+			<div class="col">
+				<b>Status:</b>
+			</div>
+			<div class="col">
+				<%= @shipment.status%>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<b>Expected Delivery Date:</b>
+			</div> 
+			<div class="col">
+				<%= @shipment.expected_delivery %>
+			</div>
+		</div>
+	</div>	
+	<%= link_to "Show all Shipments", shipments_path, class: "btn btn-primary btn-lg " %>
+</div>

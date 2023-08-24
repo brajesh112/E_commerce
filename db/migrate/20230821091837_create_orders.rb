@@ -6,7 +6,6 @@ class CreateOrders < ActiveRecord::Migration[7.0]
       t.integer :status
       t.string :track_id
       t.references :user
-      t.references :product
       t.references :address
       t.timestamps
     end

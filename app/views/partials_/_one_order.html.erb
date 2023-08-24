@@ -13,7 +13,7 @@
 		</div>
 		<div class="col-sm-6">	
 			<%= form_for @order, url_for: orders_path do |f| %>
-				<%= f.hidden_field :product_id, :value => @product.id  %>
+				<%= f.hidden_field :product_ids, :value => @product.id  %>
 				<%= f.hidden_field :item_id, :value => @id %>
 				<%= f.hidden_field :payment_method, :value => "cash" %>
 				<h3>Select Order Address:</h3>
@@ -35,7 +35,7 @@
 						</div>
 					</div>		
 				<% end %>
-					<%= link_to "Add New Address", new_address_path, method: :get, class: "btn btn-primary btn-lg my-2" %><br />
+					<%= link_to "Add New Address", new_address_path(id: 1), method: :get, class: "btn btn-primary btn-lg my-2" %><br />
 					<%= f.submit "Place Order", class: "btn btn-primary btn-lg my-2" %>
 			<% end %>
 		</div>

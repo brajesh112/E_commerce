@@ -3,7 +3,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
   enum :role, [:admin, :buyer, :seller]
-  validates :role, presence: true
+  validates :role, :name, :phone_number, presence: true
   has_one_attached :avatar
   has_one :cart, dependent: :destroy
   after_create :insert_avatar

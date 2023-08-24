@@ -1,4 +1,5 @@
 class OrdersController < ApplicationController
+	before_action :check, only: [:edit]
 	def new
 		@item = params[:id]
 		@id = @item
@@ -13,40 +14,72 @@ class OrdersController < ApplicationController
 
 	def create
 		@order = current_user.orders.new (order_params)
-		@order.status = "order_placed"
-		s = ""
+		@order.status = "pending"
 		i = 1 
-		@order.product.each do |product|
-			s+= "#{i}. Product Name: #{product.product_name}, Product Quantity: #{}" 
-			@order.description = ""
+		@order.description = ""
 		track = rand 100000..999999
 		@order.track_id = "TRC#{track}"
+		byebug
 		@order.save
-		if product_id.class == array
-			current_user.cart.line_items.destroy_all
+		@description = ""
+		if @order.product_ids.size >1
+			current_user.cart.line_items.each do |item|
+				@description += "<div class= 'row'><div class='col-auto'><b>#{i}.</b></div> <div class='col-auto'><b>Product Name:</b> #{item.product.product_name},</div></div><div class='row'><div class= 'col-auto'><b>Product Quantity:</b> #{item.quantity},</div><div class='col-auto'><b>Total Price:</b> #{item.product.price * item.quantity}</div></div>"
+				 	i +=1;
+				item.product.stock -= item.quantity
+				item.product.update(stock: item.product.stock)
+				item.destroy
+			end
 		else
-			LineItem.find(params[:order][:item_id]).destroy
+			item = LineItem.find(params[:order][:item_id])
+			@description += "1. Product Name: #{item.product.product_name}, Product Quantity: #{item.quantity}, Total Price: #{item.product.price * item.quantity}"
+			item.product.stock -= item.quantity
+			item.product.update(stock: item.product.stock)
+			item.destroy
 		end
-		redirect_to orders_path
+		@order.update(description: @description)
+		redirect_to order_path(@order)
+	end
+
+	def show
+		@order = Order.find(params[:id])
 	end
 
 	def index
-		@orders = current_user.orders.all
+		if current_user.admin?
+			@orders = Order.all
+		else
+			@orders = current_user.orders.all
+		end
+		unless @orders.present?
+			flash.alert = "You have not ordered anything at"
+			redirect_to root_path
+		end
 	end
 
 	def edit
-		byebug
+		@order = Order.find(params[:id])
 	end
 
 	def update
-		byebug
+		@order = Order.find(params[:id])
+		@order.update(status: params[:order][:status])
+		redirect_to orders_path
 	end
 
 
 	def order_params
-		if params[:order][:product_id].present?
-			params[:order][:product_id] = current_user.cart.line_items.pluck(:product_id)
+		unless params[:order][:product_ids].present?
+			byebug
+			params[:order][:product_ids] = current_user.cart.line_items.pluck(:product_id)
 		end
-		params.require(:order).permit(:product_id, :address_id, :payment_method)
+		params.require(:order).permit(:address_id, :payment_method, product_ids:[])
+	end
+
+	def check
+		unless user_signed_in? && current_user.admin?
+			flash.alert = "Only Admin Access"
+			redirect_to root_path
+		end
 	end
 end

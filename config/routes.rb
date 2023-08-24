@@ -1,11 +1,7 @@
 Rails.application.routes.draw do
   devise_for :users
-  resources :products, :carts, :line_items, :addresses
-  resources :orders do
-  						member do
-  							get 'new'
-							end
-						end
+  resources :products, :carts, :line_items, :addresses, :orders, :shipments, :tracking_orders
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")

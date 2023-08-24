@@ -2,7 +2,7 @@
   <h1>Edit Address</h1>
 </div>
 <div class="d-flex justify-content-center">
- <%= form_for @address, url_for: address_path(@address), method: :put  do |f| %>
+ <%= form_for @address, url_for: address_path(@address), method: :patch  do |f| %>
 
   <div class="field">
     <%= f.label :house_no %>

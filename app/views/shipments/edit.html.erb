@@ -1,0 +1,20 @@
+<div class="d-flex justify-content-center form-group">
+ <h1>Update Shipment</h1>
+</div>
+<div class="d-flex justify-content-center form-group">
+	<%= form_for @shipment, url_for: shipment_path(@shipment), method: :patch, data:{turbo: false}  do |f| %>
+		<div class= "field">
+			<%= f.label :status %><br />
+			<%= f.collection_select :status, Shipment.statuses.select{|key| key}, :first, :first, { prompt: "Select a Order Status" },class: 'form-control'%>
+		</div>
+
+		<div class= "field" >
+			<%= f.label :expected_delivery %><br />
+			<%= f.date_field :expected_delivery, class: "form-control", autocomplete: "expected_delivery" %>
+		</div>
+
+		<div class="action">
+			<%= f.submit "Update Shipment", class: "btn btn-primary btn-lg btn-block"%>
+	<% end %>
+	<%= link_to "Delete Shipment",shipment_path(@shipment), method: :delete, class: "btn btn-primary btn-lg btn-block" %>
+</div>

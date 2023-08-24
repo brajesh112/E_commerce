@@ -26,9 +26,13 @@
 
       <td><%= product.product_name %></td>
       <td><%= product.price %></td>
-      <td><%= product.stock %></td>
+      <% if product.stock == 0 %>
+        <td style="color: red;"> Out of stock </td>
+      <% else %>
+        <td><%= product.stock %></td>
+      <% end %>
       <td><%= product.description %></td>
-      <td><%= link_to "AddToCart", cart_path(product.id) %></td>
+      <td><%= link_to_if product.stock > 0, "AddToCart", cart_path(product.id) %></td>
       <% if user_signed_in? && current_user.admin?  %>
       	<td>
       		<%= link_to "EditProduct", edit_product_path(product) %>

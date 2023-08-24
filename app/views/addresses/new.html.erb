@@ -8,7 +8,7 @@
     <%= f.label :house_no %>
     <%= f.text_field :house_no , class: "form-control" ,autocomplete: "house_no" %>
   </div>
-
+    <%= f.hidden_field :order_id, value: @param %>
   <div class="field">
     <%= f.label :street %>
     <%= f.text_field :street , class: "form-control" ,autocomplete: "street" %>

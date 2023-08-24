@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_23_045842) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_24_125125) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -76,12 +76,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_23_045842) do
     t.integer "status"
     t.string "track_id"
     t.integer "user_id"
-    t.integer "product_id"
     t.integer "address_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "product_ids"
     t.index ["address_id"], name: "index_orders_on_address_id"
-    t.index ["product_id"], name: "index_orders_on_product_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
@@ -104,6 +103,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_23_045842) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["order_id"], name: "index_shipments_on_order_id"
+  end
+
+  create_table "tracking_orders", force: :cascade do |t|
+    t.string "place"
+    t.integer "status"
+    t.integer "shipment_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["shipment_id"], name: "index_tracking_orders_on_shipment_id"
   end
 
   create_table "users", force: :cascade do |t|

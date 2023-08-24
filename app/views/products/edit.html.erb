@@ -3,7 +3,7 @@
 </div>
 
 <div class="d-flex justify-content-center form-group">
- <%= form_for @product, url_for: product_path(@product), method: :put  do |f| %>
+ <%= form_for @product, url_for: product_path(@product), method: :patch, data:{turbo: false}  do |f| %>
 	<div class="field ">
 		<%= f.label :product_name %><br />
 		<%= f.text_field :product_name , class: "form-control", autocomplete: "product_name" %><br />

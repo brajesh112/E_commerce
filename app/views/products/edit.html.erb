@@ -34,7 +34,7 @@
 		<%= f.collection_select :categories ,Product.categories.select{|key| key}, :first, :first, { prompt: "Select a category" },class: 'form-control' %><br />
 	</div>
 
-	 <div class= "field">
+	 <div class= "action">
 		<%= f.submit "Update Product", class: "btn btn-primary btn-lg btn-block" %>
 	</div>
 

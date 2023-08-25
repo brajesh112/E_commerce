@@ -1,8 +1,9 @@
 class ShipmentsController < ApplicationController
 	before_action :check, only: [:edit, :destroy]
+	before_action :authenticate_user!
 	def index
 		if current_user.admin?
-			@orders = Orders.all
+			@orders = Order.all
 		else
 			@orders = current_user.orders.all
 		end
@@ -15,7 +16,11 @@ class ShipmentsController < ApplicationController
 	def update
 		@shipment = Shipment.find(params[:id])
 		@shipment.update(status: params[:shipment][:status])
-		redirect_to shipments_path
+		if @shipment.previous_changes[:status]
+			redirect_to new_tracking_order_path(id: @shipment.id)
+		else 
+			redirect_to shipments_path
+		end
 	end
 
 	def destroy
@@ -33,5 +38,4 @@ class ShipmentsController < ApplicationController
 			redirect_to root_path
 		end
 	end
-
 end

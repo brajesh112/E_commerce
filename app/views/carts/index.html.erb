@@ -1,77 +1,67 @@
-<% if @items.count >0 %>
-	<table class="table">
-		<% price_total = 0 
-		item_total = 0 %>
-	  <thead>
-	    <tr>
-	      <th scope="col">Item id</th>
-	      <th scope="col">User Name</th>
-	      <th scope="col">Item quantity</th>
-	      <th scope="col">Product Name</th>
-	      <th scope="col">Price</th>
-	      <th scope="col">Description</th>
-	      <th scope="col">Actions</th>
-	    </tr>
-	  </thead>
-	  <tbody>
-	  	<% @items.each do |item| %>
-	    <tr>
-	      <th scope="row"><%= "#{item.id}" %></th>
-	      <td>
-	      	<%= Cart.find(item.cart_id).user.name %>
-				</td>
-	      <td>
-	      	<div class="btn-group" role="group" aria-label="Basic example">
+<div class="container">
+	<% if @items.count >0 %>
+		<% price_total = 0 %> <% item_total = 0 %>
+		<% @items.each do |item| %>
+	    <div class="row my-4">
+	    	<div class="col-sm-3">
+	    		<%= image_tag item.product.images.first, size: "200x200" %>
+	    	</div>
+	    	<div class="col-sm-6">
+	    		<%= item.product.product_name %>
+	    		<br />
+	    		<%= item.product.description %>
+	    		<br />
+	    		Rs.<%= item.product.price * item.quantity %>
+	    	</div>
+	    	<div class="col-sm-3">
+	    		<strong>Delivery by Mon Aug 28</strong>
+	    		<p><span style="color: green;"> Free</span>₹40</p>
+	    	</div>
+	    </div>
+	    <div class="row" style="margin-top: 25px;">
+	    	<div class="col-auto">
+	    		<div class="btn-group" role="group" aria-label="Basic example">
 		      	<%= button_to "-", edit_line_item_path(item),method: :get, class: "btn-sm btn btn-outline-success" %> 
 		      	<span style="padding: 0 8px 0 0"><%= item.quantity %></span> 
 		      	<% item_total += item.quantity %> 
 		      	<%= button_to "+", line_item_path(item), method: :put, class: "btn-sm btn btn-outline-success" %>
 					</div>
-	      </td>
-	      <td>
-	      	<%= item.product.product_name %>
-	      </td>
-	       <% price_total += (item.product.price * item.quantity) %>
-	      <td>
-	      	<%= item.product.price * item.quantity %>
-	      </td>
-	      <td>
-	      	<%= item.product.description %>
-	      </td>
-	      <td>
-	      	<div class="btn-group" role="group" aria-label="Basic example">
-	      		<%= button_to "Remove", line_item_path(item), method: :delete, class: "btn btn-outline-success" %>
+					<% price_total += (item.product.price * item.quantity) %>
+				</div>
+				<div class="col-auto">
+					<div class="btn-group" role="group" aria-label="Basic example">
+	      		<%= button_to "Remove", line_item_path(item),data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete, class: "btn btn-outline-success" %>
 	      		<%= link_to "Buy", new_order_path(id: item.id), method: :get, class: "btn btn-outline-success"%>
 	      	</div>
-	    	</td>
-	    </tr>
-	    <% end %>
-	  </tbody>
-	</table>
-
-	<table class="table">
-	  <thead>
-	    <tr>
-	      <th scope="col">Total Items </th>
-	      <th scope="col">Total Price</th>
-	      <th scope="col"></th>
-	    </tr>
-	  </thead>
-	  <tbody>
-	    <tr>
-	      <td>
-	      	<%= item_total %>
-				</td>
-	      <td><%= "#{price_total}" %></td>
-	      <% if @items.count > 1 %>
-	      	<td><%=link_to "Buy All", new_order_path(id: "#{@items.ids}", method: :get)%></td>
-	      <% else %>
-	      	<td><%=link_to "Buy All", new_order_path(id: @items.first.id, method: :get)%></td>
-	      <% end %>	
-	    </tr>
-	  </tbody>
-	</table> 
-<% else %>
-<h1>Add Items To Cart</h1>
-<%= button_to "Go To Home Page", products_path, class: "btn btn-outline-success", method: :get %> 
-<% end %>
+	      </div>
+			</div>
+		<% end %>
+		<br />
+		<br />
+		<table class="table">
+		  <thead>
+		    <tr>
+		      <th scope="col">Total Items </th>
+		      <th scope="col">Total Price</th>
+		      <th scope="col"></th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    <tr>
+		      <td>
+		      	<%= item_total %>
+					</td>
+		      <td><%= "#{price_total}" %></td>
+		      <% if @items.count > 1 %>
+		      	<td><%=link_to "Buy All", new_order_path(id: "#{@items.ids}", method: :get), class: "btn btn-outline-success"%></td>
+		      <% else %>
+		      	<td><%=link_to "Buy All", new_order_path(id: @items.first.id, method: :get), class: "btn btn-outline-success"%></td>
+		      <% end %>	
+		    </tr>
+		  </tbody>
+		</table> 
+	<% else %>
+	<h1>Add Items To Cart</h1>
+	<%= button_to "Go To Home Page", products_path, class: "btn btn-outline-success", method: :get %> 
+	<% end %>
+</div>

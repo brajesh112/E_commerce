@@ -1,0 +1,23 @@
+<div class="row" id="card-container" style= "justify-content: center;">
+  <% @product.each do |product| %>
+    <div class="card mx-2 my-2" style="width: 22rem;">
+      <%= image_tag product.images.first, size: "200x200", class: "card-img-top" %>
+      <div class="card-body">  
+        <h5 class="card-title">
+          <%= "#{product.product_name}"%>
+        </h5>
+        <p class="card-text">
+          <%= "#{product.description}" %>
+        </p>
+        <h6>
+          $<%="#{product.price}" %>
+        </h6>
+        <% if product.stock == 0 %>
+          <h6 style="color: red;"> Out of stock </h6>
+        <% else %>
+          <%= link_to_if product.stock > 0, "AddToCart", cart_path(product.id),class: "btn btn-primary btn-lg btn-block" %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

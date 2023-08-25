@@ -1,0 +1,12 @@
+<div class="d-flex justify-content-center form-group">
+	<%= form_for @track, url_for: tracking_orders_path(@track), method: :post do |f| %>
+		<%= f.hidden_field :shipment_id, :value => "#{@shipment.id}" %>
+		<div class="field">
+			<%= f.label :place %>
+			<%= f.text_field :place, autocomplete: true, class: "form-control" %>
+		</div>
+		<div class="action">
+			<%= f.submit "Create",class: "btn btn-primary btn-lg btn-block" %> 
+		</div>
+	<% end %>
+</div>

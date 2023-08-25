@@ -102,5 +102,8 @@
 		<%= link_to "Edit Shipment", edit_shipment_path(@order.shipment), class: "btn btn-primary btn-lg " %>
 	<% else %>
 		<%= link_to "Show Shipment", shipment_path(@order.shipment) , class: "btn btn-primary btn-lg " %>
-	<% end %>
+		<% if @order.shipment.status != "ordered" %>
+			<%= link_to "Track Order", tracking_order_path(@order.shipment) , class: "btn btn-primary btn-lg " %>
+		<% end %>
+	<% end %>	
 </div>

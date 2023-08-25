@@ -8,8 +8,7 @@ class Order < ApplicationRecord
 	after_create :create_shipment
 
 	def create_shipment
-		byebug
-		self.build_shipment(status: "ordered", expected_delivery: "#{DateTime.current.to_date + 7.days}").save
+		self.build_shipment(status: "ordered", expected_delivery: DateTime.current.to_date + 7.days).save
 	end
 
 end

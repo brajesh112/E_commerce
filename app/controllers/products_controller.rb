@@ -1,7 +1,9 @@
 class ProductsController < ApplicationController
 	before_action :authenticate_user!, only: [:new, :show]
+	before_action :check, only: [:edit, :destroy]
 	def index
-		@product = Product.all 
+		product = Product.all
+		@product = product.paginate(page: params[:page], per_page: 5)
 	end
 
 	def new
@@ -31,10 +33,6 @@ class ProductsController < ApplicationController
 		@product = Product.find(params[:id])
 	end
 
-	def search
-		byebug
-	end
-
 	def destroy
 		@product = Product.find(params[:id])
 		@product.destroy
@@ -44,7 +42,14 @@ class ProductsController < ApplicationController
 	protected
 
 	def product_params
-		params.require(:product).permit(:product_name, :stock, :price, :description,:user_id, images:[])
+		params.require(:product).permit(:product_name, :stock, :price, :categories, :description,:user_id, images:[])
+	end
+
+	def check
+		unless user_signed_in? && current_user.admin?
+			flash.alert = "Only Admin Access"
+			redirect_to root_path
+		end
 	end
 
 end

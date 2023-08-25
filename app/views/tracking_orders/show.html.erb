@@ -1,0 +1,43 @@
+<div class="container py-5 h-100">
+  <div class="row d-flex justify-content-center align-items-center h-100">
+    <div class="col-12">
+      <div class="card card-stepper text-black" style="border-radius: 16px;">
+      	<h1 style="display: flex; justify-content: center;"> Order Tracking Details </h1>
+        <div class="card-body p-5">
+
+          <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+              <h5 class="mb-0">INVOICE <span class="text-primary font-weight-bold">#Y34XDHR</span></h5>
+            </div>
+            <div class="text-end">
+              <p class="mb-0">Expected Arrival: <span><%= @shipment.expected_delivery.to_date %></span></p>
+              <p class="mb-0">Track Id:     <span class="font-weight-bold"><%= @shipment.order.track_id%></span></p>
+            </div>
+          </div>
+
+          <ul id="progressbar-2" class="d-flex justify-content-between mx-0 mt-0 mb-5 px-0 pt-0 pb-2">
+          	<% Shipment.statuses.each_with_index do |key,value| %>
+          		<% value1 = value + 1 %>
+          		<% if value <= Shipment.statuses["#{@shipment.status}"] %>
+	              	<li class="step10 active text-center" id='step<%="#{value1}"%>'></li>
+	            <% else %>
+	              <li class="step10 text-muted <%= add_class(value)%>" id='step<%="#{value1}"%>'></li>
+	            <% end %>
+	          <% end %>
+          </ul>
+
+          <div class="d-flex justify-content-between">
+          	<% Shipment.statuses.each do |key,val| %>
+              <div class="d-lg-flex align-items-center">
+                <div>
+                	<p class="fw-bold mb-0"><%=add_place(@shipment,key)%></p>
+                  <p class="fw-bold mb-1"><%=key%></p>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

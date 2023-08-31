@@ -23,7 +23,7 @@ class OrdersController < ApplicationController
 		@description = ""
 		if @order.product_ids.size >1
 			current_user.cart.line_items.each do |item|
-				@description += "<div class= 'row'><div class='col-auto'><b>#{i}.</b></div> <div class='col-auto'><b>Product Name:</b> #{item.product.product_name},</div></div><div class='row'><div class= 'col-auto'><b>Product Quantity:</b> #{item.quantity},</div><div class='col-auto'><b>Total Price:</b> #{item.product.price * item.quantity}</div></div>"
+				@description += "<div class= 'row'><div class='col-auto'><b>#{i}.</b></div> <div class='col-auto'><b>Product Name:</b> #{item.product.product_name},</div></div><div class='row'><div class= 'col-auto'><b>Product Quantity:</b> #{item.quantity},</div><div class='col-auto'><b>Total Price:</b> ₹#{item.product.price * item.quantity}</div></div>"
 				 	i +=1;
 				item.product.stock -= item.quantity
 				item.product.update(stock: item.product.stock)
@@ -31,7 +31,7 @@ class OrdersController < ApplicationController
 			end
 		else
 			item = LineItem.find(params[:order][:item_id])
-					@description += "<div class= 'row'><div class='col-auto'><b>#{i}.</b></div> <div class='col-auto'><b>Product Name:</b> #{item.product.product_name},</div></div><div class='row'><div class= 'col-auto'><b>Product Quantity:</b> #{item.quantity},</div><div class='col-auto'><b>Total Price:</b> #{item.product.price * item.quantity}</div></div>"
+					@description += "<div class= 'row'><div class='col-auto'><b>#{i}.</b></div> <div class='col-auto'><b>Product Name:</b> #{item.product.product_name},</div></div><div class='row'><div class= 'col-auto'><b>Product Quantity:</b> #{item.quantity},</div><div class='col-auto'><b>Total Price:</b> ₹#{item.product.price * item.quantity}</div></div>"
 			item.product.stock -= item.quantity
 			item.product.update(stock: item.product.stock)
 			item.destroy
@@ -46,14 +46,15 @@ class OrdersController < ApplicationController
 
 	def index
 		if current_user.admin?
-			@orders = Order.all
+			orders = Order.all
 		else
-			@orders = current_user.orders.all
+			orders = current_user.orders.all
 		end
-		unless @orders.present?
+		unless orders.present?
 			flash.alert = "You have not ordered anything at"
 			redirect_to root_path
 		end
+		@orders = orders.paginate(page: params[:page], per_page: 1)
 	end
 
 	def edit

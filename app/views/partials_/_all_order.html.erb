@@ -1,43 +1,46 @@
-<div class="container">
-	<div class="row">
+<div style="display: flex;">	
+	<div class="container cart_item">
 		<% @cart.line_items.each do |item| %>
-			<div class="col">
-				<div class="card" style= "width: 18rem;">
-					<%= image_tag item.product.images.first, size: "250x250" ,class: "picture" ,class: "card-img-top"%>
-					<div class="card-body">
-						<b class="card-text">Product:</b>  <%= item.product.product_name %><br />
-						<b class="card-text">Price:</b>   Rs.<%= item.product.price * item.quantity %><br />
-						<b class="card-text">Quantity:</b>   <%= item.quantity %><br />
-						<b class="card-text">Status:</b>   Pending <br />
-					</div>
-				</div>
-			</div>
-		<% end %>	
-		<div class="col-sm-6">	
-			<%= form_for @order, url_for: orders_path do |f| %>
+	    <div class="row my-4">
+	    	<div class="col-sm-3">
+	    		<%= image_tag item.product.images.first, size: "200x200" %>
+	    	</div>
+	    	<div class="col-sm-6">
+	   			<strong><%= item.product.product_name %></strong>
+	    		<br />
+	   			<strong><%= item.product.description %></strong>
+	    		<br />
+	    		<strong>Rs.<%= item.product.price * item.quantity %></strong>
+	    	</div>
+	    	<div class="col-sm-3">
+	    		<strong>Status: Pending</strong>
+	    	</div>
+	    </div>
+		<% end %>
+	</div>
+	<div class="container order_address">
+		<%= form_for @order, url_for: orders_path do |f| %>
 				<%= f.hidden_field :payment_method, :value => "cash" %>
 				<h3>Select Order Address:</h3>
 				<% @address.each do |address| %>
-					<div class="card my-4" style= "width: 25rem;">
-						<div class= "row">
-							<div class = "col">
-								<%= f.radio_button :address_id, "#{address.id}"%>
-							</div>
-							<div class = "col">
-								<b>House Number:</b> <%= address.house_no%><br />
-								<b>Street Number:</b> <%= address.street%><br />
-								<b>Landmark :</b> <%= address.landmark%><br />
-								<b>City :</b> <%= address.city%><br />
-								<b>state :</b> <%= address.state%><br />
-								<b>Pincode:</b> <%= address.pin%><br />
-								<b>Country:</b> <%= address.country%><br />
-							</div>
+					<div class= "row address_row">
+						<div class = "col-sm-2">
+							<%= f.radio_button :address_id, "#{address.id}"%>
 						</div>
-					</div>		
+						<div class = "col-sm-10">
+							<b>House Number:</b> <%= address.house_no%>
+							<b>Street Number:</b> <%= address.street%><br />
+							<b>Landmark :</b> <%= address.landmark%>
+							<b>City :</b> <%= address.city%><br />
+							<b>state :</b> <%= address.state%>
+							<b>Pincode:</b> <%= address.pin%><br />
+							<b>Country:</b> <%= address.country%><br />
+						</div>
+					</div>
+					<br />		
 				<% end %>
 				<%= link_to "Add New Address", new_address_path(id: 1), method: :get, class: "btn btn-primary btn-lg my-2" %><br />
 				<%= f.submit "Place Order", class: "btn btn-primary btn-lg my-2" %>
 			<% end %>
-		</div>
 	</div>
 </div>

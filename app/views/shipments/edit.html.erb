@@ -16,5 +16,5 @@
 		<div class="action">
 			<%= f.submit "Update Shipment", class: "btn btn-primary btn-lg btn-block"%>
 	<% end %>
-	<%= link_to "Delete Shipment",shipment_path(@shipment),data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete, class: "btn btn-primary btn-lg btn-block" %>
+	<%= link_to "Delete Shipment",shipment_path(@shipment),data: { confirm: "Are you sure?"}, method: :delete, class: "btn btn-primary btn-lg btn-block" %>
 </div>

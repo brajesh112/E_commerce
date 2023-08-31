@@ -28,7 +28,7 @@
             <td><%= address.country %></td>
             <td>
             <div class="btn-group" role="group" aria-label="Basic example">
-              <%= button_to "Remove", address_path(address),data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete, class: "btn btn-outline-success" %>
+              <%= button_to "Remove", address_path(address),data: { confirm: "Are you sure?"}, method: :delete, class: "btn btn-outline-success" %>
               <%= button_to "Edit", edit_address_path(address), method: :get, class: "btn btn-outline-success" %>
             </td>
             </div>

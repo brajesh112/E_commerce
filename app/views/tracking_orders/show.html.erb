@@ -7,7 +7,15 @@
 
           <div class="d-flex justify-content-between align-items-center mb-5">
             <div>
-              <h5 class="mb-0">INVOICE <span class="text-primary font-weight-bold">#Y34XDHR</span></h5>
+              <h5 class="mb-0">
+                <%=Product.find(@shipment.order.product_ids.first).product_name %>
+                <span class="text-primary font-weight-bold">
+                  <% if @shipment.order.product_ids.count >1%> 
+                    +<%=@shipment.order.product_ids.count-1%>
+                  <% end %>
+                </span>
+              </h5>
+              <%= link_to "See more", order_path(@shipment.order) %>
             </div>
             <div class="text-end">
               <p class="mb-0">Expected Arrival: <span><%= @shipment.expected_delivery.to_date %></span></p>

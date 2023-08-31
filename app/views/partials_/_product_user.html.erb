@@ -7,16 +7,20 @@
           <%= "#{product.product_name}"%>
         </h5>
         <p class="card-text">
-          <%= "#{product.description}" %>
+          <%= "#{product.description.truncate(35)}" %>
         </p>
         <h6>
-          $<%="#{product.price}" %>
+          ₹<%="#{product.price}" %>
         </h6>
-        <% if product.stock == 0 %>
-          <h6 style="color: red;"> Out of stock </h6>
-        <% else %>
-          <%= link_to_if product.stock > 0, "AddToCart", cart_path(product.id),class: "btn btn-primary btn-lg btn-block" %>
-        <% end %>
+        <%if user_signed_in? && product.line_items.find_by(cart_id: current_user.cart.id).present? %> 
+          <%= link_to "GoToCart", carts_path,class: "btn btn-secondary btn-lg btn-block" %>
+        <% else %>  
+          <% if product.stock == 0 %>
+            <h6 style="color: red;"> Out of stock </h6>
+          <% else %>
+            <%= link_to_if product.stock > 0, "AddToCart", cart_path(product.id),class: "btn btn-primary btn-lg btn-block" %>
+          <% end %>
+        <% end %> 
       </div>
     </div>
   <% end %>

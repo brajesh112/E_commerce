@@ -11,6 +11,8 @@ module ApplicationHelper
 	def add_place (obj,key)
 		if obj.tracking_orders.where(status: key).present?
 			obj.tracking_orders.where(status: key).last.place
+		elsif key == 'ordered'
+			User.find_by(role: 'admin').addresses.first.city
 		end
 	end
 

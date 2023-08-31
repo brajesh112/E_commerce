@@ -1,46 +1,48 @@
-<div class="d-flex justify-content-center">
-  <h1>Edit Address</h1>
-</div>
-<div class="d-flex justify-content-center">
- <%= form_for @address, url_for: address_path(@address), method: :patch  do |f| %>
-
-  <div class="field">
-    <%= f.label :house_no %>
-    <%= f.text_field :house_no , class: "form-control" ,autocomplete: "house_no" %>
+<div class="container" style="width: 450px;">
+  <div class="d-flex justify-content-center">
+    <h1>Edit Address</h1>
   </div>
+  <div class="d-flex justify-content-center">
+   <%= form_for @address, url_for: address_path(@address), method: :patch  do |f| %>
 
-  <div class="field">
-    <%= f.label :street %>
-    <%= f.text_field :street , class: "form-control" ,autocomplete: "street" %>
-  </div>
+    <div class="field">
+      <%= f.label :house_no %>
+      <%= f.text_field :house_no , class: "form-control" ,autocomplete: "house_no" %>
+    </div>
 
-  <div class="field">
-    <%= f.label :landmark %>
-    <%= f.text_field :landmark , class: "form-control" ,autocomplete: "landmark" %>
-  </div>
+    <div class="field">
+      <%= f.label :street %>
+      <%= f.text_field :street , class: "form-control" ,autocomplete: "street" %>
+    </div>
 
-  <div class="field">
-    <%= f.label :city %>
-    <%= f.text_field :city , class: "form-control" ,autocomplete: "city" %>
-  </div>
+    <div class="field">
+      <%= f.label :landmark %>
+      <%= f.text_field :landmark , class: "form-control" ,autocomplete: "landmark" %>
+    </div>
 
-  <div class="field">
-    <%= f.label :state %>
-    <%= f.text_field :state , class: "form-control" ,autocomplete: "state" %>
-  </div>
+    <div class="field">
+      <%= f.label :city %>
+      <%= f.text_field :city , class: "form-control" ,autocomplete: "city" %>
+    </div>
 
-  <div class="field">
-    <%= f.label :pin %>
-    <%= f.text_field :pin , class: "form-control" ,autocomplete: "pin" %>
-  </div>
+    <div class="field">
+      <%= f.label :state %>
+      <%= f.text_field :state , class: "form-control" ,autocomplete: "state" %>
+    </div>
 
-  <div class="field">
-    <%= f.label :country %>
-    <%= f.text_field :country , class: "form-control" ,autocomplete: "country" %>
-  </div>
+    <div class="field">
+      <%= f.label :pin %>
+      <%= f.text_field :pin , class: "form-control" ,autocomplete: "pin" %>
+    </div>
 
-  <div class="field">
-    <%= f.submit "Add", class: "btn btn-primary btn-lg btn-block" %>
+    <div class="field">
+      <%= f.label :country %>
+      <%= f.text_field :country , class: "form-control" ,autocomplete: "country" %>
+    </div>
+
+    <div class="field">
+      <%= f.submit "Add", class: "btn btn-primary btn-lg btn-block" %>
+    </div>
+   <% end %>
   </div>
- <% end %>
 </div>

@@ -25,7 +25,7 @@
     			<% end %>
     			</td>
           <td><%= product.product_name %></td>
-          <td><%= product.price %></td>
+          <td>₹<%= product.price %></td>
           <td><%= product.stock %></td>
           <td><%= product.description %></td>
           <% if user_signed_in?%>
@@ -33,7 +33,7 @@
           		<%= link_to "EditProduct", edit_product_path(product) %>
           	</td>
           	<td>
-          		<%= link_to "DeleteProduct", product_path(product),data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %>
+          		<%= link_to "DeleteProduct", product_path(product),data: { confirm: "Are you sure?"}, method: :delete %>
           	</td>
           <% end %>
         </tr>

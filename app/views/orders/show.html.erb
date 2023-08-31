@@ -1,6 +1,6 @@
 <div class="container">
-	<h1><%= current_user.name %>'s Orders </h1>
-	<div class="card my-3" style= "width: 30rem;">
+	<h1> Your's Orders </h1>
+	<div class="card my-3 py-4">
 		<div class="row">
 			<div class="col">
 				<b>Description:</b>
@@ -9,12 +9,14 @@
 				<%= @order.description.html_safe%>
 			</div>
 		</div>
+	</div>
+	<div class="card my-3 py-4">
 		<div class="row">
 			<div class="col">
 				<b>Payment Method:</b>
 			</div> 
 			<div class="col">
-				<%= @order.payment_method %>
+				<b><%= @order.payment_method %></b>
 			</div>
 		</div>
 		<div class="row">
@@ -22,17 +24,19 @@
 				<b>Status:</b>
 			 </div>
 			 <div class="col">
-			 	<%= @order.status %>
+			 	<b><%= @order.status %></b>
 			 </div>
 		</div>
+		<br />
 		<div class="row">
 			<div class="col">
 				<b>Track Id: </b>
 			</div>
 			<div class="col">
-				<%=	@order.track_id %>
+				<b><%=	@order.track_id %></b>
 			</div>
 		</div>
+		<br />
 		<div class="row">
 			<div class="col">
 				<b>Delivery Address:</b>

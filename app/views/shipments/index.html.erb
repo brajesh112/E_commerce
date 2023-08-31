@@ -1,12 +1,12 @@
 <div class="container">
 	<% unless current_user.admin? %>
-		<h1><%= current_user.name %>'s Shipments </h1>
+		<h1>Your Shipments </h1>
 	<% end %>
 	<% @orders.each do |order| %>
 		<% if current_user.admin? %>
 			<h1><%= order.user.name %>'s Shipment </h1>
 	 	<% end %>
-		<div class="card my-3 px-3">
+		<div class="card my-3 px-3 bg-light">
 			<div class="row">
 				<div class="col">
 					<b>Status:</b>

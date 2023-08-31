@@ -1,12 +1,12 @@
 <div class="container">
 	<% unless current_user.admin? %>
-		<h1><%= current_user.name %>'s Orders </h1>
+		<h1> Your Orders </h1>
 	<% end %>
 	<% @orders.each do |order| %>
 		<% if current_user.admin? %>
 			<h1><%= order.user.name %>'s Orders </h1>
 	 	<% end %>
-		<div class="card my-3">
+		<div class="card my-3 px-4 py-2">
 			<div class="row">
 				<div class="col">
 					<b>Description:</b>
@@ -15,30 +15,35 @@
 					<%= order.description.html_safe%>
 				</div>
 			</div>
+		</div>
+		<div class="card my-3 px-4 py-2">
 			<div class="row">
 				<div class="col">
 					<b>Payment Method:</b>
 				</div> 
 				<div class="col">
-					<%= order.payment_method %>
+					<b><%= order.payment_method %></b>
 				</div>
 			</div>
+			<br />
 			<div class="row">
 				<div class="col">
 					<b>Status:</b>
 			 	</div>
 			 	<div class="col">
-			 		<%= order.status %>
+			 		<b><%= order.status %></b>
 			 	</div>
 			</div>
+			<br />
 			<div class="row">
 				<div class="col">
-				<b>Track Id: </b>
+					<b>Track Id: </b>
 				</div>
 				<div class="col">
-				<%=	order.track_id %>
+					<b><%=	order.track_id %></b>
 				</div>
 			</div>
+			<br />
 			<div class="row">
 				<div class="col">
 					<b>Delivery Address:</b>
@@ -107,10 +112,11 @@
 			 	<%= link_to "Edit Order", edit_order_path(order), class: "btn btn-primary btn-lg " %>
 			 	<%= link_to "Edit Shipment", edit_shipment_path(order.shipment), class: "btn btn-primary btn-lg " %>
 			<% else %>
-				<%= link_to "Show Shipment", shipments_path , class: "btn btn-primary btn-lg " %>
+				<%= link_to "Show Shipment", shipment_path(order.shipment) , class: "btn btn-primary btn-lg " %>
 				<% if order.shipment.status != "ordered" %>
 					<%= link_to "Track Order", tracking_order_path(order.shipment) , class: "btn btn-primary btn-lg " %>
 				<% end %>
 			<% end %>
 	<% end %>
 </div>
+<%= will_paginate @product, renderer: BootstrapPagination::Rails, class: "pagination" %>

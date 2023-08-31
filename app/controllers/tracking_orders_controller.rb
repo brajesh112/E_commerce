@@ -1,9 +1,13 @@
 class TrackingOrdersController < ApplicationController
 	before_action :check, only: [:edit, :destroy]
-	before_action :authenticate_user!
 	def show
 		if params[:query].present?
-			@shipment = Order.find_by(track_id: params[:query]).shipment
+			if Order.find_by(track_id: params[:query]).present?
+				@shipment = Order.find_by(track_id: params[:query]).shipment
+			else
+				flash.alert = "Please insert valid Id"
+				redirect_to root_path
+			end
 		else
 			@shipment = Shipment.find(params[:id])
 		end

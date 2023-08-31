@@ -2,7 +2,11 @@ class ProductsController < ApplicationController
 	before_action :authenticate_user!, only: [:new, :show]
 	before_action :check, only: [:edit, :destroy]
 	def index
-		product = Product.all
+		if params[:value].present?
+			product = Product.where(categories: params[:value])
+		else
+			product = Product.all
+		end
 		@product = product.paginate(page: params[:page], per_page: 5)
 	end
 

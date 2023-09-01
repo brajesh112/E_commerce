@@ -15,7 +15,7 @@ class ShipmentsController < ApplicationController
 
 	def update
 		@shipment = Shipment.find(params[:id])
-		@shipment.update(status: params[:shipment][:status])
+		@shipment.update(status: params[:shipment][:status], expected_delivery: params[:shipment][:expected_delivery])
 		if @shipment.previous_changes[:status]
 			redirect_to new_tracking_order_path(id: @shipment.id)
 		else 

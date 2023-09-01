@@ -1,13 +1,15 @@
-<div class="d-flex justify-content-center form-group">
- <h1>Update Order</h1>
-</div>
-<div class="d-flex justify-content-center form-group">
-	<%= form_for @order, url_for: order_path(@order), method: :patch, data:{turbo: false}  do |f| %>
-		<div class= "field">
-			<%= f.label :status %><br />
-			<%= f.collection_select :status, Order.statuses.select{|key| key}, :first, :first, { prompt: "Select a Order Status" },class: 'form-control'%>
-		</div>
-		<div class="action">
-			<%= f.submit "Update Status", class: "btn btn-primary btn-lg btn-block"%>
-	<% end %>
+<div class="container" style="width: 450px">
+	<div class="d-flex justify-content-center form-group">
+	 <h1>Update Order</h1>
+	</div>
+	<div class="d-flex justify-content-center form-group">
+		<%= form_for @order, url_for: order_path(@order), method: :patch, data:{turbo: false}  do |f| %>
+			<div class= "field">
+				<%= f.label :status %><br />
+				<%= f.collection_select :status, Order.statuses.select{|key| key}, :first, :first, { prompt: "Select a Order Status" },class: 'form-control'%>
+			</div>
+			<div class="action">
+				<%= f.submit "Update Status", class: "btn btn-primary btn-lg btn-block"%>
+		<% end %>
+	</div>
 </div>

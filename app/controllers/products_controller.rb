@@ -1,6 +1,6 @@
 class ProductsController < ApplicationController
-	before_action :authenticate_user!, only: [:new, :show]
-	before_action :check, only: [:edit, :destroy]
+	before_action :authenticate_user!, only: [:show]
+	before_action :check, only: [:edit, :destroy, :new]
 	def index
 		if params[:value].present?
 			product = Product.where(categories: params[:value])

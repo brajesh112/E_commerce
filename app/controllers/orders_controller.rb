@@ -1,5 +1,6 @@
 class OrdersController < ApplicationController
-	before_action :check, only: [:edit]
+	before_action :check, only: [:edit, :destroy]
+	before_action :authenticate_user!
 	def new
 		@item = params[:id]
 		@id = @item

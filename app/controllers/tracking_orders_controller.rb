@@ -1,5 +1,5 @@
 class TrackingOrdersController < ApplicationController
-	before_action :check, only: [:edit, :destroy]
+	before_action :check, only: [:edit, :destroy, :new]
 	def show
 		if params[:query].present?
 			if Order.find_by(track_id: params[:query]).present?

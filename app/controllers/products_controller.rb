@@ -2,11 +2,7 @@ class ProductsController < ApplicationController
 	before_action :authenticate_user!, only: [:show]
 	before_action :check, only: [:edit, :destroy, :new]
 	def index
-		if params[:value].present?
-			product = Product.where(categories: params[:value])
-		else
-			product = Product.all
-		end
+		product = params[:value].present? ? Product.where(categories: params[:value]) : product = Product.all
 		@product = product.paginate(page: params[:page], per_page: 5)
 	end
 
@@ -51,8 +47,7 @@ class ProductsController < ApplicationController
 
 	def check
 		unless user_signed_in? && current_user.admin?
-			flash.alert = "Only Admin Access"
-			redirect_to root_path
+			redirect_to root_path, alert: "Only Admin Access"
 		end
 	end
 

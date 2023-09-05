@@ -19,7 +19,7 @@
 	<div class="container order_address">
 		<%= form_for @order, url_for: orders_path do |f| %>
 			<%= f.hidden_field :product_ids, :value => @product.id  %>
-			<%= f.hidden_field :item_id, :value => @id %>
+			<%= f.hidden_field :item_id, :value => @item %>
 			<%= f.hidden_field :payment_method, :value => "cash" %>
 			<h3>Select Order Address:</h3>
 			<% @address.each do |address| %>

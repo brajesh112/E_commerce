@@ -3,10 +3,13 @@ class OrdersController < ApplicationController
 	before_action :authenticate_user!
 	def new
 		@item = params[:id]
-		@id = @item
 		if @item.to_i !=0
-			@quantity = LineItem.find(@item).quantity
-			@product = LineItem.find(@item).product
+			if LineItem.find_by(id: @item).present?
+				@quantity = LineItem.find(@item).quantity
+				@product = LineItem.find(@item).product
+			else
+				redirect_to carts_path
+			end
 		end
 		@cart = current_user.cart
 		@address = current_user.addresses
@@ -24,7 +27,7 @@ class OrdersController < ApplicationController
 		@description = ""
 		if @order.product_ids.size >1
 			current_user.cart.line_items.each do |item|
-				@description += "<div class= 'row'><div class='col-auto'><b>#{i}.</b></div> <div class='col-auto'><b>Product Name:</b> #{item.product.product_name},</div></div><div class='row'><div class= 'col-auto'><b>Product Quantity:</b> #{item.quantity},</div><div class='col-auto'><b>Total Price:</b> ₹#{item.product.price * item.quantity}</div></div>"
+				@description += helpers.description_body(item, i)
 				 	i +=1;
 				item.product.stock -= item.quantity
 				item.product.update(stock: item.product.stock)
@@ -32,7 +35,7 @@ class OrdersController < ApplicationController
 			end
 		else
 			item = LineItem.find(params[:order][:item_id])
-					@description += "<div class= 'row'><div class='col-auto'><b>#{i}.</b></div> <div class='col-auto'><b>Product Name:</b> #{item.product.product_name},</div></div><div class='row'><div class= 'col-auto'><b>Product Quantity:</b> #{item.quantity},</div><div class='col-auto'><b>Total Price:</b> ₹#{item.product.price * item.quantity}</div></div>"
+					@description += helpers.description_body(item, i)
 			item.product.stock -= item.quantity
 			item.product.update(stock: item.product.stock)
 			item.destroy
@@ -46,11 +49,7 @@ class OrdersController < ApplicationController
 	end
 
 	def index
-		if current_user.admin?
-			orders = Order.all
-		else
-			orders = current_user.orders.all
-		end
+		orders = current_user.admin? ? Order.all : current_user.orders.all
 		unless orders.present?
 			flash.alert = "You have not ordered anything at"
 			redirect_to root_path
@@ -82,8 +81,7 @@ class OrdersController < ApplicationController
 
 	def check
 		unless user_signed_in? && current_user.admin?
-			flash.alert = "Only Admin Access"
-			redirect_to root_path
+			redirect_to root_path, alert: "Only Admin Access"
 		end
 	end
 end

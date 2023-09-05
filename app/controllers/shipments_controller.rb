@@ -34,8 +34,7 @@ class ShipmentsController < ApplicationController
 	
 	def check
 		unless user_signed_in? && current_user.admin?
-			flash.alert = "Only Admin Access"
-			redirect_to root_path
+			redirect_to root_path, alert: "Only Admin Access"
 		end
 	end
 end

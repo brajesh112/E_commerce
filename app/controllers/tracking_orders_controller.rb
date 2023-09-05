@@ -1,16 +1,9 @@
 class TrackingOrdersController < ApplicationController
 	before_action :check, only: [:edit, :destroy, :new]
 	def show
-		if params[:query].present?
-			if Order.find_by(track_id: params[:query]).present?
-				@shipment = Order.find_by(track_id: params[:query]).shipment
-			else
-				flash.alert = "Please insert valid Id"
-				redirect_to root_path
-			end
-		else
-			@shipment = Shipment.find(params[:id])
-		end
+		@shipment = Order.find_by(track_id: params[:query]).present? ?
+			 Order.find_by(track_id: params[:query]).shipment : Shipment.find_by(id: params[:id])
+		redirect_to root_path, alert: "Please insert valid Id" if @shipment.nil?
 	end
 
 	def new
@@ -26,8 +19,7 @@ class TrackingOrdersController < ApplicationController
 
 	def check
 		unless user_signed_in? && current_user.admin?
-			flash.alert = "Only Admin Access"
-			redirect_to root_path
+			redirect_to root_path, alert: "Only Admin Access"
 		end
 	end
 

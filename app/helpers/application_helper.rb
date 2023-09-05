@@ -16,4 +16,7 @@ module ApplicationHelper
 		end
 	end
 
+	def delivery_date
+		DateTime.current.to_date + 7.days 
+	end
 end

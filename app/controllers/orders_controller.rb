@@ -49,12 +49,12 @@ class OrdersController < ApplicationController
 	end
 
 	def index
-		orders = current_user.admin? ? Order.all : current_user.orders.all
-		unless orders.present?
+		@orders = current_user.admin? ? Order.all : current_user.orders.all
+		unless @orders.present?
 			flash.alert = "You have not ordered anything at"
 			redirect_to root_path
 		end
-		@orders = orders.paginate(page: params[:page], per_page: 1)
+		# @orders = orders.paginate(page: params[:page], per_page: 1)
 	end
 
 	def edit

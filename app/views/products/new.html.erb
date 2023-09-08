@@ -31,14 +31,13 @@
 		  </div>
 
 		  <div class="field ">
-				<%= f.label :categories %><br />
-				<%= f.collection_select :categories ,Product.categories.select{|key| key}, :first, :first, { prompt: "Select a category" },class: 'form-control' %><br />
+				<%= f.label :category_id %><br />
+				<%= f.collection_select :category_id ,Category.all, :id, :categories_type, { prompt: "Select a category" },class: 'form-control' %><br />
 			</div>
 
 			<div class = "action" >
 				<%= f.submit "Add Product" ,class: "btn btn-primary btn-lg btn-block" %>
 			</div>
-
 		<% end %>
 	</div>
 </div>

@@ -14,21 +14,12 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
-        <% if user_signed_in? && current_user.admin? %>
-         <li class="nav-item">
-          <%= link_to "Add Product", new_product_path, class: "nav-link" %>
-          </li>
-        <% end %>
         <% if user_signed_in? %>
           <li class="nav-item">
             <%= link_to "Address", addresses_path, class: "nav-link" %>
           </li>
           <li class="nav-item">
-            <% if current_user.admin? %>
-              <%= link_to "All Orders", orders_path, class: "nav-link" %>
-            <% else %> 
-              <%= link_to "Your Orders", orders_path, class: "nav-link" %>
-            <% end %> 
+            <%= link_to "Your Orders", orders_path, class: "nav-link" %>
           </li>
         <% end %>
          <li class="nav-item dropdown">
@@ -36,9 +27,11 @@
             Categories
           </a>
           <ul class="dropdown-menu">
-            <li><%= link_to "Clothes", products_path(value: "clothes"), class: "dropdown-item"%></li>
-            <li><%= link_to "Electronics", products_path(value: "electronics"), class: "dropdown-item" %></li>
-            <li><%= link_to "Home Appliances",products_path(value:"home_appliances"), class: "dropdown-item" %></li>
+            <%Category.all.each do |category| %>
+              <li>
+                <%= link_to "#{category.categories_type}", products_path(value: "#{category.categories_type}"), class: "dropdown-item"%>
+              </li>
+            <% end %>
           </ul>
         </li>
       </ul>

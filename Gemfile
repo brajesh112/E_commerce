@@ -39,13 +39,11 @@ gem "jbuilder"
  gem "bootstrap"
  gem "sassc-rails"
  gem "font-awesome-sass", "~> 6.4.2"
- gem 'will_paginate', '~> 4.0'
- gem 'will_paginate-bootstrap'
- gem 'activeadmin'
- gem 'cancancan'
- gem 'draper' 
- gem 'pundit'
-
+ # gem 'will_paginate', '~> 4.0'
+ # gem 'will_paginate-bootstrap'
+ gem 'activeadmin', '~> 2.14'
+ gem 'active_admin_role'
+ gem 'arctic_admin'
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
 

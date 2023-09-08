@@ -10,7 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_24_125125) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_08_124858) do
+  create_table "active_admin_comments", force: :cascade do |t|
+    t.string "namespace"
+    t.text "body"
+    t.string "resource_type"
+    t.integer "resource_id"
+    t.string "author_type"
+    t.integer "author_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author"
+    t.index ["namespace"], name: "index_active_admin_comments_on_namespace"
+    t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource"
+  end
+
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -53,11 +67,29 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_24_125125) do
     t.index ["user_id"], name: "index_addresses_on_user_id"
   end
 
+  create_table "bank_accounts", force: :cascade do |t|
+    t.string "account_no"
+    t.string "ifsc_code"
+    t.string "bank"
+    t.string "branch_name"
+    t.string "city"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_bank_accounts_on_user_id"
+  end
+
   create_table "carts", force: :cascade do |t|
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_carts_on_user_id"
+  end
+
+  create_table "categories", force: :cascade do |t|
+    t.string "categories_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "items", force: :cascade do |t|
@@ -68,6 +100,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_24_125125) do
     t.datetime "updated_at", null: false
     t.index ["cart_id"], name: "index_items_on_cart_id"
     t.index ["product_id"], name: "index_items_on_product_id"
+  end
+
+  create_table "offer_types", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "offer_types_products", force: :cascade do |t|
+    t.integer "product_id"
+    t.integer "offer_type_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["offer_type_id"], name: "index_offer_types_products_on_offer_type_id"
+    t.index ["product_id"], name: "index_offer_types_products_on_product_id"
   end
 
   create_table "orders", force: :cascade do |t|
@@ -86,13 +133,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_24_125125) do
 
   create_table "products", force: :cascade do |t|
     t.string "product_name"
-    t.bigint "stock"
+    t.integer "stock"
     t.decimal "price"
     t.string "description"
-    t.integer "categories"
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "category_id"
+    t.index ["category_id"], name: "index_products_on_category_id"
     t.index ["user_id"], name: "index_products_on_user_id"
   end
 
@@ -131,4 +179,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_24_125125) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "products", "categories"
 end

@@ -8,3 +8,4 @@
 		 u.avatar.attach(io: File.open("#{Rails.root}/app/assets/images/profile.png"), filename: 'profile.png', content_type: 'image/png')
 		 u.save!
 #   Character.create(name: "Luke", movie: movies.first)
+	AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password', role: 99) if Rails.env.development?

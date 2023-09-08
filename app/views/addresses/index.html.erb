@@ -1,6 +1,7 @@
 <div class="container">  
   <% if @address.count > 0 %>
     <%= button_to "ADD", new_address_path, method: :get, class: "btn btn-primary btn-lg" %>
+    <br />
     <table class="table">
       <thead>
         <tr>
@@ -18,7 +19,7 @@
       <tbody>
         <% @address.each do |address| %>
           <tr>
-            <th scope="row"><%= address.id %></th>
+            <td><b><%= address.id %></b></td>
             <td><%= address.house_no %></td>
             <td><%= address.street %></td>
             <td><%= address.landmark %></td>

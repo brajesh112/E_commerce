@@ -2,8 +2,8 @@ class ProductsController < ApplicationController
 	before_action :authenticate_user!, only: [:show]
 	before_action :check, only: [:edit, :destroy, :new]
 	def index
-		product = params[:value].present? ? Product.where(categories: params[:value]) : product = Product.all
-		@product = product.paginate(page: params[:page], per_page: 5)
+		@product = params[:value].present? ? Product.includes(:category).where("categories.categories_type" => params[:value]) : product = Product.all
+		# @product = product.paginate(page: params[:page], per_page: 5)
 	end
 
 	def new
@@ -42,7 +42,7 @@ class ProductsController < ApplicationController
 	protected
 
 	def product_params
-		params.require(:product).permit(:product_name, :stock, :price, :categories, :description,:user_id, images:[])
+		params.require(:product).permit(:product_name, :stock, :price, :category_id, :description,:user_id, images:[])
 	end
 
 	def check

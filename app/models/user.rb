@@ -13,6 +13,9 @@ class User < ApplicationRecord
   has_many :addresses, inverse_of: :user, dependent: :destroy
   accepts_nested_attributes_for :addresses, allow_destroy: true
   has_many :bank_accounts
+  has_many :notifications, dependent: :destroy
+
+
   def insert_avatar
       unless self.avatar.attached? 
       self.avatar.attach(io: File.open("#{Rails.root}/app/assets/images/profile.png"), filename: 'profile.png', content_type: 'image/png')

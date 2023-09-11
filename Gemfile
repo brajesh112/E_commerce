@@ -44,6 +44,7 @@ gem "jbuilder"
  gem 'activeadmin', '~> 2.14'
  gem 'active_admin_role'
  gem 'arctic_admin'
+ gem "noticed"
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
 

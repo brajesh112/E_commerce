@@ -1,26 +1,33 @@
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">id</th>
-      <th scope="col">Images</th>
-      <th scope="col">Product Name</th>
-      <th scope="col">Price</th>
-      <th scope="col">Stock</th>
-      <th scope="col">Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row"><%= "#{@product.id}" %></th>
-      <td>
-      <% @product.images.each do |image| %>
-      	<%= image_tag image, size: "50x50" %>
-			<% end %>
-			</td>
-      <td><%= @product.product_name %></td>
-      <td><%= @product.price %></td>
-      <td><%= @product.stock %></td>
-      <td><%= @product.description %></td>
-    </tr>
-  </tbody>
-</table>
+<div style="display: flex; justify-content: center;">  
+  <div class="container cart_item">
+      <div class="row my-4">
+        <div class="col-sm-4">
+          <% @product.images.each do |image| %>
+            <%= image_tag image, size: "300" %>
+          <% end %>
+        </div>
+        <div class="col-sm-8">
+          <strong><%= @product.product_name %></strong>
+          <br />
+          <strong><%= @product.description %></strong>
+          <br />
+          <strong>Discount Percent:<%=@product.discount.discount_amount if @product.discount.present?%> %</strong>
+          <br />
+          <strong>Rs.<%= @product.price%></strong>
+          <br />
+          <strong>Rs.<%= @product.discount_price if @product.discount.present?%></strong>
+          <br />
+          <strong>Delivery Charges: <span style="color: green;">Rs. <%= @charges%></span></strong>
+          <br/>
+           <strong>Offers:</strong>
+           <%@product.offer_types.each do |offer| %>
+            <%= offer.name %> discount
+            <%= offer.discount_percent %> %
+            <br />
+          <% end %>
+        </div>
+      </div>
+      <div class="row my-4">
+      </div>
+  </div>
+</div>

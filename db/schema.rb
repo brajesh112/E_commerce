@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_08_124858) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_11_123905) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -92,6 +92,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_08_124858) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "discounts", force: :cascade do |t|
+    t.integer "discount_amount"
+    t.integer "product_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_discounts_on_product_id"
+  end
+
   create_table "items", force: :cascade do |t|
     t.bigint "quantity"
     t.integer "cart_id"
@@ -102,8 +110,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_08_124858) do
     t.index ["product_id"], name: "index_items_on_product_id"
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
   create_table "offer_types", force: :cascade do |t|
     t.string "name"
+    t.string "discount_percent"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -140,6 +158,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_08_124858) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "category_id"
+    t.integer "product_type"
     t.index ["category_id"], name: "index_products_on_category_id"
     t.index ["user_id"], name: "index_products_on_user_id"
   end

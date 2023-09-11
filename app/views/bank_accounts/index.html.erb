@@ -1,0 +1,39 @@
+<div class="container">  
+  <% if @accounts.count > 0 %>
+    <%= button_to "ADD", new_bank_account_path, method: :get, class: "btn btn-primary btn-lg" %>
+    <br />
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">id</th>
+          <th scope="col">Account No</th>
+          <th scope="col">Ifsc Code</th>
+          <th scope="col">Bank</th>
+          <th scope="col">Branch</th>
+          <th scope="col">City</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @accounts.each do |account| %>
+          <tr>
+            <td><b><%= account.id %></b></td>
+            <td><%= account.account_no %></td>
+            <td><%= account.ifsc_code %></td>
+            <td><%= account.bank %></td>
+            <td><%= account.branch_name %></td>
+            <td><%= account.city %></td>
+            <td>
+            <div class="btn-group" role="group" aria-label="Basic example">
+              <%= button_to "Remove", bank_account_path(account),data: { confirm: "Are you sure?"}, method: :delete, class: "btn btn-outline-success" %>
+              <%= button_to "Edit", edit_bank_account_path(account), method: :get, class: "btn btn-outline-success" %>
+            </td>
+            </div>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+  <h1>You Have Not Added Any account At</h1>
+  <%= button_to "ADD", new_bank_account_path, method: :get, class: "btn btn-primary btn-lg" %>
+  <% end %>
+</div>

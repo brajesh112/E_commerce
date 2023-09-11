@@ -1,5 +1,6 @@
 class LineItemsController < ApplicationController
   before_action :authenticate_user!
+  before_action :authenticate_user
 	def destroy
 		@item = LineItem.find(params[:id])
 		@item.destroy

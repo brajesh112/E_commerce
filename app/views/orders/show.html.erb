@@ -101,13 +101,8 @@
 			</div>
 		</div>
 	</div>
-	<% if current_user.admin? %>
-		<%= link_to "Edit Order", edit_order_path(@order), class: "btn btn-primary btn-lg " %>
-		<%= link_to "Edit Shipment", edit_shipment_path(@order.shipment), class: "btn btn-primary btn-lg " %>
-	<% else %>
-		<%= link_to "Show Shipment", shipment_path(@order.shipment) , class: "btn btn-primary btn-lg " %>
-		<% if @order.shipment.status != "ordered" %>
-			<%= link_to "Track Order", tracking_order_path(@order.shipment) , class: "btn btn-primary btn-lg " %>
-		<% end %>
+	<%= link_to "Show Shipment", shipment_path(@order.shipment) , class: "btn btn-primary btn-lg " %>
+	<% if @order.shipment.status != "ordered" %>
+		<%= link_to "Track Order", tracking_order_path(@order.shipment) , class: "btn btn-primary btn-lg " %>
 	<% end %>	
 </div>

@@ -1,11 +1,6 @@
 <div class="container">
-	<% unless current_user.admin? %>
-		<h1> Your Orders </h1>
-	<% end %>
+	<h1> Your Orders </h1>
 	<% @orders.each do |order| %>
-		<% if current_user.admin? %>
-			<h1><%= order.user.name %>'s Orders </h1>
-	 	<% end %>
 		<div class="card my-3 px-4 py-2">
 			<div class="row">
 				<div class="col">
@@ -107,16 +102,11 @@
 					</div>
 				</div>
 			</div>
-	 </div>
-			<% if current_user.admin? %>
-			 	<%= link_to "Edit Order", edit_order_path(order), class: "btn btn-primary btn-lg " %>
-			 	<%= link_to "Edit Shipment", edit_shipment_path(order.shipment), class: "btn btn-primary btn-lg " %>
-			<% else %>
-				<%= link_to "Show Shipment", shipment_path(order.shipment) , class: "btn btn-primary btn-lg " %>
-				<% if order.shipment.status != "ordered" %>
-					<%= link_to "Track Order", tracking_order_path(order.shipment) , class: "btn btn-primary btn-lg " %>
-				<% end %>
-			<% end %>
+	 	</div>
+		<%= link_to "Show Shipment", shipment_path(order.shipment) , class: "btn btn-primary btn-lg " %>
+		<% if order.shipment.status != "ordered" %>
+			<%= link_to "Track Order", tracking_order_path(order.shipment) , class: "btn btn-primary btn-lg " %>
+		<% end %>
 	<% end %>
 </div>
 <%#= will_paginate @product, renderer: BootstrapPagination::Rails, class: "pagination" %>

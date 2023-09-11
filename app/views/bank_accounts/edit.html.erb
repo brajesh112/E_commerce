@@ -1,0 +1,39 @@
+<div class="container" style="width: 450px;">
+	<div class="d-flex justify-content-center form-group">
+	 <h1>Update Account</h1>
+	</div>
+
+	<div class="d-flex justify-content-center form-group">
+	 <%= form_for @account, url_for: bank_account_path(@account), method: :patch, data:{turbo: false}  do |f| %>
+		<div class="field ">
+				<%= f.label :account_no %><br />
+				<%= f.text_field :account_no , class: "form-control" ,autocomplete: "account_no" %><br />
+			</div>
+
+			<div class="field ">
+				<%= f.label :ifsc_code %><br />
+				<%= f.text_area :ifsc_code , class: "form-control" ,autocomplete: "ifsc_code", size: "25x2"%><br />
+			</div>
+
+			<div class="field ">
+				<%= f.label :bank %><br />
+				<%= f.text_area :bank , class: "form-control" ,autocomplete: "bank", size: "25x2"%><br />
+			</div>
+
+			<div class="field ">
+				<%= f.label :branch_name %><br />
+				<%= f.text_area :branch_name , class: "form-control" ,autocomplete: "branch_name", size: "25x2"%><br />
+			</div>
+
+			<div class="field ">
+				<%= f.label :city %><br />
+				<%= f.text_area :city , class: "form-control" ,autocomplete: "city", size: "25x2"%><br />
+			</div>
+
+			<div class = "action" >
+				<%= f.submit "Update Account" ,class: "btn btn-primary btn-lg btn-block" %>
+			</div>
+
+	 <% end %>
+	</div>
+</div>

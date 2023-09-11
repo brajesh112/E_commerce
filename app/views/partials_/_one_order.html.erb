@@ -10,6 +10,10 @@
 	   			<strong><%= @product.description %></strong>
 	    		<br />
 	    		<strong>Rs.<%= @product.price * @quantity %></strong>
+	    		<br />
+	    		<strong>Discounted Price: Rs.<%=@order.discount_prices(@product,@quantity) %></strong>
+	    		<br />
+	    		<strong>Quantity:<%=@quantity %></strong>
 	    	</div>
 	    	<div class="col-sm-3">
 	    		<strong>Status: Pending</strong>

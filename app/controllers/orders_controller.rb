@@ -1,6 +1,7 @@
 class OrdersController < ApplicationController
 	before_action :check, only: [:edit, :destroy]
 	before_action :authenticate_user!
+	before_action :authenticate_user
 	def new
 		@item = params[:id]
 		if @item.to_i !=0
@@ -27,18 +28,12 @@ class OrdersController < ApplicationController
 		@description = ""
 		if @order.product_ids.size >1
 			current_user.cart.line_items.each do |item|
-				@description += helpers.description_body(item, i)
-				 	i +=1;
-				item.product.stock -= item.quantity
-				item.product.update(stock: item.product.stock)
-				item.destroy
+				create_order_items(item, i)
+				i +=1
 			end
 		else
 			item = LineItem.find(params[:order][:item_id])
-					@description += helpers.description_body(item, i)
-			item.product.stock -= item.quantity
-			item.product.update(stock: item.product.stock)
-			item.destroy
+			create_order_items(item, i)
 		end
 		@order.update(description: @description)
 		redirect_to order_path(@order)
@@ -49,7 +44,7 @@ class OrdersController < ApplicationController
 	end
 
 	def index
-		@orders = current_user.admin? ? Order.all : current_user.orders.all
+		@orders = current_user.orders.all
 		unless @orders.present?
 			flash.alert = "You have not ordered anything at"
 			redirect_to root_path
@@ -67,21 +62,23 @@ class OrdersController < ApplicationController
 		redirect_to orders_path
 	end
 
+	private
 
-	def order_params
-		if params[:order][:product_ids].present?
-			a = Array.new 
-			a << params[:order][:product_ids].to_i
-			params[:order][:product_ids] = a
-		else
-			params[:order][:product_ids] = current_user.cart.line_items.pluck(:product_id)
+		def order_params
+			if params[:order][:product_ids].present?
+				a = Array.new 
+				a << params[:order][:product_ids].to_i
+				params[:order][:product_ids] = a
+			else
+				params[:order][:product_ids] = current_user.cart.line_items.pluck(:product_id)
+			end
+			params.require(:order).permit(:address_id, :payment_method, product_ids:[])
 		end
-		params.require(:order).permit(:address_id, :payment_method, product_ids:[])
-	end
 
-	def check
-		unless user_signed_in? && current_user.admin?
-			redirect_to root_path, alert: "Only Admin Access"
-		end
-	end
+		def create_order_items(item ,i)
+			@description += helpers.description_body(item, i,@order)
+			item.product.stock -= item.quantity
+			item.product.update(stock: item.product.stock)
+			item.destroy
+		end 
 end

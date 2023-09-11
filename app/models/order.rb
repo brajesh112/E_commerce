@@ -14,4 +14,10 @@ class Order < ApplicationRecord
 		add = self.address
 		s ="House No: #{add.house_no},<br /> Street: #{add.street},<br /> Landmark: #{add.landmark}, <br />City: #{add.city},<br />Pincode: #{add.pin},<br />State: #{add.state},<br /> Country: #{add.country}"
 	end
+	def discount_prices(product,quantity)
+		(product.price - (product.price * product.discount.discount_amount)/100)* quantity
+	end
+	def discount_price(item)
+		(item.product.price - (item.product.price * item.product.discount.discount_amount)/100)* item.quantity
+	end
 end

@@ -13,10 +13,12 @@
 		    		<%= item.product.description %>
 		    		<br />
 		    		Rs.<%= item.product.price * item.quantity %>
+		    		<br />
+		    		Discounted Price: Rs.<%= item.cart.discount_price(item) %>
 		    	</div>
 		    	<div class="col-sm-3">
 		    		<strong>Delivery by <%= delivery_date %></strong>
-		    		<p><span style="color: green;"> Free</span>₹40</p>
+		    		<p><span style="color: green;">Charges</span>₹<%= item.cart.cart_method(item.product) %></p>
 		    	</div>
 		    </div>
 		    <div class="row" style="margin-top: 25px;">
@@ -27,7 +29,7 @@
 			      	<% item_total += item.quantity %> 
 			      	<%= button_to "+", line_item_path(item), method: :put, class: "btn-sm btn btn-outline-success" %>
 						</div>
-						<% price_total += (item.product.price * item.quantity) %>
+						<% price_total += item.cart.discount_price(item)%>
 					</div>
 					<div class="col-auto">
 						<div class="btn-group" role="group" aria-label="Basic example">
@@ -41,24 +43,18 @@
 			<br />
 			<table class="table">
 			  <thead>
-			    <tr>
-			      <th scope="col"></th>
-			      <th scope="col"></th>
-			      <th scope="col"></th>
-			    </tr>
 			  </thead>
 			  <tbody>
 			    <tr>
-			      <td>
+			      <td style="border: none">
 						</td>
-			      <td></td>
-			      <td>
+			      <td style="border: none"></td>
+			      <td style="border: none">
 				      <div class="buy-all">
 					      <% if @items.count > 1 %>
 					      	<%=link_to "Buy All", new_order_path(id: "#{@items.ids}", method: :get), class: "btn btn-outline-success"%>
 					      <% else %>
 					      	<%=link_to "Buy All", new_order_path(id: @items.first.id, method: :get), class: "btn btn-outline-success"%>
-					      		
 					      <% end %>	
 					    </div>
 				    </td>
@@ -75,14 +71,28 @@
 				  </thead>
 				  <tbody>
 				    <tr>
-				      <td>
+				      <td style="border: none">
 				      	Price(<%= item_total %> items)
 							</td>
-				      <td>₹<%= "#{price_total}" %></td>
+				      <td style="border: none">₹<%= "#{price_total}" %></td>
+				    </tr>
+				    <tr>
+				    	<td style="border: none">Delivery Charges
+				    	</td>
+				    	<td style="border: none">₹<%= current_user.cart.total_charges(@items) %>
+				    	</td>
+				    </tr>
+				    <tr>
+				    	<td style="border: none">Total Price:
+				    	</td>
+				    	<td style="border: none">₹<%=price_total + current_user.cart.total_charges(@items).to_i %>
+				    	</td>
+				    </tr>
+				    <tr>
 				      <% if @items.count > 1 %>
-				      	<td><%=link_to "Buy All", new_order_path(id: "#{@items.ids}", method: :get), class: "btn btn-outline-success"%></td>
+				      	<td style="border: none"><%=link_to "Buy All", new_order_path(id: "#{@items.ids}", method: :get), class: "btn btn-outline-success"%></td>
 				      <% else %>
-				      	<td><%=link_to "Buy All", new_order_path(id: @items.first.id, method: :get), class: "btn btn-outline-success"%></td>
+				      	<td style="border: none"><%=link_to "Buy All", new_order_path(id: @items.first.id, method: :get), class: "btn btn-outline-success"%></td>
 				      <% end %>	
 				    </tr>
 				  </tbody>

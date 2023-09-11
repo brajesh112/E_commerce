@@ -11,6 +11,10 @@
 	   			<strong><%= item.product.description %></strong>
 	    		<br />
 	    		<strong>Rs.<%= item.product.price * item.quantity %></strong>
+	    		<br />
+	    		<strong>Discounted Price: Rs.<%=@order.discount_price(item) %></strong>
+	    		<br />
+	    		<strong>Quantity:<%=item.quantity %></strong>
 	    	</div>
 	    	<div class="col-sm-3">
 	    		<strong>Status: Pending</strong>

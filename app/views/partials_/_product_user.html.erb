@@ -10,7 +10,7 @@
             <%= "#{product.product_name}"%>
           </h5>
           <p class="card-text">
-            <%= "#{product.description.truncate(35)}" %>
+            <%= "#{product.description}".html_safe %>
           </p>
           <h6>
             ₹<%="#{product.price}" %>

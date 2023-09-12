@@ -30,6 +30,6 @@
 !/tmp/storage/.keep
 
 /public/assets
-
+/config/cloudinary.yml
 # Ignore master key for decrypting credentials and more.
 /config/master.key

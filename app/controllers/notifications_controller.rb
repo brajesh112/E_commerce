@@ -7,30 +7,30 @@ class NotificationsController < ApplicationController
 
 	def show
 		@notification = Notification.find_by(id: params[:id])
+		return redirect_to root_path, alert: "Notification not found" unless @notification.present?
 	end
 
 	def new
-		@notification = Notification.new
-	end
-
-	def create
-		@notification = current_user.notifications.new(permit_params)
+		@notification = current_user.notifications.new(title: params[:title], description: params[:description])
 		@notification.save
 		redirect_to notifications_path
 	end
 
 	def edit
 		@notification = Notification.find_by(id: params[:id])
+		return redirect_to root_path, alert: "Notification not found" unless @notification.present?
 	end
 
 	def update
 		@notification = Notification.find_by(id: params[:id])
-		@notification.update(permit_params)
+		return redirect_to root_path, alert: "Notification not found" unless @notification.present?
+		@notification.update()
 		redirect_to notifications_path
 	end
 
 	def destroy
 		@notification = Notification.find_by(id: params[:id])
+		return redirect_to root_path, alert: "Notification not found" unless @notification.present?
 		@notification.destroy
 		redirect_to notifications_path
 	end

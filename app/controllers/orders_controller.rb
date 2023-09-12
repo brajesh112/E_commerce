@@ -4,10 +4,14 @@ class OrdersController < ApplicationController
 	before_action :authenticate_user
 	def new
 		@item = params[:id]
-		if @item.to_i !=0
+		@item = -2 if params[:value].present?
+		if @item.to_i !=0 
 			if LineItem.find_by(id: @item).present?
 				@quantity = LineItem.find(@item).quantity
 				@product = LineItem.find(@item).product
+			elsif @item.eql?(-2)
+				@product = Product.find_by(id: params[:id])
+				@quantity = 1;
 			else
 				redirect_to carts_path
 			end
@@ -32,7 +36,7 @@ class OrdersController < ApplicationController
 				i +=1
 			end
 		else
-			item = LineItem.find(params[:order][:item_id])
+			item = LineItem.find_by(id: params[:order][:item_id])
 			create_order_items(item, i)
 		end
 		@order.update(description: @description)
@@ -40,7 +44,8 @@ class OrdersController < ApplicationController
 	end
 
 	def show
-		@order = Order.find(params[:id])
+		@order = Order.find_by(id: params[:id])
+		return redirect_to root_path, alert: "Order not found" unless @order.present?
 	end
 
 	def index
@@ -53,11 +58,13 @@ class OrdersController < ApplicationController
 	end
 
 	def edit
-		@order = Order.find(params[:id])
+		@order = Order.find_by(id: params[:id])
+		return redirect_to root_path, alert: "Order not found" unless @order.present?
 	end
 
 	def update
-		@order = Order.find(params[:id])
+		@order = Order.find_by(id: params[:id])
+		return redirect_to root_path, alert: "Order not found" unless @order.present?
 		@order.update(status: params[:order][:status])
 		redirect_to orders_path
 	end

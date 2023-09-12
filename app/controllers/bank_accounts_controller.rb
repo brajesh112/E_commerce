@@ -14,10 +14,12 @@ class BankAccountsController < ApplicationController
 
 	def edit
 		@account = BankAccount.find_by(id: params[:id])
+		return redirect_to root_path, alert: "Account not found" unless @account.present?
 	end
 
 	def update
 		@account = BankAccount.find_by(id: params[:id])
+		return redirect_to root_path, alert: "Account not found" unless @account.present?
 		@account.update(permit_params)
 		redirect_to bank_accounts_path
 	end
@@ -28,6 +30,7 @@ class BankAccountsController < ApplicationController
 
 	def destroy 
 		@account = BankAccount.find_by(id: params[:id])
+		return redirect_to root_path, alert: "Account not found" unless @account.present?
 		@account.destroy
 		redirect_to bank_accounts_path
 	end

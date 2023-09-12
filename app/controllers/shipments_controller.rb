@@ -11,21 +11,25 @@ class ShipmentsController < ApplicationController
 	end
 
 	def edit
-		@shipment = Shipment.find(params[:id])
+		@shipment = Shipment.find_by(id: params[:id])
+		return redirect_to root_path, alert: "Shipment not found" unless @shipment.present?
 	end
 
 	def update
-		@shipment = Shipment.find(params[:id])
+		@shipment = Shipment.find_by(id: params[:id])
+		return redirect_to root_path, alert: "Shipment not found" unless @shipment.present?
 		@shipment.update(status: params[:shipment][:status], expected_delivery: params[:shipment][:expected_delivery])
 		redirect_to shipments_path
 	end
 
 	def destroy
-		@shipment = Shipment.find(param[:id])
+		@shipment = Shipment.find_by(id: param[:id])
+		return redirect_to root_path, alert: "Shipment not found" unless @shipment.present?
 		@shipment.destroy
 	end 
 
 	def show
-		@shipment = Shipment.find(params[:id])
+		@shipment = Shipment.find_by(id: params[:id])
+		return redirect_to root_path, alert: "Shipment not found" unless @shipment.present?
 	end
 end

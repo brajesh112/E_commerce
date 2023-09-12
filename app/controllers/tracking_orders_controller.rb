@@ -9,12 +9,14 @@ class TrackingOrdersController < ApplicationController
 	end
 
 	def new
-		@shipment = Shipment.find(params[:id]) 
+		@shipment = Shipment.find_by(id: params[:id])
+		return redirect_to root_path, alert: "Shipment not found" unless @shipment.present? 
 		@track = @shipment.tracking_orders.new
 	end
 
 	def create
-		@shipment = Shipment.find(params[:tracking_order][:shipment_id])
+		@shipment = Shipment.find_by(id: params[:tracking_order][:shipment_id])
+		return redirect_to root_path, alert: "Shipment not found" unless @shipment.present?
 		@shipment.tracking_orders.create(status: @shipment.status, place: params[:tracking_order][:place])
 		redirect_to tracking_order_path(@shipment)
 	end

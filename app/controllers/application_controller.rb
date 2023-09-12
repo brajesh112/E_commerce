@@ -6,6 +6,11 @@ class ApplicationController < ActionController::Base
 	# rescue_from ActionController::RoutingError, with: :route_not_found
 	# rescue_from ActionController::ActionNotFound, with: :action_not_found
 
+	# protect_from_forgery with::exception
+  def not_found_method
+    render file: Rails.public_path.join('404.html'), status: :not_found, layout: false
+  end
+
 	def insert_params
 		devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :avatar, :phone_number, :role])
 	end
@@ -21,7 +26,7 @@ class ApplicationController < ActionController::Base
 
 	def authenticate_user
 		if user_signed_in?
-			return redirect_to admin_dashboard_path if current_user.role != "buyer"
+			return redirect_to admin_dashboard_path, alert: "Login As Buyer To Accesss" if current_user.role != "buyer"
 		end
 	end
 

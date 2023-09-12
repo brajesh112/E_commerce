@@ -44,7 +44,12 @@ gem "jbuilder"
  gem 'activeadmin', '~> 2.14'
  gem 'active_admin_role'
  gem 'arctic_admin'
- gem "noticed"
+ gem 'activeadmin_quill_editor'
+ gem 'redis'
+ gem 'sidekiq'
+ gem "sidekiq-cron"
+ gem 'font-awesome-rails'
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
 

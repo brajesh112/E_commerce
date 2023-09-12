@@ -9,6 +9,8 @@
 
 // Active Admin's got SASS!
 @import "arctic_admin/base";
+@import 'activeadmin/quill_editor/quill.snow';
+@import 'activeadmin/quill_editor_input';
 
 // Overriding any non-variable Sass must be done after the fact.
 // For example, to change the default status-tag color:
@@ -19,4 +21,7 @@
 }
 .ss-main{
 	width: 50% !important; 
+}
+#product_description{
+	width:50% !important;
 }

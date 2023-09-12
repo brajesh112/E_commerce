@@ -7,11 +7,11 @@
 	    	<div class="col-sm-6">
 	   			<strong><%= @product.product_name %></strong>
 	    		<br />
-	   			<strong><%= @product.description %></strong>
+	   			<strong><%= @product.description.html_safe %></strong>
 	    		<br />
 	    		<strong>Rs.<%= @product.price * @quantity %></strong>
 	    		<br />
-	    		<strong>Discounted Price: Rs.<%=@order.discount_prices(@product,@quantity) %></strong>
+	    		<strong>Discounted Price: Rs.<%=@order.discount_prices(@product,@quantity) if @product.discount.present?%></strong>
 	    		<br />
 	    		<strong>Quantity:<%=@quantity %></strong>
 	    	</div>

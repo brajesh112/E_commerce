@@ -12,7 +12,7 @@ ActiveAdmin.register Product do
       f.input :product_name
       f.input :stock
       f.input :price
-      f.input :description
+      f.input :description, as: :quill_editor
       f.input :product_type
       f.input :offer_type_ids, as: :select, collection: OfferType.all.map{|offer| [offer.name, offer.id]},input_html: {multiple: true}
 
@@ -36,7 +36,9 @@ ActiveAdmin.register Product do
     column :product_name
     column :stock
     column :price
-    column :description
+    column :description do |product|
+      product.description.html_safe
+    end
     column :user 
     column :offer_types
     column :product_type
@@ -56,7 +58,9 @@ ActiveAdmin.register Product do
       row :product_name
       row :stock
       row :price
-      row :description
+      row :description do |product|
+        product.description.html_safe
+      end
       row :user
       row :product_type
       row :category do |product|

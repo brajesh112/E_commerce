@@ -21,17 +21,20 @@ class AddressesController < ApplicationController
 	end
 
 	def destroy
-		@address = Address.find(params[:id])
+		@address = Address.find_by(id: params[:id])
+		return redirect_to root_path, alert: "Address not found" unless @address.present?
 		@address.destroy
 		redirect_to addresses_path
 	end
 
 	def edit
-		@address = Address.find(params[:id])
+		@address = Address.find_by(id: params[:id])
+		return redirect_to root_path, alert: "Address not found" unless @address.present?
 	end
 
 	def update
-		@address = Address.find(params[:id])
+		@address = Address.find_by(id: params[:id])
+		return redirect_to root_path, alert: "Address not found" unless @address.present?
 		@address.update(address_params)
 		redirect_to addresses_path
 	end

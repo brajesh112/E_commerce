@@ -1,6 +1,7 @@
 class AddressesController < ApplicationController
 	before_action :authenticate_user!
 	before_action :authenticate_user
+	
 	def index
 		@address = current_user.addresses.all
 	end
@@ -39,8 +40,9 @@ class AddressesController < ApplicationController
 		redirect_to addresses_path
 	end
 
-	def address_params
-		params.require(:address).permit(:house_no, :street, :landmark, :city, :state, :pin, :state, :country)
-	end
+	private
+		def address_params
+			params.require(:address).permit(:house_no, :street, :landmark, :city, :state, :pin, :state, :country)
+		end
 
 end

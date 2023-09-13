@@ -10,13 +10,16 @@
           <%= @product.product_name %>
           <br />
           <%= @product.description.html_safe %>
-          Discount Percent:<%= @product.discount.discount_amount if @product.discount.present? %>
+          <% if @product.discount.present?%>
+            ₹<%= @product.discount_price %>
+            <s style="color: #9f9191;">₹<%= @product.price%></s>
+            <span style= "color: green;">
+              <%= @product.discount.discount_amount %> % Off </span>
+          <% else %>
+            ₹<%= @product.price%>
+          <% end %>  
           <br />
-          Rs.<%= @product.price%>
-          <br />
-          <%= @product.discount_price if @product.discount.present?%>
-          <br />
-          Delivery Charges: <span style="color: green;">Rs. <%= @charges%></span>
+          Delivery Charges: <span style="color: green;">₹ <%= @charges%></span>
           <br/>
           Offers:
           <%@product.offer_types.each do |offer| %>
@@ -28,7 +31,7 @@
       </div>
       <div class="row my-4">
         <div class="col-sm-4">
-          <%= link_to "AddToCart", cart_path(@product.id),class: "btn btn-primary btn-lg btn-block" %>
+          <%= link_to "AddToCart", new_cart_path(id: @product.id),class: "btn btn-primary btn-lg btn-block" %>
         </div>
         <div class="col-sm-4">
           <%= link_to "Buy Now", new_order_path(id: @product.id, value: 1), method: :get, class: "btn btn-primary btn-lg btn-block"%>

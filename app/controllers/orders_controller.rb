@@ -2,6 +2,7 @@ class OrdersController < ApplicationController
 	before_action :check, only: [:edit, :destroy]
 	before_action :authenticate_user!
 	before_action :authenticate_user
+
 	def new
 		@item = params[:id]
 		@item = -2 if params[:value].present?
@@ -40,6 +41,7 @@ class OrdersController < ApplicationController
 			create_order_items(item, i)
 		end
 		@order.update(description: @description)
+		helpers.add_notification(@order, "Your Order Is Placed")
 		redirect_to order_path(@order)
 	end
 
@@ -55,18 +57,6 @@ class OrdersController < ApplicationController
 			redirect_to root_path
 		end
 		# @orders = orders.paginate(page: params[:page], per_page: 1)
-	end
-
-	def edit
-		@order = Order.find_by(id: params[:id])
-		return redirect_to root_path, alert: "Order not found" unless @order.present?
-	end
-
-	def update
-		@order = Order.find_by(id: params[:id])
-		return redirect_to root_path, alert: "Order not found" unless @order.present?
-		@order.update(status: params[:order][:status])
-		redirect_to orders_path
 	end
 
 	private

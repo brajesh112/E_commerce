@@ -4,6 +4,10 @@ ActiveAdmin.register Product do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
+  scope :all
+  
+  Category.all.map{|cat| scope ("#{cat.categories_type}") {|scope| scope.joins(:category).where("categories.categories_type" => "#{cat.categories_type}")} }
+
   permit_params :product_name, :stock, :price, :description, :user_id, :category_id, :offer_type_ids, :product_type, images:[]
 
   form do |f|

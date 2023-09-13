@@ -10,7 +10,13 @@ class Sessions::SessionsController < Devise::SessionsController
 
   # POST /resource/sign_in
   def create
-    return redirect_to admin_dashboard_path if current_user.role != "buyer"
+    @email = params[:user][:email]
+    @user = User.find_by(email: @email)
+    # if @user.role != "buyer"
+    #   sign_in(resource_name, resource)
+    #   return redirect_to new_otp_path(email: @email)
+    # end
+   
     super
   end
 

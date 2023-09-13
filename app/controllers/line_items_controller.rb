@@ -1,6 +1,7 @@
 class LineItemsController < ApplicationController
   before_action :authenticate_user!
   before_action :authenticate_user
+  
 	def destroy
 		@item = LineItem.find_by(id: params[:id])
 		return redirect_to root_path, alert: "Item not found" unless @item.present?

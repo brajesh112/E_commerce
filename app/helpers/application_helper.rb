@@ -19,4 +19,9 @@ module ApplicationHelper
 	def delivery_date
 		DateTime.current.to_date + 7.days 
 	end
+
+	def add_notification (obj,action)
+		@notification = obj.notifications.new(user_id: obj.user.id, action: action)
+		@notification.save
+	end
 end

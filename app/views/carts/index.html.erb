@@ -12,13 +12,20 @@
 		    		<br />
 		    		<%= item.product.description.html_safe %>
 		    		<br />
-		    		Rs.<%= item.product.price * item.quantity %>
-		    		<br />
-		    		Discounted Price: Rs.<%= item.cart.discount_price(item) if item.product.discount.present? %>
+		    		<% if item.product.discount.present?%>
+			    		₹<%= item.cart.discount_price(item) %>
+			    		<s style="color: #9f9191;">₹<%= item.product.price * item.quantity %></s>
+			    		<span style= "color: green;">
+              <%= item.product.discount.discount_amount %> % Off </span>
+							<% price_total += item.cart.discount_price(item)%>
+						<% else %>
+							₹<%= item.product.price * item.quantity %>
+							<% price_total += item.product.price * item.quantity%>
+						<% end %>
 		    	</div>
 		    	<div class="col-sm-3">
 		    		<strong>Delivery by <%= delivery_date %></strong>
-		    		<p><span style="color: green;">Charges</span>₹<%= item.cart.cart_method(item.product) %></p>
+		    		<p><span style="color: green;">Charges</span><%= item.cart.cart_method(item.product) %></p>
 		    	</div>
 		    </div>
 		    <div class="row" style="margin-top: 25px;">
@@ -29,7 +36,6 @@
 			      	<% item_total += item.quantity %> 
 			      	<%= button_to "+", line_item_path(item), method: :put, class: "btn-sm btn btn-outline-success" %>
 						</div>
-						<% price_total += item.cart.discount_price(item) if item.product.discount.present?%>
 					</div>
 					<div class="col-auto">
 						<div class="btn-group" role="group" aria-label="Basic example">

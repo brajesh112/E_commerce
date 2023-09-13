@@ -40,7 +40,7 @@
       </ul>
       <% if user_signed_in? %>
         <a class= "nav-link button_to text-primary" href="/notifications">
-          <%= image_tag url_for("notification.png"), size: "30" %>
+          <i class="fa fa-bell" aria-hidden="true"></i>
         </a>
         <%= link_to "Cart (#{current_user.cart.line_items.count})", carts_path, class: "nav-link button_to text-primary" %>
         <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "nav-link button_to" %>

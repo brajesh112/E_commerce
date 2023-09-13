@@ -23,11 +23,6 @@
     </div>
 
     <div class="field ">
-      <%= f.label :role %><br />
-     <%= f.collection_select :role, User.roles.select{|key| key != "admin"}, :first, :first, { prompt: "Select a Role" },class: 'form-control' %>
-    </div>
-
-    <div class="field ">
       <%= f.label :avatar %><br />
       <%= f.file_field :avatar, class: "form-control"%>
     </div>

@@ -1,17 +1,12 @@
-<div class="container">  
+<div class="container", style="width: 250px;">  
   <% if @notifications.count > 0 %>
     <table class="table">
       <thead>
-        <tr>
-          <th scope="col">Title</th>
-          <th scope= "col">Description</th>
-        </tr>
       </thead>
       <tbody>
         <% @notifications.each do |notification| %>
           <tr>
-            <td><%= notification.title %></td>
-            <td><%= notification.description %></td>
+            <td><b><%= notification.action %></b></td>
             <!-- <td>
             <div class="btn-group" role="group" aria-label="Basic example">
               <%#= button_to "Remove", notification_path(notification),data: { confirm: "Are you sure?"}, method: :delete, class: "btn btn-outline-success" %>

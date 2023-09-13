@@ -9,9 +9,13 @@
 	   			<%= item.product.product_name %>
 	    		<br />
 	   			<%= item.product.description.html_safe %>
-	    		Rs.<%= item.product.price * item.quantity %>
-	    		<br />
-	    		Discounted Price: Rs.<%=@order.discount_price(item) if item.product.discount.present? %>
+	   			<br />
+	    		<% if item.product.discount.present? %>
+	    			<strong>₹<%=@order.discount_price(item) %></strong>
+						<s>₹<%= item.product.price * item.quantity %></s>
+					<% else %>
+						₹<%= item.product.price * item.quantity %>
+	    		<% end %>
 	    		<br />
 	    		Quantity:<%=item.quantity %>
 	    	</div>

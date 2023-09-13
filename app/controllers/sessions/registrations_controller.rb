@@ -11,7 +11,7 @@ class Sessions::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-    return redirect_to admin_dashboard_path if current_user.role != "buyer"
+    # return redirect_to admin_dashboard_path if current_user.role != "buyer"
     super
   end
 

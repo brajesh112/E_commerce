@@ -5,6 +5,12 @@ ActiveAdmin.register TrackingOrder do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
+  scope :all
+  scope ('ordered') {|scope| scope.where(status: 'ordered')}
+  scope ('shipped') {|scope| scope.where(status: 'shipped')}
+  scope ('out_for_delivery') {|scope| scope.where(status: 'out_for_delivery')}
+  scope ('arriving') {|scope| scope.where(status: 'arriving')}
+  scope ('delivered') {|scope| scope.where(status: 'delivered')}
   permit_params :place, :status, :shipment_id
   #
   # or

@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
 		end	
 		
 		def check
-			unless user_signed_in? && current_user.admin?
+			unless user_signed_in? && (current_user.admin? || current_user.seller?)
 				redirect_to root_path, alert: "Only Admin Access"
 			end
 		end

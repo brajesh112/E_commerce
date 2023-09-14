@@ -7,6 +7,11 @@
       <%= render "devise/shared/error_messages", resource: resource %>
       <div class="field">
         <%= f.hidden_field :role, :value => "buyer" %>
+        <% if params[:value].present? %>
+          <%= f.hidden_field :role, :value => "seller" %>
+          <%= f.hidden_field :fssi_no, :value => params[:fssi_no] %>
+          <%= f.hidden_field :account, :value => params[:value] %>
+        <% end %>
         <%= f.label :name %><br />
         <%= f.text_field :name, autofocus: true, class: "form-control",autocomplete: "Name" %>
       </div>
@@ -20,11 +25,6 @@
         <%= f.label :phone_number %><br />
         <%= f.text_field :phone_number, autofocus: true, class: "form-control",autocomplete: "Phone Number" %>
       </div>
-
-    <!--   <div class="field ">
-        <%#= f.label :role %><br />
-        <%#= f.collection_select :role, User.roles.select{|key| key != "admin"}, :first, :first, { prompt: "Select a Role" },class: 'form-control' %>
-      </div> -->
 
       <div class="field">
         <%= f.label :avatar %><br />
@@ -49,5 +49,5 @@
       </div>
     <% end %>
   </div>
-  <%= render "devise/shared/links" %>
+  <%= render "devise/shared/links" unless params[:value].present?%>
 </div>

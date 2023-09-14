@@ -4,6 +4,7 @@
   </div>
   <div class="d-flex justify-content-center">
   <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <%= f.hidden_field :onepass, :value =>@onepass %>
     <div class="field">
       <%= f.label :email %><br />
       <%= f.email_field :email, autofocus: true, class: "form-control", autocomplete: "email" %>

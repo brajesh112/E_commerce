@@ -12,7 +12,7 @@ class User < ApplicationRecord
   after_create :create_cart
   has_many :addresses, inverse_of: :user, dependent: :destroy
   accepts_nested_attributes_for :addresses, allow_destroy: true
-  has_many :bank_accounts
+  has_many :bank_accounts, dependent: :destroy
   has_many :notifications, dependent: :destroy
   has_many :otps, dependent: :destroy
 

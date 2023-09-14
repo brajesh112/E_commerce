@@ -1,0 +1,6 @@
+<div class="container" style="width: 450px">
+	<%= form_tag '/otps', class: "d-flex", method: :post do %>
+	 <%= text_field_tag :email, "", placeholder: "Enter Your Email",class: "form-control me-2" %>
+	 <%= button_tag :submit, class: "btn btn-outline-success" %>
+	<% end %>
+</div>

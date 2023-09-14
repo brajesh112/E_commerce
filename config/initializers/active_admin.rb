@@ -129,7 +129,7 @@ ActiveAdmin.setup do |config|
   # link. For example :get, :delete, :put, etc..
   #
   # Default:
-  config.logout_link_method = :get
+  config.logout_link_method = :delete
 
   # == Root
   #
@@ -354,7 +354,7 @@ ActiveAdmin.setup do |config|
   #
   # config.use_webpacker = true
   def check
-    unless user_signed_in? && current_user.admin?
+    unless user_signed_in? && (current_user.admin? || current_user.seller?)
       redirect_to root_path, alert: "Only Admin Access"
     end
   end

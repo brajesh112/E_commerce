@@ -45,8 +45,19 @@
         <%= link_to "Cart (#{current_user.cart.line_items.count})", carts_path, class: "nav-link button_to text-primary" %>
         <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "nav-link button_to" %>
       <% else %>
-        <%= link_to "Login /", new_user_session_path, class: "nav-link" %>
-        <%= link_to " Signup", new_user_registration_path, class: "nav-link button_to" %>
+        <ul style="margin: 0 20px;">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Logins
+            </a>
+            <ul class="dropdown-menu">
+              <%= link_to "Login As Seller", new_otp_path , class: "dropdown-item" %>
+              <%= link_to "Login As Buyer/Admin", new_user_session_path, class: "dropdown-item" %>
+              <%= link_to " Signup As Buyer", new_user_registration_path, class: "dropdown-item" %>
+              <%= link_to "Sign Up As Seller", new_bank_account_path(value: -2),class: "dropdown-item"%>
+            </ul>
+          </li>
+        </ul>
       <% end %>
       <%= form_tag '/tracking_orders/id', class: "d-flex", method: :get do %>
         <%= text_field_tag :query, "", placeholder: "Search With Track Id",class: "form-control me-2" %>

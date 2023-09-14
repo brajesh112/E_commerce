@@ -11,7 +11,16 @@ class Sessions::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-    # return redirect_to admin_dashboard_path if current_user.role != "buyer"
+    if params[:user][:role].eql?("seller")
+      @account = JSON.parse(params[:user][:account])
+      @fssi = params[:user][:fssi_no]
+      build_resource(sign_up_params)
+      resource.fssi_no = @fssi
+      resource.save
+      sign_up(resource_name, resource)
+      account_create(resource, @account)
+      return redirect_to admin_dashboard_path
+    end
     super
   end
 
@@ -60,4 +69,13 @@ class Sessions::RegistrationsController < Devise::RegistrationsController
   # def after_inactive_sign_up_path_for(resource)
   #   super(resource)
   # end
+  def account_create(obj, hashh)
+    @account = obj.bank_accounts.new
+    @account.account_no = hashh["account_no"] 
+    @account.bank = hashh["bank"]
+    @account.branch_name = hashh["branch_name"]
+    @account.ifsc_code = hashh["ifsc_code"]
+    @account.city = hashh["city"]
+    @account.save
+  end
 end

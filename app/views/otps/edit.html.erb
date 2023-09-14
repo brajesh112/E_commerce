@@ -1,0 +1,7 @@
+<div class="container" style="width: 450px">
+	<%= form_tag '/otps', class: "d-flex", method: :get do %>
+	 <%= text_field_tag :query, "", placeholder: "Enter OTP",class: "form-control me-2" %>
+	 <%= hidden_field_tag :user, @user.id %>
+	 <%= button_tag :submit, class: "btn btn-outline-success" %>
+	<% end %>
+</div>

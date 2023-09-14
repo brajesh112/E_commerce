@@ -4,7 +4,7 @@
 	</div>
 	<div class="d-flex justify-content-center form-group">
 		<%= form_for @account, url_for: bank_accounts_path, method: :post  do |f| %>  
-
+				<%= f.hidden_field :query, :value => @value %>
 			<div class="field ">
 				<%= f.label :account_no %><br />
 				<%= f.text_field :account_no , class: "form-control" ,autocomplete: "account_no" %><br />

@@ -1,0 +1,7 @@
+<div class="container" style="width: 450px">
+	<%= form_tag '/users/sign_up', class: "d-flex", method: :get do %>
+	 <%= text_field_tag :fssi_no, "", placeholder: "Enter Your Fssi No",class: "form-control me-2" %>
+	 <%= hidden_field_tag :value, @account.to_json%>
+	 <%= button_tag :submit, class: "btn btn-outline-success" %>
+	<% end %>
+</div>

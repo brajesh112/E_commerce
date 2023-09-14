@@ -1,7 +1,6 @@
 <div class="d-flex justify-content-center">
 <%- if controller_name != 'sessions' %>
   <%= link_to "Log in", new_session_path(resource_name), class: "btn"%>
-  <%= link_to "Sign Up As Seller", root_path, class: "btn" %>
 <% end %>
 
 <%- if devise_mapping.registerable? && controller_name != 'registrations' %>

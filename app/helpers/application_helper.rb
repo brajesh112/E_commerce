@@ -21,6 +21,7 @@ module ApplicationHelper
 	end
 
 	def add_notification (obj,action)
+		byebug
 		@notification = obj.notifications.new(user_id: obj.user.id, action: action)
 		@notification.save
 	end

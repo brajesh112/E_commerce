@@ -1,5 +1,56 @@
-<% if @item.to_i !=0 %>
-	<%= render "/partials_/one_order" %>
-<% else %>
-	<%= render "partials_/all_order" %>
-<% end %>
+<div style="display: flex;">	
+	<div class="container cart_item">
+		<% @items.each do |item| %>
+	    <div class="row my-4">
+	    	<div class="col-sm-3">
+	    		<%= image_tag item.product.images.first, size: "200x200" %>
+	    	</div>
+	    	<div class="col-sm-6">
+	   			<%= item.product.product_name %>
+	    		<br />
+	   			<%= item.product.description %>
+	   			<br />
+	    		<% if item.product.discount.present? %>
+	    			<strong>₹<%=@order.discount_price(item) %></strong>
+						<s>₹<%= item.product.price * item.quantity %></s>
+					<% else %>
+						₹<%= item.product.price * item.quantity %>
+	    		<% end %>
+	    		<br />
+	    		Quantity:<%=item.quantity %>
+	    	</div>
+	    	<div class="col-sm-3">
+	    		Status: Pending
+	    	</div>
+	    </div>
+		<% end %>
+	</div>
+	<div class="container order_address">
+		<%= form_for @order, url_for: orders_path do |f| %>
+				<%= f.hidden_field :payment_method, :value => "cash" %>
+				<%= f.hidden_field :track_id, :value => @track %>
+				<%= f.hidden_field :status, :value => "pending" %>
+				<h3>Select Order Address:</h3>
+				<% @address.each do |address| %>
+					<div class= "row address_row">
+						<div class = "col-sm-2">
+							<%= f.radio_button :address_id, "#{address.id}"%>
+							<%= f.hidden_field :item_id, :value => @items.all.ids %>
+						</div>
+						<div class = "col-sm-10">
+							<b>House Number:</b> <%= address.house_no%>
+							<b>Street Number:</b> <%= address.street%><br />
+							<b>Landmark :</b> <%= address.landmark%>
+							<b>City :</b> <%= address.city%><br />
+							<b>state :</b> <%= address.state%>
+							<b>Pincode:</b> <%= address.pin%><br />
+							<b>Country:</b> <%= address.country%><br />
+						</div>
+					</div>
+					<br />		
+				<% end %>
+				<%= link_to "Add New Address", new_address_path(id: 1), method: :get, class: "btn btn-primary btn-lg my-2" %><br />
+				<%= f.submit "Place Order", class: "btn btn-primary btn-lg my-2" %>
+			<% end %>
+	</div>
+</div>

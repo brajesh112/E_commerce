@@ -39,10 +39,10 @@ gem "jbuilder"
  gem "bootstrap"
  gem "sassc-rails"
  gem "font-awesome-sass", "~> 6.4.2"
- # gem 'will_paginate', '~> 4.0'
- # gem 'will_paginate-bootstrap'
+ gem 'kaminari'
+ gem 'bootstrap5-kaminari-views'
  gem 'activeadmin', '~> 2.14'
- gem 'active_admin_role'
+ gem 'cancancan'
  gem 'arctic_admin'
  gem 'activeadmin_quill_editor'
  gem 'redis'

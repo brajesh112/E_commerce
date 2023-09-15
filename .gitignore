@@ -30,7 +30,7 @@
 !/tmp/storage/.keep
 
 /public/assets
-/config/cloudinary.yml
-/config/environments/development.rb
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+/config/puma.rb
+/config/cloudinary.yml

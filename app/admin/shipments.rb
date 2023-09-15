@@ -5,6 +5,7 @@ ActiveAdmin.register Shipment do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
+  menu :if => proc{ current_user.admin? }
   scope :all
   Shipment.all.map{|ship| scope ("#{ship.status}") {|scope| scope.where(status: "#{ship.status}")}}
   permit_params :status, :expected_delivery, :order_id

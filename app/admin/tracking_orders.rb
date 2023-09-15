@@ -5,6 +5,7 @@ ActiveAdmin.register TrackingOrder do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
+  menu :if => proc{ current_user.admin? }
   scope :all
   scope ('ordered') {|scope| scope.where(status: 'ordered')}
   scope ('shipped') {|scope| scope.where(status: 'shipped')}

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_14_084324) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_15_082233) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -146,9 +146,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_14_084324) do
     t.integer "address_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "product_ids"
     t.index ["address_id"], name: "index_orders_on_address_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
+  end
+
+  create_table "orders_products", force: :cascade do |t|
+    t.integer "product_id"
+    t.integer "order_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_orders_products_on_order_id"
+    t.index ["product_id"], name: "index_orders_products_on_product_id"
   end
 
   create_table "otps", force: :cascade do |t|
@@ -180,6 +188,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_14_084324) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["order_id"], name: "index_shipments_on_order_id"
+  end
+
+  create_table "terms_and_conditions", force: :cascade do |t|
+    t.text "terms"
+    t.boolean "status"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "tracking_orders", force: :cascade do |t|

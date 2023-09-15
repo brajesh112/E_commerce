@@ -4,7 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
   enum :role, [:admin, :buyer, :seller]
   validates :role, :name, :phone_number, presence: true
-  has_one_attached :avatar
+  has_one_attached :avatar , dependent: :destroy
   has_one :cart, dependent: :destroy
   after_create :insert_avatar
   has_many :orders, dependent: :destroy

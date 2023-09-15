@@ -1,15 +1,24 @@
 <div style="display: flex; justify-content: center;">  
-  <div class="container cart_item">
+  <div class="container cart_item" style="width: 50%">
       <div class="row my-4">
         <div class="col-sm-4">
-          <% @product.images.each do |image| %>
-            <%= image_tag image, size: "300" %>
-          <% end %>
+          <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+              <% @product.images.each do |image| %>
+                <div class="carousel-item active">
+                 <%= image_tag image, size: "300",class: "d-block w-100" %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          <%# @product.images.each do |image| %>
+            <%#= image_tag image, size: "300" %>
+          <%# end %>
         </div>
-        <div class="col-sm-8">
+        <div class="col-sm-8" style="padding: 0 0 0 50px;">
           <%= @product.product_name %>
           <br />
-          <%= @product.description.html_safe %>
+          <%= @product.description%>
           <% if @product.discount.present?%>
             ₹<%= @product.discount_price %>
             <s style="color: #9f9191;">₹<%= @product.price%></s>

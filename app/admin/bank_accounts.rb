@@ -14,5 +14,9 @@ ActiveAdmin.register BankAccount do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  
+  controller do
+   def scoped_collection
+      BankAccount.where(user_id: current_user.id)
+    end
+  end
 end

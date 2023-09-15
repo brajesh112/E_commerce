@@ -10,7 +10,7 @@
 		    	<div class="col-sm-6">
 		    		<%= item.product.product_name %>
 		    		<br />
-		    		<%= item.product.description.html_safe %>
+		    		<%= item.product.description%>
 		    		<br />
 		    		<% if item.product.discount.present?%>
 			    		₹<%= item.cart.discount_price(item) %>
@@ -40,7 +40,7 @@
 					<div class="col-auto">
 						<div class="btn-group" role="group" aria-label="Basic example">
 		      		<%= button_to "Remove", line_item_path(item),data: { confirm: "Are you sure?"}, method: :delete, class: "btn btn-outline-success" %>
-		      		<%= link_to "Buy", new_order_path(id: item.id), method: :get, class: "btn btn-outline-success"%>
+		      		<%= link_to "Buy", new_order_path(item_id: item.id), method: :get, class: "btn btn-outline-success"%>
 		      	</div>
 		      </div>
 				</div>
@@ -58,9 +58,9 @@
 			      <td style="border: none">
 				      <div class="buy-all">
 					      <% if @items.count > 1 %>
-					      	<%=link_to "Buy All", new_order_path(id: "#{@items.ids}", method: :get), class: "btn btn-outline-success"%>
+					      	<%=link_to "Buy All", new_order_path(item_id: "#{@items.ids}", method: :get), class: "btn btn-outline-success"%>
 					      <% else %>
-					      	<%=link_to "Buy All", new_order_path(id: @items.first.id, method: :get), class: "btn btn-outline-success"%>
+					      	<%=link_to "Buy All", new_order_path(item_id: @items.first.id, method: :get), class: "btn btn-outline-success"%>
 					      <% end %>	
 					    </div>
 				    </td>

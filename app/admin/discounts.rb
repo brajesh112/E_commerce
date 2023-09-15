@@ -5,6 +5,7 @@ ActiveAdmin.register Discount do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
+  menu :if => proc{ current_user.admin? }
   permit_params :discount_amount, :product_id
   #
   # or

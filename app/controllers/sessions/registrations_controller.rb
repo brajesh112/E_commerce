@@ -19,7 +19,7 @@ class Sessions::RegistrationsController < Devise::RegistrationsController
       resource.save
       sign_up(resource_name, resource)
       account_create(resource, @account)
-      return redirect_to admin_dashboard_path
+      return redirect_to admin_terms_and_conditions_path
     end
     super
   end

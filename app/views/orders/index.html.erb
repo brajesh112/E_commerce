@@ -109,4 +109,4 @@
 		<% end %>
 	<% end %>
 </div>
-<%#= will_paginate @product, renderer: BootstrapPagination::Rails, class: "pagination" %>
+<%= paginate @orders , theme: 'bootstrap-5', pagination_class: "pagination-sm flex-wrap justify-content-center"%>

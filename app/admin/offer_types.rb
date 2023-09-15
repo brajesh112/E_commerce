@@ -5,6 +5,7 @@ ActiveAdmin.register OfferType do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
+   menu :if => proc{ current_user.admin? }
    permit_params :name, :discount_percent
   #
   # or

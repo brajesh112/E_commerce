@@ -2,8 +2,8 @@ class ProductsController < ApplicationController
 	before_action :check, only: [:edit, :destroy, :new]
 	before_action :authenticate_user
 	def index
-		@product = params[:value].present? ? Product.includes(:category).where("categories.categories_type" => params[:value]) : product = Product.all
-		# @product = product.paginate(page: params[:page], per_page: 5)
+		products = params[:value].present? ? Product.includes(:category).where("categories.categories_type" => params[:value]) : Product.all
+		@products = products.page params[:page] 
 	end
 
 	def show

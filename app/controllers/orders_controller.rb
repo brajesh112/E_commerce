@@ -4,41 +4,28 @@ class OrdersController < ApplicationController
 	before_action :authenticate_user
 
 	def new
-		@item = params[:id]
-		@item = -2 if params[:value].present?
-		if @item.to_i !=0 
-			if LineItem.find_by(id: @item).present?
-				@quantity = LineItem.find(@item).quantity
-				@product = LineItem.find(@item).product
-			elsif @item.eql?(-2)
-				@product = Product.find_by(id: params[:id])
-				@quantity = 1;
-			else
-				redirect_to carts_path
-			end
-		end
-		@cart = current_user.cart
-		@address = current_user.addresses
-		@order = current_user.orders.new
+		current_user.cart.line_items.create(quantity: 1, product_id: params[:id]) if params[:value].present?
+		 @items = params[:item_id].to_i.eql?(0) ? current_user.cart.line_items : LineItem.where(id: params[:id])
+		 return redirect_to carts_path unless @items.present?
+		 @address = current_user.addresses
+		 track = rand 100000..999999
+		 @track = "TRC#{track}"
+		 @order = current_user.orders.new
 	end
 
 	def create
+		@items = LineItem.where(id: params[:order][:item_id].split)
 		@order = current_user.orders.new (order_params)
-		@order.status = "pending"
 		i = 1 
 		@order.description = ""
-		track = rand 100000..999999
-		@order.track_id = "TRC#{track}"
 		@order.save
+		@products = []
+		@items.all.map { |item| @products << item.product }
+		@order.products << @products
 		@description = ""
-		if @order.product_ids.size >1
-			current_user.cart.line_items.each do |item|
-				create_order_items(item, i)
-				i +=1
-			end
-		else
-			item = LineItem.find_by(id: params[:order][:item_id])
+		@items.each do |item|
 			create_order_items(item, i)
+			i +=1
 		end
 		@order.update(description: @description)
 		helpers.add_notification(@order, "Your Order Is Placed")
@@ -51,25 +38,15 @@ class OrdersController < ApplicationController
 	end
 
 	def index
-		@orders = current_user.orders.all
-		unless @orders.present?
-			flash.alert = "You have not ordered anything at"
-			redirect_to root_path
-		end
-		# @orders = orders.paginate(page: params[:page], per_page: 1)
+		orders = current_user.orders.all
+		redirect_to root_path, alert: "You have not ordered anything at" unless orders.present?
+		@orders = orders.page params[:page]
 	end
 
 	private
 
 		def order_params
-			if params[:order][:product_ids].present?
-				a = Array.new 
-				a << params[:order][:product_ids].to_i
-				params[:order][:product_ids] = a
-			else
-				params[:order][:product_ids] = current_user.cart.line_items.pluck(:product_id)
-			end
-			params.require(:order).permit(:address_id, :payment_method, product_ids:[])
+			params.require(:order).permit(:address_id, :payment_method, :track_id, :status)
 		end
 
 		def create_order_items(item ,i)

@@ -5,11 +5,12 @@ class OrdersController < ApplicationController
 
 	def new
 		current_user.cart.line_items.create(quantity: 1, product_id: params[:id]) if params[:value].present?
-		 @items = params[:item_id].to_i.eql?(0) ? current_user.cart.line_items : LineItem.where(id: params[:id])
+		 @items = params[:item_id].to_i.eql?(0) ? current_user.cart.line_items : LineItem.where(id: params[:item_id])
 		 return redirect_to carts_path unless @items.present?
 		 @address = current_user.addresses
 		 track = rand 100000..999999
 		 @track = "TRC#{track}"
+		 @status = "pending"
 		 @order = current_user.orders.new
 	end
 
@@ -41,6 +42,14 @@ class OrdersController < ApplicationController
 		orders = current_user.orders.all
 		redirect_to root_path, alert: "You have not ordered anything at" unless orders.present?
 		@orders = orders.page params[:page]
+	end
+
+	def update
+		@order = Order.find_by(id: params[:id])
+		return redirect_to root_path unless @order.present?
+		@order.update(status: "cancel", track_id: nil)
+		@order.shipment.destroy
+		redirect_to orders_path
 	end
 
 	private

@@ -11,6 +11,7 @@
           <%= f.hidden_field :role, :value => "seller" %>
           <%= f.hidden_field :fssi_no, :value => params[:fssi_no] %>
           <%= f.hidden_field :account, :value => params[:value] %>
+          <%= f.hidden_field :notification_status, :value=> true %>
         <% end %>
         <%= f.label :name %><br />
         <%= f.text_field :name, autofocus: true, class: "form-control",autocomplete: "Name" %>

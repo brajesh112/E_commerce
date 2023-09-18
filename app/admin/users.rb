@@ -9,7 +9,8 @@ ActiveAdmin.register User do
   scope ('admin') {|scope| scope.where(role: 'admin')}
   scope ('seller') {|scope| scope.where(role: 'seller')}
   scope ('buyer') {|scope| scope.where(role: 'buyer')}
-   permit_params :email, :encrypted_password, :name, :phone_number, :role, :reset_password_token, :reset_password_sent_at, :remember_created_at, :fssi_no
+   
+  permit_params :email, :encrypted_password, :name, :phone_number, :role, :fssi_no, :notification_status
   #
   # or
   #
@@ -18,9 +19,9 @@ ActiveAdmin.register User do
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end
-  # controller do
-  #  def scoped_collection
-  #     User.where(id: current_user.id) unless current_user.admin?
-  #   end
-  # end
+  controller do
+    def scoped_collection
+      current_user.admin? ? User.all : User.where(id: current_user.id)
+    end
+  end
 end

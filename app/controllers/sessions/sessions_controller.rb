@@ -12,10 +12,9 @@ class Sessions::SessionsController < Devise::SessionsController
   # POST /resource/sign_in
   def create
     @user = User.find_by(email: params[:user][:email])
-    return redirect_to root_path unless @user.present?
+    return redirect_to root_path, alert: "User Not Present" unless @user.present?
     if @user.role.eql?("admin") || (@user.role.eql?("seller") && params[:user][:onepass].present?)
-     self.resource = warden.authenticate!(auth_options)
-      sign_in(resource_name, resource)
+      sign_in(:user, @user)
      return redirect_to admin_dashboard_path
     elsif @user.role.eql?("seller")
      return redirect_to root_path, alert: "Please Verify first"

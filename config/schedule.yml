@@ -1,4 +1,9 @@
-my_first_job:
+my_notification_job:
   cron: "0 0 0 * * *"
   class: "NotificationJob"
+  queue: default
+
+my_otp_job:
+  cron: "0 0 0 * * *"
+  class: "OtpJob"
   queue: default

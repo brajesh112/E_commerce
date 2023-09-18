@@ -14,9 +14,7 @@ class Product < ApplicationRecord
 	after_create :notification_method
 	after_update :notification_update
 	has_and_belongs_to_many :orders, dependent: :destroy
-	def discount_price
-		self.price - (self.price * self.discount.discount_amount)/100
-	end
+
 	private
 		def notification_method
 			add_notification(self, "Your Product Created")

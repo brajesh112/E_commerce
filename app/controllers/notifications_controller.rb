@@ -4,6 +4,7 @@ class NotificationsController < ApplicationController
 
 	def index
 		@notifications = current_user.notifications.all.reverse
+		@time = DateTime.now
 	end
 
 	# def show

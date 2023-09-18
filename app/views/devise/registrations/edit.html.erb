@@ -50,6 +50,11 @@
       <%= f.password_field :current_password, class: "form-control", autocomplete: "current-password" %>
     </div>
 
+    <div class="field ">
+      <%= f.label :notification_status %>
+      <%= f.check_box :notification_status, class: "form-control", autocomplete: "current-password" %>
+    </div>
+
     <div class="actions">
       <%= f.submit "Update", class: "btn btn-primary btn-lg btn-block"%>
     </div>

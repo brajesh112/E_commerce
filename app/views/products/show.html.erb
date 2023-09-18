@@ -19,14 +19,11 @@
           <%= @product.product_name %>
           <br />
           <%= @product.description%>
-          <% if @product.discount.present?%>
+          <br />
             ₹<%= @product.discount_price %>
             <s style="color: #9f9191;">₹<%= @product.price%></s>
             <span style= "color: green;">
-              <%= @product.discount.discount_amount %> % Off </span>
-          <% else %>
-            ₹<%= @product.price%>
-          <% end %>  
+              <%= @product.discount.discount_amount if @product.discount.present? %> % Off </span>
           <br />
           Delivery Charges: <span style="color: green;">₹ <%= @charges%></span>
           <br/>

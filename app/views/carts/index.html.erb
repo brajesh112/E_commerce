@@ -12,16 +12,11 @@
 		    		<br />
 		    		<%= item.product.description%>
 		    		<br />
-		    		<% if item.product.discount.present?%>
-			    		₹<%= item.cart.discount_price(item) %>
-			    		<s style="color: #9f9191;">₹<%= item.product.price * item.quantity %></s>
-			    		<span style= "color: green;">
-              <%= item.product.discount.discount_amount %> % Off </span>
-							<% price_total += item.cart.discount_price(item)%>
-						<% else %>
-							₹<%= item.product.price * item.quantity %>
-							<% price_total += item.product.price * item.quantity%>
-						<% end %>
+		    		₹<%= item.product.discount_price %>
+		    		<s style="color: #9f9191;">₹<%= item.product.price * item.quantity %></s>
+		    		<span style= "color: green;">
+            <%= item.product.discount.discount_amount if item.product.discount.present? %> % Off </span>
+						<% price_total += item.product.discount_price * item.quantity%>
 		    	</div>
 		    	<div class="col-sm-3">
 		    		<strong>Delivery by <%= delivery_date %></strong>
@@ -40,7 +35,7 @@
 					<div class="col-auto">
 						<div class="btn-group" role="group" aria-label="Basic example">
 		      		<%= button_to "Remove", line_item_path(item),data: { confirm: "Are you sure?"}, method: :delete, class: "btn btn-outline-success" %>
-		      		<%= link_to "Buy", new_order_path(item_id: item.id), method: :get, class: "btn btn-outline-success"%>
+		      		<%= link_to "Buy", new_order_path(item_id: item.id, method: :get), class: "btn btn-outline-success"%>
 		      	</div>
 		      </div>
 				</div>

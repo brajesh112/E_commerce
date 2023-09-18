@@ -22,8 +22,6 @@ ActiveAdmin.register Order do
     f.input :status
     actions
   end
-  show do
-  end
 
   index do
     selectable_column
@@ -42,6 +40,24 @@ ActiveAdmin.register Order do
     column :updated_at
     actions
   end
+
+  show do
+    attributes_table do
+      row :description do |order|
+      order.description.html_safe
+    end
+      row :status
+      row :track_id
+      row :user
+      row :payment_method
+      row :address do |order|
+        order.show_model.html_safe
+      end
+      row :created_at
+      row :updated_at
+    end
+  end
+
   controller do
     def scoped_collection
       current_user.admin? ?Order.all : Order.joins(:products).where("products.user_id" => current_user)

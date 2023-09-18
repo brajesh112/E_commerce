@@ -9,8 +9,4 @@ class Cart < ApplicationRecord
 	def total_charges(items)
 		items.joins(:product).where("product.product_type"=>"national").present? ? 40 : "Free"
 	end
-	def discount_price(item)
-		# byebug
-		(item.product.price - (item.product.price * item.product.discount.discount_amount)/100)* item.quantity
-	end
 end

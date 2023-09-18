@@ -8,7 +8,7 @@ ActiveAdmin.register Product do
   
   Category.all.map{|cat| scope ("#{cat.categories_type}") {|scope| scope.joins(:category).where("categories.categories_type" => "#{cat.categories_type}")} }
 
-  permit_params :product_name, :stock, :price, :description, :user_id, :category_id, :offer_type_ids, :product_type, images:[]
+  permit_params :product_name, :stock, :price, :description, :user_id, :category_id, :offer_type_ids, :product_type, :discount_price, images:[]
 
   form do |f|
     f.inputs do
@@ -81,7 +81,6 @@ ActiveAdmin.register Product do
   # end
   controller do
     def update
-      # resource.permit_value(params)
       super
       offers_add
     end
@@ -95,6 +94,11 @@ ActiveAdmin.register Product do
       @offers = OfferType.where(id: params[:product][:offer_type_ids].compact_blank)
       resource.offer_types.delete(resource.offer_types.where(id: resource.offer_types.excluding(@offers))) if resource.offer_types.present?
       resource.offer_types << @offers.excluding(resource.offer_types)
+
+      @price = resource.discount.present? ? resource.price - (resource.price * resource.discount.discount_amount)/100 : resource.price
+
+      resource.discount_price =  resource.offer_types.present? ? @price - (@price * resource.offer_types.first.discount_percent.to_i)/100 : @price
+      resource.save
     end
 
     def scoped_collection

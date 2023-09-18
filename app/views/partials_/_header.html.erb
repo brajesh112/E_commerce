@@ -39,9 +39,11 @@
         </li>
       </ul>
       <% if user_signed_in? %>
-        <a class= "nav-link button_to text-primary" href="/notifications">
-          <i class="fa fa-bell" aria-hidden="true"></i>
-        </a>
+        <% if current_user.notification_status %>
+          <a class= "nav-link button_to text-primary" href="/notifications">
+            <i class="fa fa-bell" aria-hidden="true"></i>
+          </a>
+        <% end %>
         <%= link_to "Cart (#{current_user.cart.line_items.count})", carts_path, class: "nav-link button_to text-primary" %>
         <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "nav-link button_to" %>
       <% else %>

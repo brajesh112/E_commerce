@@ -15,9 +15,13 @@
 // Overriding any non-variable Sass must be done after the fact.
 // For example, to change the default status-tag color:
 //
-//   .status_tag { background: #6090DB; }
+//   
+.status_tag { background: #6090DB; }
 .col-description{
-	width:20%;
+	width:15%;
+}
+.col-terms{
+	width: 85%;
 }
 .ss-main{
 	width: 50% !important; 

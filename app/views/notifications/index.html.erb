@@ -1,4 +1,4 @@
-<div class="container", style="width: 250px;">  
+<div class="container" style="width: 479px;">  
   <% if @notifications.count > 0 %>
     <table class="table">
       <thead>
@@ -6,7 +6,11 @@
       <tbody>
         <% @notifications.each do |notification| %>
           <tr>
-            <td><b><%= notification.action %></b></td>
+            <td>
+              <b><%= notification.action %></b>
+              <br />
+              <%= distance_of_time_in_words(notification.created_at,@time) %> ago
+            </td>
             <!-- <td>
             <div class="btn-group" role="group" aria-label="Basic example">
               <%#= button_to "Remove", notification_path(notification),data: { confirm: "Are you sure?"}, method: :delete, class: "btn btn-outline-success" %>

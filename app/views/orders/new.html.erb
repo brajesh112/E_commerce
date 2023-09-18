@@ -10,12 +10,8 @@
 	    		<br />
 	   			<%= item.product.description %>
 	   			<br />
-	    		<% if item.product.discount.present? %>
-	    			<strong>₹<%=@order.discount_price(item) %></strong>
+	    			<strong>₹<%=item.product.discount_price * item.quantity%></strong>
 						<s>₹<%= item.product.price * item.quantity %></s>
-					<% else %>
-						₹<%= item.product.price * item.quantity %>
-	    		<% end %>
 	    		<br />
 	    		Quantity:<%=item.quantity %>
 	    	</div>
@@ -29,7 +25,7 @@
 		<%= form_for @order, url_for: orders_path do |f| %>
 				<%= f.hidden_field :payment_method, :value => "cash" %>
 				<%= f.hidden_field :track_id, :value => @track %>
-				<%= f.hidden_field :status, :value => "pending" %>
+				<%= f.hidden_field :status, :value => @status %>
 				<h3>Select Order Address:</h3>
 				<% @address.each do |address| %>
 					<div class= "row address_row">

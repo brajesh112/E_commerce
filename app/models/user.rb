@@ -15,6 +15,7 @@ class User < ApplicationRecord
   has_many :bank_accounts, dependent: :destroy
   has_many :notifications, dependent: :destroy
   has_many :otps, dependent: :destroy
+  has_many :transactions
   validates :phone_number, length: {is: 10}
 
 

@@ -1,1 +1,17 @@
+production:
+  cloud_name: 'dknq3jgrr'
+  api_key: '965579635243566'
+  api_secret: 'S-cUFN1PKB0mN7oHwiZ4B2I7LA8'
+  secure: true
 
+development:
+  cloud_name: 'dknq3jgrr'
+  api_key: '965579635243566'
+  api_secret: 'S-cUFN1PKB0mN7oHwiZ4B2I7LA8'
+  secure: true
+
+test:
+  cloud_name: 'dknq3jgrr'
+  api_key: '965579635243566'
+  api_secret: 'S-cUFN1PKB0mN7oHwiZ4B2I7LA8'
+  secure: true

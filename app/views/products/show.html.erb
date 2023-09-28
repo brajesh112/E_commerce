@@ -35,13 +35,15 @@
           <br />
         </div>
       </div>
-      <div class="row my-4">
-        <div class="col-sm-4">
-          <%= link_to "AddToCart", new_cart_path(id: @product.id),class: "btn btn-primary btn-lg btn-block" %>
+      <% unless @product.stock == 0 %>
+        <div class="row my-4">
+          <div class="col-sm-4">
+            <%= link_to "AddToCart", new_cart_path(id: @product.id),class: "btn btn-primary btn-lg btn-block" %>
+          </div>
+          <div class="col-sm-4">
+            <%= link_to "Buy Now", new_order_path(id: @product.id, value: 1), method: :get, class: "btn btn-primary btn-lg btn-block"%>
+          </div>
         </div>
-        <div class="col-sm-4">
-          <%= link_to "Buy Now", new_order_path(id: @product.id, value: 1), method: :get, class: "btn btn-primary btn-lg btn-block"%>
-        </div>
-      </div>
+      <% end %>
   </div>
 </div>

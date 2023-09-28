@@ -4,8 +4,12 @@ class OrdersController < ApplicationController
 	before_action :authenticate_user
 
 	def new
-		current_user.cart.line_items.create(quantity: 1, product_id: params[:id]) if params[:value].present?
-		 @items = params[:item_id].to_i.eql?(0) ? current_user.cart.line_items : LineItem.where(id: params[:item_id])
+		if params[:value].present?
+			current_user.cart.line_items.create(quantity: 1, product_id: params[:id])
+			 @items = current_user.cart.line_items.where(product_id: params[:id])
+		else
+			@items = params[:item_id].to_i.eql?(0) ? current_user.cart.line_items : LineItem.where(id: params[:item_id])
+		end
 		 return redirect_to carts_path unless @items.present?
 		 @address = current_user.addresses
 		 track = rand 100000..999999
@@ -26,6 +30,7 @@ class OrdersController < ApplicationController
 		@description = ""
 		@items.each do |item|
 			create_order_items(item, i)
+			helpers.create_transactions(item, @order)
 			i +=1
 		end
 		@order.update(description: @description)

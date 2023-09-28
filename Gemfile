@@ -50,7 +50,8 @@ gem "jbuilder"
  gem "sidekiq-cron"
  gem 'font-awesome-rails'
  gem "letter_opener"
-
+ gem 'stripe'
+ gem 'twilio-ruby'
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
 

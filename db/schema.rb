@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_18_124427) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_28_103048) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -90,6 +90,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_18_124427) do
     t.string "categories_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "category_comission"
   end
 
   create_table "discounts", force: :cascade do |t|
@@ -204,6 +205,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_18_124427) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["shipment_id"], name: "index_tracking_orders_on_shipment_id"
+  end
+
+  create_table "transactions", force: :cascade do |t|
+    t.decimal "admin_commision"
+    t.decimal "seller_earning"
+    t.decimal "tax"
+    t.decimal "total_amount"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "product_id"
+    t.integer "order_id"
+    t.index ["order_id"], name: "index_transactions_on_order_id"
+    t.index ["user_id"], name: "index_transactions_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|

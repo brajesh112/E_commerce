@@ -12,7 +12,7 @@
 		    		<br />
 		    		<%= item.product.description%>
 		    		<br />
-		    		₹<%= item.product.discount_price %>
+		    		₹<%= item.product.discount_price * item.quantity %>
 		    		<s style="color: #9f9191;">₹<%= item.product.price * item.quantity %></s>
 		    		<span style= "color: green;">
             <%= item.product.discount.discount_amount if item.product.discount.present? %> % Off </span>

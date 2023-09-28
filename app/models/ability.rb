@@ -6,6 +6,8 @@ class Ability
   def initialize(user)
     if user.admin?
      can :manage, :all
+     cannot :manage, Transaction
+     can :read, Transaction
     else
      can :read, :all
      can :manage, BankAccount

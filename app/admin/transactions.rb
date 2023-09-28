@@ -1,16 +1,16 @@
-ActiveAdmin.register Category do
+ActiveAdmin.register Transaction do
 
   # See permitted parameters documentation:
   # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
   # Uncomment all parameters which should be permitted for assignment
   #
-   permit_params :categories_type, :category_comission
+  # permit_params :admin_commision, :seller_earning, :tax, :total_amount, :user_id, :product_id, :order_id
   #
   # or
   #
   # permit_params do
-  #   permitted = [:categories_type]
+  #   permitted = [:admin_commision, :seller_earning, :tax, :total_amount, :user_id, :product_id, :order_id]
   #   permitted << :other if params[:action] == 'create' && current_user.admin?
   #   permitted
   # end

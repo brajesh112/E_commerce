@@ -48,6 +48,7 @@ class OrdersController < ApplicationController
 		@order = Order.find_by(id: params[:id])
 		return redirect_to root_path unless @order.present?
 		@order.update(status: "cancel", track_id: nil)
+		helpers.add_notification(@order, "Your Order Is Canceled")
 		@order.shipment.destroy
 		redirect_to orders_path
 	end

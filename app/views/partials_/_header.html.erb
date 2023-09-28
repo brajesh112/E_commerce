@@ -40,7 +40,7 @@
       </ul>
       <% if user_signed_in? %>
         <% if current_user.notification_status %>
-          <a class= "nav-link button_to text-primary" href="/notifications">
+          <a id="notify" class= "nav-link button_to text-primary" href="/notifications">
             <i class="fa fa-bell" aria-hidden="true"></i>
           </a>
         <% end %>

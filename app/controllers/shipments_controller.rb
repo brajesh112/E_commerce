@@ -4,11 +4,7 @@ class ShipmentsController < ApplicationController
 	before_action :authenticate_user
 
 	def index
-		if current_user.admin?
-			@orders = Order.all
-		else
-			@orders = current_user.orders.all
-		end
+		@orders = current_user.orders.where("status != ?", 2)
 	end
 	
 	def show

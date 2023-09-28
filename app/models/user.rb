@@ -15,6 +15,7 @@ class User < ApplicationRecord
   has_many :bank_accounts, dependent: :destroy
   has_many :notifications, dependent: :destroy
   has_many :otps, dependent: :destroy
+  validates :phone_number, length: {is: 10}
 
 
   def insert_avatar

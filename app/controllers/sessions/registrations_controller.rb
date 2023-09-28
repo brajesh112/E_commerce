@@ -22,6 +22,8 @@ class Sessions::RegistrationsController < Devise::RegistrationsController
       return redirect_to admin_terms_and_conditions_path
     end
     super
+    resource.update(notification_status: true)
+
   end
 
   # GET /resource/edit

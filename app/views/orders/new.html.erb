@@ -22,16 +22,16 @@
 		<% end %>
 	</div>
 	<div class="container order_address">
-		<%= form_for @order, url_for: orders_path do |f| %>
+		<%= form_for @order, url_for: orders_path, data: {turbo: false} do |f| %>
 				<%= f.hidden_field :payment_method, :value => "cash" %>
 				<%= f.hidden_field :track_id, :value => @track %>
 				<%= f.hidden_field :status, :value => @status %>
+				<%= f.hidden_field :item_id, :value => @items.all.ids %>
 				<h3>Select Order Address:</h3>
 				<% @address.each do |address| %>
 					<div class= "row address_row">
 						<div class = "col-sm-2">
 							<%= f.radio_button :address_id, "#{address.id}"%>
-							<%= f.hidden_field :item_id, :value => @items.all.ids %>
 						</div>
 						<div class = "col-sm-10">
 							<b>House Number:</b> <%= address.house_no%>

@@ -10,7 +10,7 @@ ActiveAdmin.register User do
   scope ('seller') {|scope| scope.where(role: 'seller')}
   scope ('buyer') {|scope| scope.where(role: 'buyer')}
    
-  permit_params :email, :encrypted_password, :name, :phone_number, :role, :fssi_no, :notification_status
+  permit_params :email, :encrypted_password, :name, :phone_number, :role, :fssi_no, :notification_status, :stripe_id
   #
   # or
   #

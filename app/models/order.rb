@@ -5,7 +5,7 @@ class Order < ApplicationRecord
 	enum :status, [:pending, :paid, :cancel, :refunded]
 	has_one :shipment, dependent: :destroy
 	after_update :create_shipment
-	has_many :trasactions
+	has_many :transactions
 	has_many :notifications, as: :notificable
 	has_and_belongs_to_many :products
 	paginates_per 1

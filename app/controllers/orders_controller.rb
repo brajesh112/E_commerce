@@ -5,7 +5,7 @@ class OrdersController < ApplicationController
 
 	def new
 		if params[:value].present?
-			current_user.cart.line_items.create(quantity: 1, product_id: params[:id])
+			current_user.cart.line_items.create(quantity: 1, product_id: params[:id]) unless current_user.cart.line_items.where(product_id: params[:id]).present?
 			 @items = current_user.cart.line_items.where(product_id: params[:id])
 		else
 			@items = params[:item_id].to_i.eql?(0) ? current_user.cart.line_items : LineItem.where(id: params[:item_id])
@@ -23,10 +23,11 @@ class OrdersController < ApplicationController
 		@order = current_user.orders.new (order_params)
 		i = 1 
 		@order.description = ""
-		@order.save
 		@products = []
 		@items.all.map { |item| @products << item.product }
 		@order.products << @products
+		return redirect_to new_order_path, alert: "something went wrong" unless @order.save
+		byebug
 		@description = ""
 		@items.each do |item|
 			create_order_items(item, i)
@@ -35,7 +36,11 @@ class OrdersController < ApplicationController
 		end
 		@order.update(description: @description)
 		helpers.add_notification(@order, "Your Order Is Placed")
-		redirect_to order_path(@order)
+		session = StripePayment.checkout_session(current_user, @items)
+		# byebug
+		redirect_to(session.url , :allow_other_host=> true, data: {turbo: false})
+		# byebug
+		# redirect_to order_path(@order)
 	end
 
 	def show

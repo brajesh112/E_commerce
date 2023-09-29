@@ -8,7 +8,7 @@ ActiveAdmin.register Product do
   
   Category.all.map{|cat| scope ("#{cat.categories_type}") {|scope| scope.joins(:category).where("categories.categories_type" => "#{cat.categories_type}")} }
 
-  permit_params :product_name, :stock, :price, :description, :user_id, :category_id, :offer_type_ids, :product_type, :discount_price, images:[]
+  permit_params :product_name, :stock, :price, :description, :user_id, :category_id, :offer_type_ids, :product_type, :discount_price,:price_id, images:[]
 
   form do |f|
     f.inputs do
@@ -88,6 +88,9 @@ ActiveAdmin.register Product do
     def create
       super
       offers_add
+      obj = StripePayment.create_product(resource)
+      resource.price_id = obj.id
+      resource.save
     end
 
     def offers_add

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_28_103048) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_29_103815) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -179,6 +179,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_28_103048) do
     t.integer "category_id"
     t.integer "product_type"
     t.decimal "discount_price"
+    t.string "price_id"
     t.index ["category_id"], name: "index_products_on_category_id"
     t.index ["user_id"], name: "index_products_on_user_id"
   end
@@ -215,8 +216,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_28_103048) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "product_id"
     t.integer "order_id"
+    t.integer "quantity"
+    t.string "product"
     t.index ["order_id"], name: "index_transactions_on_order_id"
     t.index ["user_id"], name: "index_transactions_on_user_id"
   end
@@ -234,6 +236,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_28_103048) do
     t.datetime "updated_at", null: false
     t.string "fssi_no"
     t.boolean "notification_status"
+    t.string "stripe_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

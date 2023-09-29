@@ -15,14 +15,17 @@ class Sessions::RegistrationsController < Devise::RegistrationsController
       @account = JSON.parse(params[:user][:account])
       @fssi = params[:user][:fssi_no]
       build_resource(sign_up_params)
+      obj = StripePayment.create_customer(resource)
       resource.fssi_no = @fssi
+      resource.stripe_id = obj.id
       resource.save
       sign_up(resource_name, resource)
       account_create(resource, @account)
       return redirect_to admin_terms_and_conditions_path
     end
     super
-    resource.update(notification_status: true)
+    obj = StripePayment.create_customer(resource)
+    resource.update(notification_status: true, stripe_id: obj.id)
 
   end
 

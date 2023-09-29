@@ -14,6 +14,7 @@ class Shipment < ApplicationRecord
 		end
 
 		def create_tracking_order
+			byebug
 			city = self.order.products.first.user.addresses.first.city
 			self.tracking_orders.new(status: self.status, place: city).save
 		end

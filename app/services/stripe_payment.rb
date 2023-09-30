@@ -23,7 +23,6 @@ class StripePayment
 	  end
 
 	  def create_product(product)
-	  	byebug
 	  	@product = Stripe::Product.create(name: "#{product.product_name}")
 	  	Stripe::Price.create(unit_amount: (product.discount_price.to_i*100), currency: 'inr', product: @product.id)
 	  end

@@ -27,7 +27,6 @@ class OrdersController < ApplicationController
 		@items.all.map { |item| @products << item.product }
 		@order.products << @products
 		return redirect_to new_order_path, alert: "something went wrong" unless @order.save
-		byebug
 		@description = ""
 		@items.each do |item|
 			create_order_items(item, i)
@@ -36,11 +35,11 @@ class OrdersController < ApplicationController
 		end
 		@order.update(description: @description)
 		helpers.add_notification(@order, "Your Order Is Placed")
-		session = StripePayment.checkout_session(current_user, @items)
-		# byebug
-		redirect_to(session.url , :allow_other_host=> true, data: {turbo: false})
-		# byebug
-		# redirect_to order_path(@order)
+		unless @order.payment_method.eql?('cash')
+			session = StripePayment.checkout_session(current_user, @items) 
+			return redirect_to(session.url , :allow_other_host=> true, data: {turbo: false})
+		end
+		redirect_to order_path(@order)
 	end
 
 	def show
@@ -71,6 +70,7 @@ class OrdersController < ApplicationController
 
 		def create_order_items(item ,i)
 			@description += helpers.description_body(item, i,@order)
+			item.product.order_items.create(order_id: @order.id, quantity: item.quantity)
 			item.product.stock -= item.quantity
 			item.product.update(stock: item.product.stock)
 			item.destroy

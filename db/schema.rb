@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_29_103815) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_30_130041) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -138,6 +138,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_29_103815) do
     t.index ["product_id"], name: "index_offer_types_products_on_product_id"
   end
 
+  create_table "order_items", force: :cascade do |t|
+    t.integer "quantity"
+    t.integer "product_id"
+    t.integer "order_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_order_items_on_order_id"
+    t.index ["product_id"], name: "index_order_items_on_product_id"
+  end
+
   create_table "orders", force: :cascade do |t|
     t.text "description"
     t.integer "payment_method"
@@ -166,6 +176,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_29_103815) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_otps_on_user_id"
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.string "payment_id"
+    t.integer "order_id"
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_payments_on_order_id"
   end
 
   create_table "products", force: :cascade do |t|

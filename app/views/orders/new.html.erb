@@ -43,10 +43,22 @@
 							<b>Country:</b> <%= address.country%><br />
 						</div>
 					</div>
-					<br />		
+					<br />
 				<% end %>
 				<%= link_to "Add New Address", new_address_path(id: 1), method: :get, class: "btn btn-primary btn-lg my-2" %><br />
-				<%= f.submit "Place Order", class: "btn btn-primary btn-lg my-2" %>
+				<h3>Select Payment Type</h3>
+				<% Order.payment_methods.each do |pay_method, id| %>
+					<div class= "row address_row">
+						<div class = "col-sm-2" style="margin-top: 10px;">
+							<%= f.radio_button :payment_method, "#{pay_method}"%>
+						</div>	
+						<div class = "col-sm-10">
+							<%= pay_method %>
+						</div>					
+					</div>
+					<br />
+				<% end %>		
+				<%= f.submit "Place Order", class: "btn btn-primary order_button" %>
 			<% end %>
 	</div>
 </div>

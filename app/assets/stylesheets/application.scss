@@ -193,7 +193,7 @@ background: #c5cae9 !important;
 .address_row{
   justify-content: space-between;
  	align-items: center;
-  border: 2px solid black;	
+  /*border: 2px solid black;	*/
 }
 .a_product{
 	width: 0%;
@@ -201,4 +201,8 @@ background: #c5cae9 !important;
 	margin: 0;
 	text-decoration: none;
 	color: black;
+}
+.order_button{
+	height: 48px !important;
+  font-size: 28px !important;
 }

@@ -52,6 +52,12 @@ gem "jbuilder"
  gem "letter_opener"
  gem 'stripe'
  gem 'twilio-ruby'
+ gem "chartkick"
+ gem "groupdate"
+ gem 'wicked_pdf'
+ gem 'wkhtmltopdf-binary'
+ gem "zip-codes"
+ gem "city-state"
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
 

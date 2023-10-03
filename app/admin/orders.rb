@@ -6,8 +6,9 @@ ActiveAdmin.register Order do
   # Uncomment all parameters which should be permitted for assignment
   #
   scope :all
+  scope ('pending') {|scope| scope.where(status: 'pending')}
   scope ('paid') {|scope| scope.where(status: 'paid')}
-  scope ('canceled') {|scope| scope.where(status: 'canceled')}
+  scope ('canceled') {|scope| scope.where(status: 'cancel')}
   scope ('refunded') {|scope| scope.where(status: 'refunded')}
   permit_params :description, :payment_method, :status, :track_id, :user_id, :address_id
   #

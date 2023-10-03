@@ -13,12 +13,10 @@ class StripePayment
 	      	items.map do |item|
 	      		{price: item.product.price_id, quantity: item.quantity}
 	      	end
-	        # price: 'price_1NvZegSBU8NpHWncKDTQb3OT', #price api id usually starts with price_ApIiD
-	        # quantity: 1,
 	      ],
 	      mode: 'payment',
-	      success_url: "http://localhost:3000/payments/success",
-	      cancel_url: "http://localhost:3000/payments/cancel"
+	      success_url: "http://localhost:3000/payments/success?session_id={CHECKOUT_SESSION_ID}",
+	      cancel_url: "http://localhost:3000/payments/cancel?session_id={CHECKOUT_SESSION_ID}"
 	      )
 	  end
 
@@ -26,6 +24,12 @@ class StripePayment
 	  	@product = Stripe::Product.create(name: "#{product.product_name}")
 	  	Stripe::Price.create(unit_amount: (product.discount_price.to_i*100), currency: 'inr', product: @product.id)
 	  end
+
+	  def refund_payment(order)
+	  	id = order.payments.find_by(status: "success").payment_id	
+	  	Stripe::Refund.create({payment_intent: id,})
+	  end
+
 
 	  # def update_product(product)
 	  # end

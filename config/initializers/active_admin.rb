@@ -237,6 +237,7 @@ ActiveAdmin.setup do |config|
   # To load a javascript file:
   #   config.register_javascript 'my_javascript.js'
   config.register_javascript "https://unpkg.com/slim-select@latest/dist/slimselect.min.js"
+  config.register_stylesheet "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
   config.register_stylesheet "https://unpkg.com/slim-select@latest/dist/slimselect.css"
   # == CSV options
   #

@@ -6,27 +6,29 @@ class PaymentsController < ApplicationController
 	def create
   end
   
-  def success
-  	debugger
-    redirect_to root_url, notice: "Purchase Successful"
-  end
+  # def success
+  # 	debugger
+  #   redirect_to root_url, notice: "Purchase Successful"
+  # end
   
-  def cancel
-    #handle if the payment is cancelled
-    redirect_to root_url, notice: "Purchase Unsuccessful"
-  end
+  # def cancel
+  #   #handle if the payment is cancelled
+  #   debugger
+  #   redirect_to root_url, notice: "Purchase Unsuccessful"
+  # end
 
   def show
-  	debugger
+  	@order = current_user.orders.last
+  	@session = Stripe::Checkout::Session.retrieve(params[:session_id])
   	if params[:id].eql?("success")
-  		current_user.orders.last.update(status: 'paid')
-  		current_user.orders.last.payments.create(status: "success")
+  		@order.update(status: 'paid')
+  		@order.payments.create(status: "success", payment_id: @session.payment_intent)
+  		helpers.add_notification(@order, "Your Order Is Placed")
   		return redirect_to orders_path
   	else
-  		current_user.orders.last.update(status: 'pending')
-  		current_user.orders.last.payments.create(status: "failed")
-  		return redirect_to new_order_path
+  		@order.update(status: 'payment_failed')
+  		@order.payments.create(status: "failed", payment_id: @session.payment_intent)
+  		return redirect_to order_path(@order)
   	end
-  	byebug
   end
 end

@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   resources :seller_signups, only: [:index]
   resources :line_items, :notifications, :otps
   resources :payments
+  get 'orders/order', to: 'orders#order'
   root to: "homes#index"
   match '*unmatched', to: 'application#not_found_method', via: :all, constraints: lambda { |req| (req.path.exclude? 'active_storage')}
 end

@@ -12,34 +12,36 @@ class OrdersController < ApplicationController
 		end
 		 return redirect_to carts_path unless @items.present?
 		 @address = current_user.addresses
-		 track = rand 100000..999999
-		 @track = "TRC#{track}"
+		 @track = "TRC#{rand 100000..999999}"
 		 @status = "pending"
 		 @order = current_user.orders.new
 	end
 
 	def create
-		@items = LineItem.where(id: params[:order][:item_id].split)
-		@order = current_user.orders.new (order_params)
-		i = 1 
-		@order.description = ""
-		@products = []
-		@items.all.map { |item| @products << item.product }
-		@order.products << @products
-		return redirect_to new_order_path, alert: "something went wrong" unless @order.save
-		@description = ""
-		@items.each do |item|
-			create_order_items(item, i)
-			helpers.create_transactions(item, @order)
-			i +=1
+		unless params[:id].present?
+			@order = current_user.orders.new(order_params)
+			@items = LineItem.where(id: params[:order][:item_id].split)
+			i = 1 
+			@order.description = ""
+			@products = []
+			@items.all.map { |item| @products << item.product }
+			@order.products << @products
+			return redirect_to new_order_path, alert: "something went wrong" unless @order.save
+			@description = ""
+			@items.each do |item|
+				create_order_items(item, i)
+				i +=1
+			end
+			@order.update(description: @description)
+		else
+			@order = Order.find_by(id: params[:id])
+			@items = @order.order_items
 		end
-		@order.update(description: @description)
-		helpers.add_notification(@order, "Your Order Is Placed")
-		unless @order.payment_method.eql?('cash')
-			session = StripePayment.checkout_session(current_user, @items) 
-			return redirect_to(session.url , :allow_other_host=> true, data: {turbo: false})
-		end
-		redirect_to order_path(@order)
+			unless @order.payment_method.eql?('cash')
+				session = StripePayment.checkout_session(current_user, @items) 
+				return redirect_to(session.url , :allow_other_host=> true, data: {turbo: false})
+			end
+			redirect_to order_path(@order)
 	end
 
 	def show
@@ -48,15 +50,29 @@ class OrdersController < ApplicationController
 	end
 
 	def index
-		orders = current_user.orders.all
-		redirect_to root_path, alert: "You have not ordered anything at" unless orders.present?
-		@orders = orders.page params[:page]
+		@orders = current_user.orders.all
+		redirect_to root_path, alert: "You have not ordered anything at" unless @orders.present?
+		# byebug
+		# @orders = orders.page params[:page]
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render pdf: "orders/order",
+               page_size: "A4",
+               template: "orders/order"
+      end
+    end
 	end
 
 	def update
 		@order = Order.find_by(id: params[:id])
 		return redirect_to root_path unless @order.present?
-		@order.update(status: "cancel", track_id: nil)
+		if @order.status.eql?("paid")
+			@order.update(status: "refunded", track_id: nil)
+			StripePayment.refund_payment(@order) 
+		else
+			@order.update(status: "cancel", track_id: nil)
+		end
 		helpers.add_notification(@order, "Your Order Is Canceled")
 		@order.shipment.destroy
 		redirect_to orders_path

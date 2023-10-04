@@ -16,6 +16,12 @@
 @import "bootstrap";
 @import "font-awesome";
 
+.fixed-nav{
+	position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 99;
+}
 .btn-block{
 	margin-top: 15px;
 	width: 100%;
@@ -24,6 +30,12 @@
 .picture{
 	display: flex;
 	margin: auto;
+}
+.alert{
+	z-index: 99;
+	color: red !important;
+	text-align: center !important; 
+	margin-top: 73px !important;
 }
 
 h1{
@@ -58,7 +70,10 @@ body{
 .card-stepper {
 	z-index: 0
 }
-
+#card-container{
+	justify-content: center;
+	margin-top: 88px;
+}
 #progressbar-2 {
 color: #455A64;
 }
@@ -168,7 +183,7 @@ background: #c5cae9 !important;
 }
 .cart_item{
 	margin: 100px 55px 0 100px; 
-	width: 70%;
+	width: 55%;
 	height: fit-content;
 }
 
@@ -176,7 +191,9 @@ background: #c5cae9 !important;
 	width: 25%; 
 	margin: 100px 192px 0 0;
 	height: 300px;
-	position: sticky;
+	position: fixed;
+	right: 0px;
+	top: 1px;
 }
 
 .buy-all{
@@ -186,8 +203,10 @@ background: #c5cae9 !important;
 
 .order_address{
 	width: 35%; 
-	margin: 100px 192px 0 0;
-	position: sticky;
+	position: fixed;
+	right: 0;
+	margin: 14px;
+	top: 84px;
 	height: fit-content;
 }
 .address_row{

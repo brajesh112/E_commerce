@@ -55,9 +55,11 @@ gem "jbuilder"
  gem "chartkick"
  gem "groupdate"
  gem 'wicked_pdf'
+ # gem 'wicked_pdf', '~> 2.1'
  gem 'wkhtmltopdf-binary'
  gem "zip-codes"
  gem "city-state"
+ gem 'prawn', '~> 2.1'
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
 

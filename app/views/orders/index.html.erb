@@ -112,8 +112,7 @@
 				<%= link_to "Track Order", tracking_order_path(order.shipment) , class: "btn btn-primary btn-lg " if order.shipment.status != "ordered" %>
 			<% end %>
 		<% end %>
+		<%= link_to "PDF", order_path(id: order.id, format: :pdf), class: "btn btn-primary" %>
 	<% end %>
 </div>
-<%#= paginate @orders , theme: 'bootstrap-5', pagination_class: "pagination-sm flex-wrap justify-content-center"%>
-
-<%= link_to "PDF", orders_path(format: :pdf), class: "btn btn-primary" %>
+<%= paginate @orders , theme: 'bootstrap-5', pagination_class: "pagination-sm flex-wrap justify-content-center"%>

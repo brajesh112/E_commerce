@@ -108,6 +108,7 @@
 			<%= link_to "Show Shipment", shipment_path(@order.shipment) , class: "btn btn-primary btn-lg " %>
 			<%= link_to "Cancel Order", order_path(@order), data: {confirm: "Are You Sure"}, method: :patch, class: "btn btn-primary btn-lg " %>
 			<%= link_to "Track Order", tracking_order_path(@order.shipment) , class: "btn btn-primary btn-lg " if @order.shipment.status != "ordered" %>
+			<%= link_to "Download PDF", order_path(@order, format: :pdf), class: "btn btn-primary" %>
 		<% end %>
 	<% end %>
 </div>

@@ -12,7 +12,7 @@ class BankAccountsController < ApplicationController
 		return redirect_to seller_signups_path(permit_params) if params[:bank_account][:query].present?
 		@account = current_user.bank_accounts.new(permit_params)
 		@account.save
-		add_notification(@account, "Bank Account Added To Your Profile")
+		helpers.add_notification(@account, "Bank Account Added To Your Profile")
 		redirect_to bank_accounts_path
 	end
 
@@ -25,7 +25,7 @@ class BankAccountsController < ApplicationController
 		@account = BankAccount.find_by(id: params[:id])
 		return redirect_to root_path, alert: "Account not found" unless @account.present?
 		@account.update(permit_params)
-		add_notification(@account, "Bank Account Updated On Your Profile")
+		helpers.add_notification(@account, "Bank Account Updated On Your Profile")
 		redirect_to bank_accounts_path
 	end
 

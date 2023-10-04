@@ -13,10 +13,10 @@
   <body>
     <%= render "partials_/header" %>
     <% if flash.notice.present? %>
-      <p class="alert alert-info" style="color: red; text-align: center;"><%= notice %></p>
+      <p class="alert alert-info"><%= notice %></p>
     <% end %>
     <% if flash.alert.present? %> 
-      <p class="alert alert-info" style="color: red; text-align: center;"><%= alert %></p>
+      <p class="alert alert-info"><%= alert %></p>
     <% end %>
     <%= yield %>
     <%#= render "partials_/footer" %>

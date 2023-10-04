@@ -2,7 +2,7 @@ class OrdersController < ApplicationController
 	before_action :check, only: [:edit, :destroy]
 	before_action :authenticate_user!
 	before_action :authenticate_user
-
+	require 'prawn'
 	def new
 		if params[:value].present?
 			current_user.cart.line_items.create(quantity: 1, product_id: params[:id]) unless current_user.cart.line_items.where(product_id: params[:id]).present?
@@ -46,22 +46,42 @@ class OrdersController < ApplicationController
 
 	def show
 		@order = Order.find_by(id: params[:id])
-		return redirect_to root_path, alert: "Order not found" unless @order.present?
+		respond_to do |format|
+	    format.html
+	    format.pdf do
+	      pdf = Prawn::Document.new
+	      pdf.text "this is a pdf"
+	      send_data pdf.render_file "mypdf.pdf"
+	    end
+	  end
+		# return redirect_to root_path, alert: "Order not found" unless @order.present?
+		# respond_to do |format|
+  #     format.html
+  #     format.pdf do
+  #         render pdf: "order", template: "orders/show", layout: "layouts/pdf", formats: [:html]
+  #     end
+  #   end
+		# respond_to do |format|
+	 #    format.html
+	 #    format.pdf do
+	 # # #        render pdf: "demo",
+	 # # #        # page_size: 'A4',
+	 # # #        template: "orders/order",
+  # # #         formats: [:html],
+  # # #         disposition: :inline,
+  # # #         layout: 'pdf'
+	 # # 			render pdf: "hello-filename", template: "orders/show", formats: [:html], disposition: :inline, layout: 'layouts/pdf'
+		# 		pdf = Prawn::Document.new
+		# 		pdf.render_file('show.pdf')
+		#   end
+	  # end
 	end
 
 	def index
-		@orders = current_user.orders.all
-		redirect_to root_path, alert: "You have not ordered anything at" unless @orders.present?
+		orders = current_user.orders.all
+		redirect_to root_path, alert: "You have not ordered anything at" unless orders.present?
 		# byebug
-		# @orders = orders.page params[:page]
-    respond_to do |format|
-      format.html
-      format.pdf do
-        render pdf: "orders/order",
-               page_size: "A4",
-               template: "orders/order"
-      end
-    end
+		@orders = orders.page params[:page]
 	end
 
 	def update
@@ -78,6 +98,32 @@ class OrdersController < ApplicationController
 		redirect_to orders_path
 	end
 
+	def order_pdf 
+		@orders = Order.where(id: params[:order_id])
+				pdf = Prawn::Document.new
+				pdf.render_file('show.pdf')
+				byebug
+		# respond_to do |format|
+  #           # format.html
+  #           format.pdf do
+  #               render "orders/order_pdf",
+  #               page_size: 'A4',
+  #               template: "orders/order_pdf.html.erb",
+  #               layout: "layouts/pdf",
+  #               orientation: "Landscape",
+  #               lowquality: true,
+  #               zoom: 1,
+  #               dpi: 75
+  #           end
+  #       end
+		# respond_to do |format|
+  #     format.pdf do
+  #       render "orders/order" ,layout: "layouts/pdf"
+  #     end
+  #   end
+    # byebug
+    # redirect_to orders_path
+	end
 	private
 
 		def order_params

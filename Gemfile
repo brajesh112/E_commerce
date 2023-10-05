@@ -60,6 +60,7 @@ gem "jbuilder"
  gem "zip-codes"
  gem "city-state"
  gem 'prawn', '~> 2.1'
+ gem 'activeadmin_addons'
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
 

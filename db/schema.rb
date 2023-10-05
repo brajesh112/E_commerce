@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_03_113445) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_05_121459) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -90,7 +90,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_03_113445) do
     t.string "categories_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.decimal "category_comission"
   end
 
   create_table "discounts", force: :cascade do |t|
@@ -187,6 +186,22 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_03_113445) do
     t.index ["order_id"], name: "index_payments_on_order_id"
   end
 
+  create_table "product_colors", force: :cascade do |t|
+    t.integer "product_id"
+    t.string "color"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_product_colors_on_product_id"
+  end
+
+  create_table "product_sizes", force: :cascade do |t|
+    t.integer "variant_id"
+    t.string "size"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["variant_id"], name: "index_product_sizes_on_variant_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "product_name"
     t.integer "stock"
@@ -199,8 +214,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_03_113445) do
     t.integer "product_type"
     t.decimal "discount_price"
     t.string "price_id"
+    t.integer "sub_category_id"
+    t.integer "variant_id"
     t.index ["category_id"], name: "index_products_on_category_id"
+    t.index ["sub_category_id"], name: "index_products_on_sub_category_id"
     t.index ["user_id"], name: "index_products_on_user_id"
+    t.index ["variant_id"], name: "index_products_on_variant_id"
+  end
+
+  create_table "properties", force: :cascade do |t|
+    t.string "color"
+    t.string "size"
+    t.integer "variant_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["variant_id"], name: "index_properties_on_variant_id"
   end
 
   create_table "shipments", force: :cascade do |t|
@@ -210,6 +238,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_03_113445) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["order_id"], name: "index_shipments_on_order_id"
+  end
+
+  create_table "sub_categories", force: :cascade do |t|
+    t.string "name"
+    t.integer "category_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_sub_categories_on_category_id"
   end
 
   create_table "terms_and_conditions", force: :cascade do |t|
@@ -261,7 +297,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_03_113445) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "variants", force: :cascade do |t|
+    t.decimal "category_comission"
+    t.string "variant_name"
+    t.integer "sub_category_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sub_category_id"], name: "index_variants_on_sub_category_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "products", "categories"
+  add_foreign_key "products", "sub_categories"
+  add_foreign_key "products", "variants"
 end

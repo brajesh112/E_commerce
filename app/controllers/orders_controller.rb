@@ -46,35 +46,15 @@ class OrdersController < ApplicationController
 
 	def show
 		@order = Order.find_by(id: params[:id])
-		respond_to do |format|
-	    format.html
-	    format.pdf do
-	      pdf = Prawn::Document.new
-	      pdf.text "this is a pdf"
-	      send_data pdf.render_file "mypdf.pdf"
-	    end
-	  end
-		# return redirect_to root_path, alert: "Order not found" unless @order.present?
-		# respond_to do |format|
-  #     format.html
-  #     format.pdf do
-  #         render pdf: "order", template: "orders/show", layout: "layouts/pdf", formats: [:html]
-  #     end
-  #   end
 		# respond_to do |format|
 	 #    format.html
 	 #    format.pdf do
-	 # # #        render pdf: "demo",
-	 # # #        # page_size: 'A4',
-	 # # #        template: "orders/order",
-  # # #         formats: [:html],
-  # # #         disposition: :inline,
-  # # #         layout: 'pdf'
-	 # # 			render pdf: "hello-filename", template: "orders/show", formats: [:html], disposition: :inline, layout: 'layouts/pdf'
-		# 		pdf = Prawn::Document.new
-		# 		pdf.render_file('show.pdf')
-		#   end
-	  # end
+	 #      pdf = Prawn::Document.new
+	 #      pdf.text "this is a pdf"
+	 #      send_data pdf.render_file "mypdf.pdf"
+	 #    end
+	 #  end
+
 	end
 
 	def index
@@ -99,37 +79,30 @@ class OrdersController < ApplicationController
 	end
 
 	def order_pdf 
-		@orders = Order.where(id: params[:order_id])
-				pdf = Prawn::Document.new
-				pdf.render_file('show.pdf')
-				byebug
-		# respond_to do |format|
-  #           # format.html
-  #           format.pdf do
-  #               render "orders/order_pdf",
-  #               page_size: 'A4',
-  #               template: "orders/order_pdf.html.erb",
-  #               layout: "layouts/pdf",
-  #               orientation: "Landscape",
-  #               lowquality: true,
-  #               zoom: 1,
-  #               dpi: 75
-  #           end
-  #       end
-		# respond_to do |format|
-  #     format.pdf do
-  #       render "orders/order" ,layout: "layouts/pdf"
-  #     end
-  #   end
-    # byebug
-    # redirect_to orders_path
+		order = Order.find_by(id: params[:order_id])
+    send_data generate_pdf(order),
+              filename: "#{order.id}.pdf",
+              type: "application/pdf",
+              disposition: "inline"
+ #    send_file("/home/user/Downloads/#{user.user_name}.pdf",
+ #              filename: "#{user.id}.pdf",
+ #              type: "application/pdf")
+ 
 	end
+
 	private
 
 		def order_params
 			params.require(:order).permit(:address_id, :payment_method, :track_id, :status)
 		end
 
+    def generate_pdf(order)
+      Prawn::Document.new do
+        # text order.id, align: :center
+        text "Address: #{order.id}"
+        text "Email: #{order.description}"
+      end.render
+    end
 		def create_order_items(item ,i)
 			@description += helpers.description_body(item, i,@order)
 			item.product.order_items.create(order_id: @order.id, quantity: item.quantity)

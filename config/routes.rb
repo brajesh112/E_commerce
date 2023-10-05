@@ -15,6 +15,9 @@ Rails.application.routes.draw do
   resources :seller_signups, only: [:index]
   resources :line_items, :notifications, :otps
   resources :payments
+
+  post "admin/products/add_sub", to: "admin/products#add_sub"
+  post "admin/products/variant", to: "admin/products#variant"
   root to: "homes#index"
   match '*unmatched', to: 'application#not_found_method', via: :all, constraints: lambda { |req| (req.path.exclude? 'active_storage')}
 end

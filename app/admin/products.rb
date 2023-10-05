@@ -8,7 +8,7 @@ ActiveAdmin.register Product do
   
   Category.all.map{|cat| scope ("#{cat.categories_type}") {|scope| scope.joins(:category).where("categories.categories_type" => "#{cat.categories_type}")} }
 
-  permit_params :product_name, :stock, :price, :description, :user_id, :category_id, :offer_type_ids, :product_type, :discount_price,:price_id, images:[]
+  permit_params :product_name, :stock, :price, :description, :user_id, :category_id, :offer_type_ids, :product_type, :discount_price,:price_id,:sub_category_id, :variant_id,images:[]
 
   form do |f|
     f.inputs do
@@ -22,11 +22,25 @@ ActiveAdmin.register Product do
 
       f.input :category, as: :select, collection: Category.all.map{|category| [category.categories_type, category.id]}
 
+      div class: "d-none", id: "sub_div" do 
+       f.input :sub_category, as: :select, collection: []
+      end
+
+      div class: "d-none", id: "variant_div" do 
+       f.input :variant, as: :select, collection: []
+      end
+
+
       if f.object.images.attached?
         f.input :images, as: :file, input_html: { multiple: true },hint: image_tag(f.object.images.first, size: "100")
       else
         f.input :images, as: :file, input_html: { multiple: true }
       end 
+    end
+    f.inputs "ProductColor" do
+      f.has_many :product_colors, heading: false do |cd|
+        cd.input :color
+      end
     end
     actions
   end
@@ -83,6 +97,7 @@ ActiveAdmin.register Product do
     def update
       super
       offers_add
+      byebug
     end
 
     def create
@@ -91,6 +106,7 @@ ActiveAdmin.register Product do
       obj = StripePayment.create_product(resource)
       resource.price_id = obj.id
       resource.save
+      byebug
     end
 
     def offers_add
@@ -106,6 +122,20 @@ ActiveAdmin.register Product do
 
     def scoped_collection
       current_user.seller? ? Product.where(user_id: current_user.id) : Product.all
+    end
+
+    def add_sub
+      response = SubCategory.where(category_id: params[:id]).map{|subcat| [subcat.id, subcat.name]}
+      respond_to do |format|
+        format.json {render json: response}
+      end
+    end
+
+    def variant
+      response = Variant.where(sub_category_id: params[:id]).map{|variant| [variant.id, variant.variant_name]}
+      respond_to do |format|
+        format.json {render json: response}
+      end
     end
   end
 end

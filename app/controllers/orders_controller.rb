@@ -26,6 +26,7 @@ class OrdersController < ApplicationController
 			@products = []
 			@items.all.map { |item| @products << item.product }
 			@order.products << @products
+			byebug
 			return redirect_to new_order_path, alert: "something went wrong" unless @order.save
 			@description = ""
 			@items.each do |item|
@@ -46,15 +47,6 @@ class OrdersController < ApplicationController
 
 	def show
 		@order = Order.find_by(id: params[:id])
-		# respond_to do |format|
-	 #    format.html
-	 #    format.pdf do
-	 #      pdf = Prawn::Document.new
-	 #      pdf.text "this is a pdf"
-	 #      send_data pdf.render_file "mypdf.pdf"
-	 #    end
-	 #  end
-
 	end
 
 	def index

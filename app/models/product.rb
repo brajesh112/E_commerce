@@ -8,6 +8,9 @@ class Product < ApplicationRecord
 	has_many :line_items, dependent: :destroy
 	has_many :order_items, dependent: :destroy
 	has_and_belongs_to_many :offer_types, dependent: :destroy
+	has_many :sizes ,dependent: :destroy
+	has_many :product_sizes,through: :sizes
+	accepts_nested_attributes_for :sizes, allow_destroy: true
 	belongs_to :user
 	belongs_to :category
 	belongs_to :sub_category

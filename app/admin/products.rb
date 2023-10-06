@@ -8,11 +8,11 @@ ActiveAdmin.register Product do
   
   Category.all.map{|cat| scope ("#{cat.categories_type}") {|scope| scope.joins(:category).where("categories.categories_type" => "#{cat.categories_type}")} }
 
-  permit_params :product_name, :stock, :price, :description, :user_id, :category_id, :offer_type_ids, :product_type, :discount_price,:price_id,:sub_category_id, :variant_id,images:[]
+  permit_params :product_name, :stock, :price, :description, :user_id, :category_id, :offer_type_ids, :product_type, :discount_price,:price_id,:sub_category_id, :variant_id,product_colors_attributes: [:id, :color, :_destroy => true], sizes_attributes: [:id, :product_size_id, :_destroy => true], images:[]
 
   form do |f|
     f.inputs do
-      f.input :user 
+      f.input :user, as: :select, collection: User.where(role: "seller").map{|seller| [seller.name, seller.id]}
       f.input :product_name
       f.input :stock
       f.input :price
@@ -23,13 +23,12 @@ ActiveAdmin.register Product do
       f.input :category, as: :select, collection: Category.all.map{|category| [category.categories_type, category.id]}
 
       div class: "d-none", id: "sub_div" do 
-       f.input :sub_category, as: :select, collection: []
+       f.input :sub_category, as: :select, collection: SubCategory.all.map{|sub_category| [sub_category.name, sub_category.id]}
       end
 
       div class: "d-none", id: "variant_div" do 
-       f.input :variant, as: :select, collection: []
+       f.input :variant, as: :select, collection: Variant.all.map{|variant| [variant.variant_name, variant.id]}
       end
-
 
       if f.object.images.attached?
         f.input :images, as: :file, input_html: { multiple: true },hint: image_tag(f.object.images.first, size: "100")
@@ -38,8 +37,13 @@ ActiveAdmin.register Product do
       end 
     end
     f.inputs "ProductColor" do
-      f.has_many :product_colors, heading: false do |cd|
+      f.has_many :product_colors, allow_destroy: true, heading: false do |cd|
         cd.input :color
+      end
+    end
+    f.inputs "ProductSize" do
+      f.has_many :sizes, allow_destroy: true, heading: false do |cd|
+        cd.input :product_size_id, as: :select, collection: ProductSize.all.map{|pro_size| [pro_size.size, pro_size.id]},input_html:{class: "size_options"}
       end
     end
     actions
@@ -84,20 +88,10 @@ ActiveAdmin.register Product do
       row :updated_at
     end
   end
-
-  #
-  # or
-  #
-  # permit_params do
-  #   permitted = [:product_name, :stock, :price, :description, :user_id, :category_id]
-  #   permitted << :other if params[:action] == 'create' && current_user.admin?
-  #   permitted
-  # end
   controller do
     def update
       super
       offers_add
-      byebug
     end
 
     def create
@@ -106,7 +100,6 @@ ActiveAdmin.register Product do
       obj = StripePayment.create_product(resource)
       resource.price_id = obj.id
       resource.save
-      byebug
     end
 
     def offers_add
@@ -133,6 +126,12 @@ ActiveAdmin.register Product do
 
     def variant
       response = Variant.where(sub_category_id: params[:id]).map{|variant| [variant.id, variant.variant_name]}
+      respond_to do |format|
+        format.json {render json: response}
+      end
+    end
+    def size_of_product
+      response = ProductSize.where(variant_id: params[:id]).map{|prod_size| [prod_size.id, prod_size.size]}
       respond_to do |format|
         format.json {render json: response}
       end

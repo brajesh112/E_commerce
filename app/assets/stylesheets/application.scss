@@ -202,10 +202,6 @@ background: #c5cae9 !important;
 
 .order_address{
 	width: 35%; 
-	position: fixed;
-	right: 0;
-	margin: 14px;
-	top: 84px;
 	height: fit-content;
 }
 .address_row{
@@ -223,4 +219,15 @@ background: #c5cae9 !important;
 .order_button{
 	height: 48px !important;
   font-size: 28px !important;
+}
+#address_country{
+	height: 40px;
+}
+#address_state{
+	height: 40px;
+	width:100%;
+}
+#address_city{
+	height: 40px;
+	width:100%;
 }

@@ -37,11 +37,47 @@ $(document).ready(function() {
       async: false,
       success: function(response){       	
 				var list = "<option value=''></option>";
+				debugger
 				for (var j = 0; j < response.length; j++){
 		      list += "<option value='" +response[j][0]+ "'>" +response[j][1]+ "</option>";
 				}
 				$("#product_variant_id").html(list);
 				$("#variant_div").removeClass("d-none")
+			}
+		})
+	});
+
+	$("#product_variant_id").change(function(){ 
+		var cat = this.value;
+		$.ajax({
+			type: 'POST',
+      url: '/admin/products/size_of_product',
+      data: {id: cat},
+      dataType: 'json',
+      async: false,
+      success: function(response){      
+				var list = "<option value=''></option>";
+				for (var j = 0; j < response.length; j++){
+		      list += "<option value='" +response[j][0]+ "'>" +response[j][1]+ "</option>";
+				}
+				$(".size_options").html(list);
+			}
+		})
+	})
+	$(".has_many_add").click(function(){
+		var cat = $("#product_variant_id")[0].value;
+		$.ajax({
+			type: 'POST',
+      url: '/admin/products/size_of_product',
+      data: {id: cat},
+      dataType: 'json',
+      async: false,
+      success: function(response){      
+				var list = "<option value=''></option>";
+				for (var j = 0; j < response.length; j++){
+		      list += "<option value='" +response[j][0]+ "'>" +response[j][1]+ "</option>";
+				}
+				setTimeout(function(){$(".size_options").last().html(list);}, 1)
 			}
 		})
 	});

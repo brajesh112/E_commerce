@@ -130,6 +130,7 @@ GEM
     concurrent-ruby (1.2.2)
     connection_pool (2.4.1)
     crass (1.0.6)
+    currencies (0.4.2)
     date (3.3.3)
     debug (1.8.0)
       irb (>= 1.5.0)
@@ -433,6 +434,7 @@ DEPENDENCIES
   chartkick
   city-state
   cloudinary
+  currencies
   debug
   devise
   dotenv-rails

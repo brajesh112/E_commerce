@@ -102,13 +102,13 @@
 		</div>
 	</div>
 	<% if failed_payment(@order) %>
-			<%= link_to "Repay", orders_path(id: order), method: :post, class: "btn btn-primary btn-lg " %>
+			<%= link_to "Repay", orders_path(id: @order), method: :post, class: "btn btn-primary btn-lg " %>
 	<% else %>
 		<% unless order_status(@order)  %>
 			<%= link_to "Show Shipment", shipment_path(@order.shipment) , class: "btn btn-primary btn-lg " %>
 			<%= link_to "Cancel Order", order_path(@order), data: {confirm: "Are You Sure"}, method: :patch, class: "btn btn-primary btn-lg " %>
 			<%= link_to "Track Order", tracking_order_path(@order.shipment) , class: "btn btn-primary btn-lg " if @order.shipment.status != "ordered" %>
-			<%= link_to "Download PDF", order_detail_pdf_path(order_id: order.id, format: :pdf), class: "btn btn-primary" %>
+			<%= link_to "Download PDF", order_detail_pdf_path(order_id: @order.id, format: :pdf), class: "btn btn-primary" %>
 		<% end %>
 	<% end %>
 </div>

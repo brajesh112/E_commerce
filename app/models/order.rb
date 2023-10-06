@@ -26,7 +26,7 @@ class Order < ApplicationRecord
 		if self.status.eql?('paid')
 			self.order_items.all.each do |item|
 				@price = item.product.discount_price * item.quantity
-				@admin_comision = (item.product.sub_sub_categories.category_comission * @price)/100 
+				@admin_comision = (item.product.variant.category_comission * @price)/100 
 				@tax = @price/50
 				@seller_earnings = @price - (@admin_comision + @tax)
 				item.product.user.transactions.create(admin_commision: @admin_comision, tax: @tax, seller_earning: @seller_earnings, total_amount: @price, product: item.product.product_name, order_id: self.id, quantity: item.quantity, status: 'pending')

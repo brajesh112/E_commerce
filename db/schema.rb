@@ -11,13 +11,16 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
     t.string "resource_type"
-    t.integer "resource_id"
+    t.bigint "resource_id"
     t.string "author_type"
-    t.integer "author_id"
+    t.bigint "author_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author"
@@ -28,8 +31,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
-    t.integer "record_id", null: false
-    t.integer "blob_id", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
@@ -48,7 +51,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
-    t.integer "blob_id", null: false
+    t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
@@ -61,7 +64,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
     t.string "state"
     t.string "pin"
     t.string "country"
-    t.integer "user_id"
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_addresses_on_user_id"
@@ -73,14 +76,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
     t.string "bank"
     t.string "branch_name"
     t.string "city"
-    t.integer "user_id"
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_bank_accounts_on_user_id"
   end
 
   create_table "carts", force: :cascade do |t|
-    t.integer "user_id"
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_carts_on_user_id"
@@ -94,7 +97,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
 
   create_table "discounts", force: :cascade do |t|
     t.integer "discount_amount"
-    t.integer "product_id"
+    t.bigint "product_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["product_id"], name: "index_discounts_on_product_id"
@@ -102,8 +105,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
 
   create_table "items", force: :cascade do |t|
     t.bigint "quantity"
-    t.integer "cart_id"
-    t.integer "product_id"
+    t.bigint "cart_id"
+    t.bigint "product_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cart_id"], name: "index_items_on_cart_id"
@@ -113,8 +116,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
   create_table "notifications", force: :cascade do |t|
     t.string "action"
     t.string "notificable_type"
-    t.integer "notificable_id"
-    t.integer "user_id"
+    t.bigint "notificable_id"
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["notificable_type", "notificable_id"], name: "index_notifications_on_notificable"
@@ -129,8 +132,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
   end
 
   create_table "offer_types_products", force: :cascade do |t|
-    t.integer "product_id"
-    t.integer "offer_type_id"
+    t.bigint "product_id"
+    t.bigint "offer_type_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["offer_type_id"], name: "index_offer_types_products_on_offer_type_id"
@@ -139,8 +142,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
 
   create_table "order_items", force: :cascade do |t|
     t.integer "quantity"
-    t.integer "product_id"
-    t.integer "order_id"
+    t.bigint "product_id"
+    t.bigint "order_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["order_id"], name: "index_order_items_on_order_id"
@@ -152,8 +155,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
     t.integer "payment_method"
     t.integer "status"
     t.string "track_id"
-    t.integer "user_id"
-    t.integer "address_id"
+    t.bigint "user_id"
+    t.bigint "address_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["address_id"], name: "index_orders_on_address_id"
@@ -161,8 +164,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
   end
 
   create_table "orders_products", force: :cascade do |t|
-    t.integer "product_id"
-    t.integer "order_id"
+    t.bigint "product_id"
+    t.bigint "order_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["order_id"], name: "index_orders_products_on_order_id"
@@ -171,7 +174,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
 
   create_table "otps", force: :cascade do |t|
     t.integer "onetp"
-    t.integer "user_id"
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_otps_on_user_id"
@@ -179,7 +182,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
 
   create_table "payments", force: :cascade do |t|
     t.string "payment_id"
-    t.integer "order_id"
+    t.bigint "order_id"
     t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -187,7 +190,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
   end
 
   create_table "product_colors", force: :cascade do |t|
-    t.integer "product_id"
+    t.bigint "product_id"
     t.string "color"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -195,7 +198,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
   end
 
   create_table "product_sizes", force: :cascade do |t|
-    t.integer "variant_id"
+    t.bigint "variant_id"
     t.string "size"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -204,45 +207,34 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
 
   create_table "products", force: :cascade do |t|
     t.string "product_name"
-    t.integer "stock"
+    t.bigint "stock"
     t.decimal "price"
     t.string "description"
-    t.integer "user_id"
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "category_id"
+    t.bigint "category_id"
     t.integer "product_type"
     t.decimal "discount_price"
     t.string "price_id"
-    t.integer "sub_category_id"
-    t.integer "variant_id"
+    t.bigint "variant_id"
     t.index ["category_id"], name: "index_products_on_category_id"
-    t.index ["sub_category_id"], name: "index_products_on_sub_category_id"
     t.index ["user_id"], name: "index_products_on_user_id"
     t.index ["variant_id"], name: "index_products_on_variant_id"
-  end
-
-  create_table "properties", force: :cascade do |t|
-    t.string "color"
-    t.string "size"
-    t.integer "variant_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["variant_id"], name: "index_properties_on_variant_id"
   end
 
   create_table "shipments", force: :cascade do |t|
     t.integer "status"
     t.datetime "expected_delivery"
-    t.integer "order_id"
+    t.bigint "order_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["order_id"], name: "index_shipments_on_order_id"
   end
 
   create_table "sizes", force: :cascade do |t|
-    t.integer "product_id"
-    t.integer "product_size_id"
+    t.bigint "product_id"
+    t.bigint "product_size_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["product_id"], name: "index_sizes_on_product_id"
@@ -251,7 +243,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
 
   create_table "sub_categories", force: :cascade do |t|
     t.string "name"
-    t.integer "category_id"
+    t.bigint "category_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_sub_categories_on_category_id"
@@ -266,7 +258,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
   create_table "tracking_orders", force: :cascade do |t|
     t.string "place"
     t.integer "status"
-    t.integer "shipment_id"
+    t.bigint "shipment_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["shipment_id"], name: "index_tracking_orders_on_shipment_id"
@@ -277,10 +269,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
     t.decimal "seller_earning"
     t.decimal "tax"
     t.decimal "total_amount"
-    t.integer "user_id"
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "order_id"
+    t.bigint "order_id"
     t.integer "quantity"
     t.string "product"
     t.integer "status"
@@ -309,7 +301,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
   create_table "variants", force: :cascade do |t|
     t.decimal "category_comission"
     t.string "variant_name"
-    t.integer "sub_category_id"
+    t.bigint "sub_category_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["sub_category_id"], name: "index_variants_on_sub_category_id"
@@ -318,6 +310,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "products", "categories"
-  add_foreign_key "products", "sub_categories"
   add_foreign_key "products", "variants"
 end

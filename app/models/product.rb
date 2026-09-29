@@ -13,7 +13,10 @@ class Product < ApplicationRecord
 	accepts_nested_attributes_for :sizes, allow_destroy: true
 	belongs_to :user
 	belongs_to :category
-	belongs_to :sub_category
+	# Vestigial: the category hierarchy moved to category + variant (which owns
+	# the sub_category). There is no products.sub_category_id column, so this
+	# association is optional to keep products creatable.
+	belongs_to :sub_category, optional: true
 	belongs_to :variant
 	validates :product_name, :price, :description, presence: true
 	enum :product_type,[:national, :personal]

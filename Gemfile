@@ -1,10 +1,10 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.1.2"
+ruby "3.4.10"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 7.0.6"
+gem "rails", "~> 8.0.0"
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
@@ -13,7 +13,7 @@ gem "sprockets-rails"
 # gem "sqlite3", "~> 1.4"
 gem "pg"
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", "~> 5.0"
+gem "puma", "~> 6.0"
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
@@ -27,7 +27,7 @@ gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
- gem 'omniauth', '~> 1.6', '>= 1.6.1'
+ gem 'omniauth', '~> 2.1'
  gem "omniauth-google-oauth2"
  gem "omniauth-rails_csrf_protection"
  gem 'omniauth-facebook'
@@ -40,26 +40,19 @@ gem "jbuilder"
  gem "font-awesome-sass", "~> 6.4.2"
  gem 'kaminari'
  gem 'bootstrap5-kaminari-views'
- gem 'activeadmin', '~> 2.14'
+ gem 'activeadmin', '4.0.0.beta23'
  gem 'cancancan'
- gem 'arctic_admin'
- gem 'activeadmin_quill_editor'
  gem 'redis'
  gem 'sidekiq'
  gem "sidekiq-cron"
- gem 'font-awesome-rails'
  gem "letter_opener"
  gem 'stripe'
  gem 'twilio-ruby'
  gem "chartkick"
  gem "groupdate"
- gem 'wicked_pdf'
- # gem 'wicked_pdf', '~> 2.1'
- gem 'wkhtmltopdf-binary'
  gem "zip-codes"
  gem "city-state"
  gem 'prawn', '~> 2.1'
- gem 'activeadmin_addons'
  gem 'currencies'
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
@@ -75,6 +68,10 @@ gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
+
+# Pin json to 2.x: Rails 8.0.5's JSON encoder still passes the quirks_mode
+# option that json 3.x removed (breaks serialized-column saves).
+gem "json", "~> 2.9"
 
 # Use Sass to process CSS
 # gem "sassc-rails"
@@ -103,5 +100,4 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
-  gem "webdrivers"
 end

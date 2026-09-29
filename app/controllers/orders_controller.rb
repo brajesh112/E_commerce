@@ -20,6 +20,7 @@ class OrdersController < ApplicationController
 	def create
 		unless params[:id].present?
 			@order = current_user.orders.new(order_params)
+			@order.status = "pending" # never trust a client-supplied status
 			@items = LineItem.where(id: params[:order][:item_id].split)
 			i = 1 
 			@order.description = ""
@@ -34,7 +35,8 @@ class OrdersController < ApplicationController
 			end
 			@order.update(description: @description)
 		else
-			@order = Order.find_by(id: params[:id])
+			@order = current_user.orders.find_by(id: params[:id])
+			return redirect_to orders_path, alert: "Order not found" if @order.nil?
 			@items = @order.order_items
 		end
 			unless @order.payment_method.eql?('cash')
@@ -45,7 +47,8 @@ class OrdersController < ApplicationController
 	end
 
 	def show
-		@order = Order.find_by(id: params[:id])
+		@order = current_user.orders.find_by(id: params[:id])
+		redirect_to orders_path, alert: "Order not found" if @order.nil?
 	end
 
 	def index
@@ -56,21 +59,22 @@ class OrdersController < ApplicationController
 	end
 
 	def update
-		@order = Order.find_by(id: params[:id])
-		return redirect_to root_path unless @order.present?
+		@order = current_user.orders.find_by(id: params[:id])
+		return redirect_to orders_path, alert: "Order not found" unless @order.present?
 		if @order.status.eql?("paid")
 			@order.update(status: "refunded", track_id: nil)
-			StripePayment.refund_payment(@order) 
+			StripePayment.refund_payment(@order)
 		else
 			@order.update(status: "cancel", track_id: nil)
 		end
 		helpers.add_notification(@order, "Your Order Is Canceled")
-		@order.shipment.destroy
+		@order.shipment&.destroy
 		redirect_to orders_path
 	end
 
-	def order_pdf 
-		order = Order.find_by(id: params[:order_id])
+	def order_pdf
+		order = current_user.orders.find_by(id: params[:order_id])
+		return redirect_to orders_path, alert: "Order not found" if order.nil?
     send_data generate_pdf(order),
               filename: "#{order.id}.pdf",
               type: "application/pdf",
@@ -84,7 +88,7 @@ class OrdersController < ApplicationController
 	private
 
 		def order_params
-			params.require(:order).permit(:address_id, :payment_method, :track_id, :status)
+			params.require(:order).permit(:address_id, :payment_method, :track_id)
 		end
 
     def generate_pdf(order)

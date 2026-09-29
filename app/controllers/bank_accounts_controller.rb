@@ -17,12 +17,12 @@ class BankAccountsController < ApplicationController
 	end
 
 	def edit
-		@account = BankAccount.find_by(id: params[:id])
+		@account = current_user.bank_accounts.find_by(id: params[:id])
 		return redirect_to root_path, alert: "Account not found" unless @account.present?
 	end
 
 	def update
-		@account = BankAccount.find_by(id: params[:id])
+		@account = current_user.bank_accounts.find_by(id: params[:id])
 		return redirect_to root_path, alert: "Account not found" unless @account.present?
 		@account.update(permit_params)
 		helpers.add_notification(@account, "Bank Account Updated On Your Profile")
@@ -33,8 +33,8 @@ class BankAccountsController < ApplicationController
 		@accounts = current_user.bank_accounts.all
 	end 
 
-	def destroy 
-		@account = BankAccount.find_by(id: params[:id])
+	def destroy
+		@account = current_user.bank_accounts.find_by(id: params[:id])
 		return redirect_to root_path, alert: "Account not found" unless @account.present?
 		helpers.add_notification(@account, "Bank Account Removed from Your Profile")
 		@account.destroy
@@ -43,6 +43,6 @@ class BankAccountsController < ApplicationController
 
 	private
 		def permit_params 
-			params.require(:bank_account).permit(:account_no, :ifsc_code, :bank, :branch_name, :city, :user_id)
+			params.require(:bank_account).permit(:account_no, :ifsc_code, :bank, :branch_name, :city)
 		end
 end

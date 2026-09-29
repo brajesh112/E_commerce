@@ -4,9 +4,6 @@ ActiveAdmin.setup do |config|
   # Set the title that is displayed on the main layout
   # for each of the active admin pages.
   #
-  meta_tags_options = { viewport: 'width=device-width, initial-scale=1' }
-  config.meta_tags = meta_tags_options
-  config.meta_tags_for_logged_out_pages = meta_tags_options
   config.site_title = "E Commerce"
 
   # Set the link url for the title. For example, to take
@@ -130,7 +127,7 @@ ActiveAdmin.setup do |config|
   # link. For example :get, :delete, :put, etc..
   #
   # Default:
-  config.logout_link_method = :delete
+  # [AA4 removed] config.logout_link_method = :delete
 
   # == Root
   #
@@ -236,9 +233,9 @@ ActiveAdmin.setup do |config|
   #
   # To load a javascript file:
   #   config.register_javascript 'my_javascript.js'
-  config.register_javascript "https://unpkg.com/slim-select@latest/dist/slimselect.min.js"
-  config.register_stylesheet "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-  config.register_stylesheet "https://unpkg.com/slim-select@latest/dist/slimselect.css"
+  # [AA4 removed] config.register_javascript "https://unpkg.com/slim-select@latest/dist/slimselect.min.js"
+  # [AA4 removed] config.register_stylesheet "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+  # [AA4 removed] config.register_stylesheet "https://unpkg.com/slim-select@latest/dist/slimselect.css"
   # == CSV options
   #
   # Set the CSV builder separator

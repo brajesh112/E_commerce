@@ -1,6 +1,4 @@
-//= require arctic_admin/base
-//= require activeadmin/quill_editor/quill
-//= require activeadmin/quill_editor_input
+// [AA4 migration] arctic_admin/quill removed with their gems.
 //= require chartkick
 //= require Chart.bundle
 $(document).ready(function() {
@@ -37,7 +35,6 @@ $(document).ready(function() {
       async: false,
       success: function(response){       	
 				var list = "<option value=''></option>";
-				debugger
 				for (var j = 0; j < response.length; j++){
 		      list += "<option value='" +response[j][0]+ "'>" +response[j][1]+ "</option>";
 				}

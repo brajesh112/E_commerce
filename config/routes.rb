@@ -16,6 +16,8 @@ Rails.application.routes.draw do
   resources :line_items, :notifications, :otps
   resources :payments
   post "stripe/webhook", to: "stripe_webhooks#create"
+  resources :device_tokens, only: [:create]
+  get "firebase-messaging-sw.js", to: "push#service_worker"
 
   post "admin/products/add_sub", to: "admin/products#add_sub"
   post "admin/products/variant", to: "admin/products#variant"

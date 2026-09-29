@@ -48,6 +48,7 @@ gem "jbuilder"
  gem "letter_opener"
  gem 'stripe'
  gem 'twilio-ruby'
+ gem 'googleauth' # Firebase Cloud Messaging HTTP v1 auth
  gem "chartkick"
  gem "groupdate"
  gem "zip-codes"

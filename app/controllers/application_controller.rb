@@ -1,8 +1,9 @@
 class ApplicationController < ActionController::Base
 	add_flash_types :danger, :info, :warning, :success, :messages
+	protect_from_forgery with: :exception
 	before_action :insert_params, only:[:create], if: :devise_controller?
 	before_action :update_params, only:[:update], if: :devise_controller?
-	 # protect_from_forgery
+	before_action :sanitize_role, only:[:create, :update], if: :devise_controller?
 
   # def access_denied(exception)
   #   redirect_to admin_dashboard_path, alert: exception.message
@@ -18,7 +19,15 @@ class ApplicationController < ActionController::Base
 
 		def update_params
 			devise_parameter_sanitizer.permit(:account_update, keys: [:name, :avatar, :phone_number, :role, :notification_status])
-		end	
+		end
+
+		# Users may register/update as buyer or seller only; never self-assign admin.
+		def sanitize_role
+			role = params.dig(:user, :role)
+			if role.present? && !%w[buyer seller].include?(role)
+				params[:user][:role] = "buyer"
+			end
+		end
 		
 		def check
 			unless user_signed_in? && (current_user.admin? || current_user.seller?)

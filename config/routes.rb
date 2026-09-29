@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   resources :seller_signups, only: [:index]
   resources :line_items, :notifications, :otps
   resources :payments
+  post "stripe/webhook", to: "stripe_webhooks#create"
 
   post "admin/products/add_sub", to: "admin/products#add_sub"
   post "admin/products/variant", to: "admin/products#variant"

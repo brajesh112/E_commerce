@@ -26,7 +26,6 @@ class OrdersController < ApplicationController
 			@products = []
 			@items.all.map { |item| @products << item.product }
 			@order.products << @products
-			byebug
 			return redirect_to new_order_path, alert: "something went wrong" unless @order.save
 			@description = ""
 			@items.each do |item|
@@ -39,7 +38,7 @@ class OrdersController < ApplicationController
 			@items = @order.order_items
 		end
 			unless @order.payment_method.eql?('cash')
-				session = StripePayment.checkout_session(current_user, @items) 
+				session = StripePayment.checkout_session(current_user, @items, @order)
 				return redirect_to(session.url , :allow_other_host=> true, data: {turbo: false})
 			end
 			redirect_to order_path(@order)

@@ -20,6 +20,14 @@ class User < ApplicationRecord
   validates :phone_number, length: {is: 10}
 
 
+  # Never let admin search filters expose auth/payment secrets.
+  SENSITIVE_RANSACK_ATTRS = %w[encrypted_password reset_password_token
+                               reset_password_sent_at remember_created_at stripe_id].freeze
+
+  def self.ransackable_attributes(_auth_object = nil)
+    column_names - SENSITIVE_RANSACK_ATTRS
+  end
+
   def insert_avatar
       unless self.avatar.attached? 
       self.avatar.attach(io: File.open("#{Rails.root}/app/assets/images/profile.png"), filename: 'profile.png', content_type: 'image/png')

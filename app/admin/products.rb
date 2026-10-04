@@ -30,11 +30,14 @@ ActiveAdmin.register Product do
     if params[:file].blank?
       redirect_to bulk_upload_admin_products_path, alert: "Please choose an .xlsx file."
     else
-      result = ProductImporter.new(params[:file], current_user).call
-      first_errors = result.errors.first(5).map { |e| "Row #{e[:row] || '-'}: #{e[:messages].join(', ')}" }
-      flash_type = result.errors.any? ? :warning : :notice
-      redirect_to admin_products_path,
-                  flash_type => [result.summary, *first_errors].join(" | ")
+      # Persist the upload and run the import in the background so a large file
+      # never blocks the request; results appear on the Product Imports page.
+      import = ProductImport.new(user: current_user)
+      import.file.attach(params[:file])
+      import.save!
+      ProductImportJob.perform_later(import.id)
+      redirect_to admin_product_imports_path,
+                  notice: "Import queued. Results will appear here once processing finishes."
     end
   end
 

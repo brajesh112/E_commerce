@@ -14,6 +14,8 @@ class Ability
      can [:read, :update], User, id: user.id
      can :manage, Product, user_id: user.id
      can :manage, BankAccount, user_id: user.id
+     cannot :read, ProductImport
+     can [:read, :create], ProductImport, user_id: user.id
     end
     #   return unless user.present?
     #   can :read, :all

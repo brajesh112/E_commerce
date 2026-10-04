@@ -34,6 +34,7 @@ gem "jbuilder"
  gem 'dotenv-rails'
  gem "devise" 
  gem 'cloudinary'
+ gem "aws-sdk-s3", require: false
  gem "jquery-rails"
  gem "bootstrap"
  gem "sassc-rails"

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_04_150000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_04_160000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -218,6 +218,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_04_150000) do
     t.index ["product_id"], name: "index_product_colors_on_product_id"
   end
 
+  create_table "product_imports", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "status", default: "pending", null: false
+    t.integer "created_count", default: 0, null: false
+    t.jsonb "row_errors", default: [], null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_product_imports_on_user_id"
+  end
+
   create_table "product_sizes", force: :cascade do |t|
     t.bigint "variant_id"
     t.string "size"
@@ -351,6 +361,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_04_150000) do
   add_foreign_key "orders", "addresses"
   add_foreign_key "orders", "users"
   add_foreign_key "payments", "orders"
+  add_foreign_key "product_imports", "users"
   add_foreign_key "products", "categories"
   add_foreign_key "products", "variants"
   add_foreign_key "shipments", "orders"

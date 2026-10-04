@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_04_160000) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  enable_extension "pg_catalog.plpgsql"
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
@@ -93,6 +93,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
     t.string "categories_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "code"
+    t.index ["code"], name: "index_categories_on_code", unique: true
+  end
+
+  create_table "device_tokens", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "token", null: false
+    t.string "platform", default: "web"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["token"], name: "index_device_tokens_on_token", unique: true
+    t.index ["user_id"], name: "index_device_tokens_on_user_id"
   end
 
   create_table "discounts", force: :cascade do |t|
@@ -159,6 +171,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
     t.bigint "address_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "amount"
+    t.string "gateway"
     t.index ["address_id"], name: "index_orders_on_address_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
@@ -168,6 +182,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
     t.bigint "order_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["order_id", "product_id"], name: "index_orders_products_on_order_and_product", unique: true
     t.index ["order_id"], name: "index_orders_products_on_order_id"
     t.index ["product_id"], name: "index_orders_products_on_product_id"
   end
@@ -186,7 +201,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
     t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "stripe_session_id"
+    t.decimal "amount"
+    t.string "gateway", default: "stripe"
+    t.string "razorpay_payment_link_id"
     t.index ["order_id"], name: "index_payments_on_order_id"
+    t.index ["razorpay_payment_link_id"], name: "index_payments_on_razorpay_payment_link_id"
+    t.index ["stripe_session_id"], name: "index_payments_on_stripe_session_id"
   end
 
   create_table "product_colors", force: :cascade do |t|
@@ -195,6 +216,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["product_id"], name: "index_product_colors_on_product_id"
+  end
+
+  create_table "product_imports", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "status", default: "pending", null: false
+    t.integer "created_count", default: 0, null: false
+    t.jsonb "row_errors", default: [], null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_product_imports_on_user_id"
   end
 
   create_table "product_sizes", force: :cascade do |t|
@@ -241,12 +272,22 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
     t.index ["product_size_id"], name: "index_sizes_on_product_size_id"
   end
 
+  create_table "stripe_events", force: :cascade do |t|
+    t.string "event_id", null: false
+    t.string "event_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_stripe_events_on_event_id", unique: true
+  end
+
   create_table "sub_categories", force: :cascade do |t|
     t.string "name"
     t.bigint "category_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "code"
     t.index ["category_id"], name: "index_sub_categories_on_category_id"
+    t.index ["code"], name: "index_sub_categories_on_code", unique: true
   end
 
   create_table "terms_and_conditions", force: :cascade do |t|
@@ -304,11 +345,24 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_06_063712) do
     t.bigint "sub_category_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "code"
+    t.index ["code"], name: "index_variants_on_code", unique: true
     t.index ["sub_category_id"], name: "index_variants_on_sub_category_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "addresses", "users"
+  add_foreign_key "bank_accounts", "users"
+  add_foreign_key "carts", "users"
+  add_foreign_key "device_tokens", "users"
+  add_foreign_key "order_items", "orders"
+  add_foreign_key "order_items", "products"
+  add_foreign_key "orders", "addresses"
+  add_foreign_key "orders", "users"
+  add_foreign_key "payments", "orders"
+  add_foreign_key "product_imports", "users"
   add_foreign_key "products", "categories"
   add_foreign_key "products", "variants"
+  add_foreign_key "shipments", "orders"
 end

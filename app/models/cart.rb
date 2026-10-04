@@ -7,6 +7,9 @@ class Cart < ApplicationRecord
 	end
 
 	def total_charges(items)
-		items.joins(:product).where("product.product_type"=>"national").present? ? 40 : "Free"
+		# Flat ₹40 shipping if any line item is a national product, else free.
+		# (The old "product.product_type" referenced a non-existent table alias.)
+		national = Product.product_types[:national]
+		items.joins(:product).where(products: { product_type: national }).exists? ? 40 : "Free"
 	end
 end

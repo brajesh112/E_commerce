@@ -14,7 +14,8 @@ class Shipment < ApplicationRecord
 		end
 
 		def create_tracking_order
-			city = self.order.products.first.user.addresses.first.city
-			self.tracking_orders.new(status: self.status, place: city).save
+			city = order.products.first&.user&.addresses&.first&.city
+			return if city.blank? # place is required on TrackingOrder
+			tracking_orders.new(status: self.status, place: city).save
 		end
 end

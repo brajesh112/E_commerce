@@ -1,0 +1,32 @@
+<div class="panel">
+  <h3>Bulk upload products</h3>
+  <div class="panel_contents">
+    <ol>
+      <li><%= link_to "Download the Excel template", download_template_admin_products_path, class: "button" %></li>
+      <li>Open it and read the <strong>Category Codes</strong>, <strong>Sub Category Codes</strong>, and <strong>Variant Codes</strong> sheets.</li>
+      <li>Fill the <strong>Products</strong> sheet (one product per row), then upload the file below.</li>
+    </ol>
+    <p>
+      <em>
+        variant_code is optional &mdash; leave it blank to use the sub-category's first variant.
+        seller_email is required only when an admin uploads (it sets each product's seller);
+        a seller's own uploads are assigned to them automatically.
+        image_urls is optional &mdash; one or more public http(s) image URLs separated by spaces,
+        commas or "|"; a product with none gets a placeholder image.
+      </em>
+    </p>
+
+    <%= form_tag import_admin_products_path, multipart: true do %>
+      <div style="margin: 12px 0;">
+        <%= file_field_tag :file, accept: ".xlsx" %>
+      </div>
+      <%= submit_tag "Import products", class: "button" %>
+    <% end %>
+    <p>
+      <em>
+        Imports run in the background. The uploaded file is saved and the created
+        count and any per-row errors appear on the <strong>Product Imports</strong> page.
+      </em>
+    </p>
+  </div>
+</div>

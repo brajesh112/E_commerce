@@ -9,9 +9,7 @@ module ApplicationHelper
 	end
 
 	def add_place (obj,key)
-		if obj.tracking_orders.where(status: key).present?
-			obj.tracking_orders.where(status: key).last.place
-		end
+		obj.tracking_orders.where(status: key).last&.place
 	end
 
 	def delivery_date
@@ -21,10 +19,26 @@ module ApplicationHelper
 	def add_notification (obj,action)
 		@notification = obj.notifications.new(user_id: obj.user.id, action: action)
 		@notification.save
+		# Mirror the in-app notification as a Firebase push (async).
+		PushNotificationJob.perform_later(obj.user.id, "E Commerce", action) if @notification.persisted?
+	end
+
+	def firebase_web_config
+		{
+			apiKey: ENV["FIREBASE_API_KEY"],
+			authDomain: ENV["FIREBASE_AUTH_DOMAIN"],
+			projectId: ENV["FIREBASE_PROJECT_ID"],
+			messagingSenderId: ENV["FIREBASE_MESSAGING_SENDER_ID"],
+			appId: ENV["FIREBASE_APP_ID"]
+		}
+	end
+
+	def firebase_push_enabled?
+		ENV["FIREBASE_API_KEY"].present? && ENV["FIREBASE_VAPID_KEY"].present?
 	end
 
 	def order_status(order)
-		order.status.eql?("cancel") || order.status.eql?("refunded")
+		order.status.eql?("cancel") || order.status.eql?("refunded") || order.status.eql?("refund_pending")
 	end
 
 	def failed_payment(order)

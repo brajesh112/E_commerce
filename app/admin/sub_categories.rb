@@ -5,7 +5,7 @@ ActiveAdmin.register SubCategory do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
-   permit_params :name, :category_id
+   permit_params :name, :category_id, :code
   #
   # or
   #
@@ -27,6 +27,7 @@ ActiveAdmin.register SubCategory do
     selectable_column
     id_column
     column :name
+    column :code
     column :category do |sub_category|
       sub_category.category.categories_type
     end

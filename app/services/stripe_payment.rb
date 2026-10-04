@@ -5,18 +5,20 @@ class StripePayment
 	  	Stripe::Customer.create(:email => user.email, :name => user.name)
 	  end
 
-	  def checkout_session(user, items)
+	  def checkout_session(user, items, order)
 	  	customer = Stripe::Customer.retrieve("#{user.stripe_id}")
-	    Stripe::Checkout::Session.create( 
-	      customer: customer, 
+	  	host = ENV.fetch("APP_HOST", "http://localhost:3000")
+	    Stripe::Checkout::Session.create(
+	      customer: customer,
+	      client_reference_id: order.id,
 	      line_items: [
 	      	items.map do |item|
 	      		{price: item.product.price_id, quantity: item.quantity}
 	      	end
 	      ],
 	      mode: 'payment',
-	      success_url: "http://localhost:3000/payments/success?session_id={CHECKOUT_SESSION_ID}",
-	      cancel_url: "http://localhost:3000/payments/cancel?session_id={CHECKOUT_SESSION_ID}"
+	      success_url: "#{host}/payments/success?session_id={CHECKOUT_SESSION_ID}",
+	      cancel_url: "#{host}/payments/cancel?session_id={CHECKOUT_SESSION_ID}"
 	      )
 	  end
 
@@ -26,8 +28,9 @@ class StripePayment
 	  end
 
 	  def refund_payment(order)
-	  	id = order.payments.find_by(status: "success").payment_id	
-	  	Stripe::Refund.create({payment_intent: id,})
+	  	payment = order.payments.find_by(status: "success")
+	  	return if payment.nil? # nothing captured, nothing to refund
+	  	Stripe::Refund.create({payment_intent: payment.payment_id})
 	  end
 
 

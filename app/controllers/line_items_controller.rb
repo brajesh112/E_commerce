@@ -11,20 +11,21 @@ class LineItemsController < ApplicationController
 
 	def update
 		@item = LineItem.find_by(id: params[:id])
-		x = @item.quantity
-		if  x+1 > @item.product.stock
+		return redirect_to carts_path, alert: "Item not found" unless @item.present?
+		if @item.quantity + 1 > @item.product.stock
 			flash.alert = "Product is out Of Stock"
 			redirect_to carts_path
 		else
-			@item.update(quantity:"#{x+1}")
+			@item.update(quantity: @item.quantity + 1)
 			redirect_to carts_path
 		end
 	end
 
 	def edit
 		@item = LineItem.find_by(id: params[:id])
-		x = @item.quantity
-		@item.update(quantity:"#{x-1}")
+		return redirect_to carts_path, alert: "Item not found" unless @item.present?
+		# Never let quantity drop below 1 (it must stay > 0).
+		@item.update(quantity: [@item.quantity - 1, 1].max)
 		redirect_to carts_path
 	end
 	

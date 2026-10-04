@@ -57,7 +57,21 @@
 						</div>					
 					</div>
 					<br />
-				<% end %>		
+				<% end %>
+				<h4>Card gateway <small>(only applies if you pay by Card; UPI always uses Razorpay)</small></h4>
+				<div class="row address_row">
+					<div class="col-sm-2" style="margin-top: 10px;">
+						<%= f.radio_button :gateway, "stripe", checked: true %>
+					</div>
+					<div class="col-sm-10">Stripe</div>
+				</div>
+				<div class="row address_row">
+					<div class="col-sm-2" style="margin-top: 10px;">
+						<%= f.radio_button :gateway, "razorpay" %>
+					</div>
+					<div class="col-sm-10">Razorpay</div>
+				</div>
+				<br />
 				<%= f.submit "Place Order", class: "btn btn-primary order_button" %>
 			<% end %>
 	</div>

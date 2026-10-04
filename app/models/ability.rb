@@ -10,9 +10,12 @@ class Ability
      can :read, Transaction
     else
      can :read, :all
-     can :manage, BankAccount
-     can :manage, Product
-     can :manage, User
+     cannot :read, [User, BankAccount, Transaction]
+     can [:read, :update], User, id: user.id
+     can :manage, Product, user_id: user.id
+     can :manage, BankAccount, user_id: user.id
+     cannot :read, ProductImport
+     can [:read, :create], ProductImport, user_id: user.id
     end
     #   return unless user.present?
     #   can :read, :all

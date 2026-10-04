@@ -15,9 +15,18 @@ class User < ApplicationRecord
   has_many :bank_accounts, dependent: :destroy
   has_many :notifications, dependent: :destroy
   has_many :otps, dependent: :destroy
+  has_many :device_tokens, dependent: :destroy
   has_many :transactions
   validates :phone_number, length: {is: 10}
 
+
+  # Never let admin search filters expose auth/payment secrets.
+  SENSITIVE_RANSACK_ATTRS = %w[encrypted_password reset_password_token
+                               reset_password_sent_at remember_created_at stripe_id].freeze
+
+  def self.ransackable_attributes(_auth_object = nil)
+    column_names - SENSITIVE_RANSACK_ATTRS
+  end
 
   def insert_avatar
       unless self.avatar.attached? 

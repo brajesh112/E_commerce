@@ -34,3 +34,13 @@
 /config/master.key
 /config/puma.rb
 /config/cloudinary.yml
+
+# Secrets and local data — never commit.
+/.env
+/.env.*
+!/.env.example
+/node_modules
+/com-database.sql
+/dump.rdb
+/development.db
+/.byebug_history

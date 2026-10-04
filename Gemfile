@@ -47,6 +47,7 @@ gem "jbuilder"
  gem "sidekiq-cron"
  gem "letter_opener"
  gem 'stripe'
+ gem 'razorpay', '~> 3.0'
  gem 'twilio-ruby'
  gem 'googleauth' # Firebase Cloud Messaging HTTP v1 auth
  gem "chartkick"

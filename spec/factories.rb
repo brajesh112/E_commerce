@@ -129,6 +129,7 @@ FactoryBot.define do
   factory :payment do
     sequence(:payment_id) { |n| "pi_test_#{n}" }
     sequence(:stripe_session_id) { |n| "cs_test_#{n}" }
+    gateway { "stripe" }
     amount { 100 }
     status { :success }
     association :order
@@ -136,6 +137,12 @@ FactoryBot.define do
     trait :pending do
       status { :pending }
       payment_id { nil }
+    end
+
+    trait :razorpay do
+      gateway { "razorpay" }
+      stripe_session_id { nil }
+      sequence(:razorpay_payment_link_id) { |n| "plink_test_#{n}" }
     end
   end
 

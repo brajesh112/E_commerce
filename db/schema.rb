@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_04_130000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_04_140000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -170,6 +170,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_04_130000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "amount"
+    t.string "gateway"
     t.index ["address_id"], name: "index_orders_on_address_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
@@ -200,7 +201,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_04_130000) do
     t.datetime "updated_at", null: false
     t.string "stripe_session_id"
     t.decimal "amount"
+    t.string "gateway", default: "stripe"
+    t.string "razorpay_payment_link_id"
     t.index ["order_id"], name: "index_payments_on_order_id"
+    t.index ["razorpay_payment_link_id"], name: "index_payments_on_razorpay_payment_link_id"
     t.index ["stripe_session_id"], name: "index_payments_on_stripe_session_id"
   end
 

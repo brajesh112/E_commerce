@@ -18,6 +18,19 @@ class PaymentsController < ApplicationController
     redirect_to orders_path, alert: "Could not verify payment. Check your orders shortly."
   end
 
+  # Razorpay redirects here after the hosted link. DISPLAY ONLY — the Razorpay
+  # webhook is the source of truth; this only shows current status.
+  def razorpay_return
+    @order = current_user.orders.find_by(id: params[:razorpay_payment_link_reference_id])
+    return redirect_to orders_path, alert: "Order not found" if @order.nil?
+
+    if params[:razorpay_payment_link_status] == "paid"
+      redirect_to orders_path, notice: order_status_message(@order)
+    else
+      redirect_to order_path(@order), alert: "Payment was not completed."
+    end
+  end
+
   private
 
   def order_status_message(order)

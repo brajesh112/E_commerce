@@ -20,6 +20,7 @@ class OrdersController < ApplicationController
 		unless params[:id].present?
 			@order = current_user.orders.new(order_params)
 			@order.status = "pending" # never trust a client-supplied status
+			@order.gateway = resolved_gateway(@order.payment_method, params.dig(:order, :gateway))
 			@items = LineItem.where(id: params[:order][:item_id].split)
 			return redirect_to new_order_path, alert: "something went wrong" unless @items.present?
 
@@ -35,15 +36,12 @@ class OrdersController < ApplicationController
 			@items = @order.order_items
 		end
 			unless @order.payment_method.eql?('cash')
-				begin
-					session = StripePayment.checkout_session(current_user, @items, @order)
-				rescue Stripe::StripeError
-					return redirect_to carts_path, alert: "Payment could not be started. Please try again."
+				case @order.gateway
+				when "razorpay"
+					return start_razorpay_payment
+				else
+					return start_stripe_payment
 				end
-				# Record the attempt in the ledger. The webhook moves it to
-				# success/failed; this pending row is the audit trail of the attempt.
-				@order.payments.create(status: :pending, stripe_session_id: session.id, amount: @order.amount)
-				return redirect_to(session.url , :allow_other_host=> true, data: {turbo: false})
 			end
 			redirect_to order_path(@order)
 	end
@@ -63,12 +61,16 @@ class OrdersController < ApplicationController
 		@order = current_user.orders.find_by(id: params[:id])
 		return redirect_to orders_path, alert: "Order not found" unless @order.present?
 		if @order.status.eql?("paid")
-			# Initiate the refund; the order only becomes `refunded` once Stripe
-			# confirms it via the charge.refunded webhook.
+			# Initiate the refund; the order only becomes `refunded` once the gateway
+			# confirms it via webhook (charge.refunded / refund.processed).
 			@order.update(status: "refund_pending", track_id: nil)
 			begin
-				StripePayment.refund_payment(@order)
-			rescue Stripe::StripeError
+				if @order.gateway == "razorpay"
+					RazorpayPayment.refund_payment(@order)
+				else
+					StripePayment.refund_payment(@order)
+				end
+			rescue Stripe::StripeError, Razorpay::Error
 				@order.update(status: "paid")
 				flash[:alert] = "Refund could not be started. Please try again."
 			end
@@ -119,7 +121,36 @@ class OrdersController < ApplicationController
 		end
 
 		def order_params
-			params.require(:order).permit(:address_id, :payment_method, :track_id)
+			params.require(:order).permit(:address_id, :payment_method, :track_id, :gateway)
+		end
+
+		# cash → no gateway; upi → always Razorpay; card → buyer's choice (Stripe
+		# default). Never trust the raw param beyond this whitelist.
+		def resolved_gateway(payment_method, requested)
+			case payment_method
+			when "cash" then nil
+			when "upi"  then "razorpay"
+			when "card" then %w[stripe razorpay].include?(requested) ? requested : "stripe"
+			end
+		end
+
+		def start_stripe_payment
+			session = StripePayment.checkout_session(current_user, @items, @order)
+			# Pending row = audit trail of the attempt; the webhook moves it to success/failed.
+			@order.payments.create(status: :pending, gateway: "stripe",
+			                       stripe_session_id: session.id, amount: @order.amount)
+			redirect_to(session.url, allow_other_host: true, data: { turbo: false })
+		rescue Stripe::StripeError
+			redirect_to carts_path, alert: "Payment could not be started. Please try again."
+		end
+
+		def start_razorpay_payment
+			link = RazorpayPayment.payment_link(current_user, @order)
+			@order.payments.create(status: :pending, gateway: "razorpay",
+			                       razorpay_payment_link_id: link.id, amount: @order.amount)
+			redirect_to(link.short_url, allow_other_host: true, data: { turbo: false })
+		rescue Razorpay::Error
+			redirect_to carts_path, alert: "Payment could not be started. Please try again."
 		end
 
     def generate_pdf(order)

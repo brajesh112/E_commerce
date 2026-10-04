@@ -14,8 +14,10 @@ Rails.application.routes.draw do
   resources :shipments,:tracking_orders, only: [:show]
   resources :seller_signups, only: [:index]
   resources :line_items, :notifications, :otps
+  get "payments/razorpay_return", to: "payments#razorpay_return"
   resources :payments
   post "stripe/webhook", to: "stripe_webhooks#create"
+  post "razorpay/webhook", to: "razorpay_webhooks#create"
   resources :device_tokens, only: [:create]
   get "firebase-messaging-sw.js", to: "push#service_worker"
 

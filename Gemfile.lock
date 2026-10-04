@@ -205,6 +205,10 @@ GEM
     hashdiff (1.2.1)
     hashie (5.1.0)
       logger
+    httparty (0.24.3)
+      csv
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
     i18n (1.15.2)
       concurrent-ruby (~> 1.0)
     importmap-rails (2.2.3)
@@ -380,6 +384,8 @@ GEM
       activerecord (>= 7.2)
       activesupport (>= 7.2)
       i18n
+    razorpay (3.2.4)
+      httparty (~> 0.14)
     rbs (4.2.0)
       logger
       prism (>= 1.6.0)
@@ -543,6 +549,7 @@ DEPENDENCIES
   prawn (~> 2.1)
   puma (~> 6.0)
   rails (~> 8.0.0)
+  razorpay (~> 3.0)
   redis
   rspec-rails
   sassc-rails

@@ -103,6 +103,41 @@ RSpec.describe "Orders", type: :request do
       expect(response).to redirect_to("https://stripe.test/session/abc")
     end
 
+    it "routes a UPI order to a Razorpay payment link" do
+      sign_in user
+      address = create(:address, user: user)
+      product = sellable_product
+      line_item = create(:line_item, cart: user.cart, product: product, quantity: 1)
+
+      allow(RazorpayPayment).to receive(:payment_link)
+        .and_return(double(id: "plink_1", short_url: "https://rzp.io/i/abc"))
+
+      post orders_path, params: {
+        order: { address_id: address.id, payment_method: "upi", item_id: line_item.id.to_s }
+      }
+      order = user.orders.last
+      expect(order.gateway).to eq("razorpay")
+      expect(order.payments.last.razorpay_payment_link_id).to eq("plink_1")
+      expect(response).to redirect_to("https://rzp.io/i/abc")
+    end
+
+    it "routes a card order to Razorpay when the buyer picks that gateway" do
+      sign_in user
+      address = create(:address, user: user)
+      product = sellable_product
+      line_item = create(:line_item, cart: user.cart, product: product, quantity: 1)
+
+      allow(RazorpayPayment).to receive(:payment_link)
+        .and_return(double(id: "plink_2", short_url: "https://rzp.io/i/xyz"))
+
+      post orders_path, params: {
+        order: { address_id: address.id, payment_method: "card", gateway: "razorpay",
+                 item_id: line_item.id.to_s }
+      }
+      expect(user.orders.last.gateway).to eq("razorpay")
+      expect(response).to redirect_to("https://rzp.io/i/xyz")
+    end
+
     it "persists the computed order total (amount)" do
       sign_in user
       address = create(:address, user: user)

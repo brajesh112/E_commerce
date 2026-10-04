@@ -1,13 +1,28 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
-		 u = User.new(name: "Brajesh", email: "sahubrajesh112@gmail.com", phone_number: "7869309851", password: "brajesh112", password_confirmation: "brajesh112", role: "admin" )
-		 u.avatar.attach(io: File.open("#{Rails.root}/app/assets/images/profile.png"), filename: 'profile.png', content_type: 'image/png')
-		 obj = StripePayment.create_customer(u)
-		 u.stripe_id = obj.id
-		 u.save!
-# #   Character.create(name: "Luke", movie: movies.first)
-# 	AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password', role: 99) if Rails.env.development?
+# Seed the database with default data. Run with `bin/rails db:seed`.
+# Everything here is idempotent (find_or_create_by), so it is safe to re-run.
+
+# Admin user. find_or_initialize so re-seeding doesn't duplicate or re-charge
+# Stripe for an existing account.
+admin = User.find_or_initialize_by(email: "sahubrajesh112@gmail.com")
+if admin.new_record?
+  admin.assign_attributes(
+    name: "Brajesh",
+    phone_number: "7869309851",
+    password: "brajesh112",
+    password_confirmation: "brajesh112",
+    role: "admin"
+  )
+  admin.avatar.attach(
+    io: File.open(Rails.root.join("app/assets/images/profile.png")),
+    filename: "profile.png",
+    content_type: "image/png"
+  )
+  admin.stripe_id = StripePayment.create_customer(admin).id
+  admin.save!
+  puts "Created admin user #{admin.email}."
+else
+  puts "Admin user #{admin.email} already exists, skipping."
+end
+
+# Categories and sub-categories.
+load Rails.root.join("db/seeds/categories.rb")

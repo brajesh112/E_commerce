@@ -102,6 +102,34 @@ RSpec.describe "Orders", type: :request do
       expect(StripePayment).to have_received(:checkout_session)
       expect(response).to redirect_to("https://stripe.test/session/abc")
     end
+
+    it "persists the computed order total (amount)" do
+      sign_in user
+      address = create(:address, user: user)
+      product = sellable_product # price 100, discount_price 90
+      line_item = create(:line_item, cart: user.cart, product: product, quantity: 2)
+
+      post orders_path, params: {
+        order: { address_id: address.id, payment_method: "cash", item_id: line_item.id.to_s }
+      }
+      expect(user.orders.last.amount).to eq(180) # discount_price(90) * 2
+    end
+
+    it "rejects the order and keeps stock when an item is out of stock" do
+      sign_in user
+      address = create(:address, user: user)
+      product = sellable_product
+      product.update!(stock: 1)
+      line_item = create(:line_item, cart: user.cart, product: product, quantity: 5)
+
+      expect {
+        post orders_path, params: {
+          order: { address_id: address.id, payment_method: "cash", item_id: line_item.id.to_s }
+        }
+      }.not_to change(user.orders, :count)
+      expect(response).to redirect_to(carts_path)
+      expect(product.reload.stock).to eq(1) # untouched
+    end
   end
 
   describe "PATCH /orders/:id (update - cancel/refund)" do

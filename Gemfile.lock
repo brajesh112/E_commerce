@@ -101,6 +101,8 @@ GEM
     bootstrap5-kaminari-views (0.0.1)
       kaminari (>= 0.13)
       rails (>= 3.1)
+    brakeman (8.1.0)
+      racc
     builder (3.3.0)
     byebug (13.0.0)
       reline (>= 0.6.0)
@@ -511,6 +513,7 @@ DEPENDENCIES
   bootsnap
   bootstrap
   bootstrap5-kaminari-views
+  brakeman
   byebug
   cancancan
   capybara

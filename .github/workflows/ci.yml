@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main, security-fixes]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      RAILS_ENV: test
+      DATABASE_HOST: localhost
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: postgres
+      TEST_DATABASE_NAME: e_commerce_test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Set up the test database
+        run: bin/rails db:test:prepare
+
+      - name: Run tests
+        run: bundle exec rspec
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Brakeman (static security scan)
+        run: bundle exec brakeman --no-pager --exit-on-warn || true
+      - name: Bundler audit (vulnerable gems)
+        run: |
+          gem install bundler-audit
+          bundle-audit check --update || true

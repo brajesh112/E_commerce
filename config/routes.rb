@@ -23,5 +23,5 @@ Rails.application.routes.draw do
   post "admin/products/variant", to: "admin/products#variant"
   post "admin/products/size_of_product", to: "admin/products#size_of_product"
   root to: "homes#index"
-  match '*unmatched', to: 'application#not_found_method', via: :all, constraints: lambda { |req| (req.path.exclude? 'active_storage')}
+  match '*unmatched', to: 'application#not_found_method', via: :get, constraints: lambda { |req| (req.path.exclude? 'active_storage')}
 end

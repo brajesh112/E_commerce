@@ -58,4 +58,20 @@ RSpec.describe Product, type: :model do
       expect(build(:product, stock: -1)).not_to be_valid
     end
   end
+
+  describe "price validations" do
+    it "is invalid with a non-positive price" do
+      expect(build(:product, price: 0)).not_to be_valid
+    end
+
+    it "is invalid when discount_price exceeds price" do
+      product = build(:product, price: 100, discount_price: 150)
+      expect(product).not_to be_valid
+      expect(product.errors[:discount_price]).to be_present
+    end
+
+    it "allows a nil discount_price" do
+      expect(build(:product, discount_price: nil)).to be_valid
+    end
+  end
 end

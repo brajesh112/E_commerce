@@ -7,7 +7,7 @@
 					<b>Description:</b>
 				</div>
 				<div class="col">
-					<%= order.description.html_safe%>
+					<%= sanitize order.description, tags: %w[div b br], attributes: %w[class] %>
 				</div>
 			</div>
 		</div>

@@ -9,9 +9,7 @@ module ApplicationHelper
 	end
 
 	def add_place (obj,key)
-		if obj.tracking_orders.where(status: key).present?
-			obj.tracking_orders.where(status: key).last.place
-		end
+		obj.tracking_orders.where(status: key).last&.place
 	end
 
 	def delivery_date

@@ -28,8 +28,9 @@ class StripePayment
 	  end
 
 	  def refund_payment(order)
-	  	id = order.payments.find_by(status: "success").payment_id	
-	  	Stripe::Refund.create({payment_intent: id,})
+	  	payment = order.payments.find_by(status: "success")
+	  	return if payment.nil? # nothing captured, nothing to refund
+	  	Stripe::Refund.create({payment_intent: payment.payment_id})
 	  end
 
 

@@ -3,7 +3,8 @@ require "rails_helper"
 RSpec.describe TwilioClient do
   describe ".send_message" do
     it "sends an SMS whose body is the object's action" do
-      notification = create(:notification, action: "Order shipped")
+      recipient = create(:user, phone_number: "9876543210")
+      notification = create(:notification, action: "Order shipped", user: recipient)
 
       messages = double("messages")
       client = double("Twilio::REST::Client", messages: messages)
@@ -18,7 +19,7 @@ RSpec.describe TwilioClient do
       expect(Twilio::REST::Client).to have_received(:new)
       expect(messages).to have_received(:create) do |args|
         expect(args[:body]).to eq("Order shipped")
-        expect(args[:to]).to eq("+917869309851")
+        expect(args[:to]).to eq("+919876543210") # recipient's own number, no longer hardcoded
         expect(args[:from]).to eq("+15005550006")
       end
     end

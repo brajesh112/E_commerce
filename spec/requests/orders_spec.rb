@@ -94,7 +94,7 @@ RSpec.describe "Orders", type: :request do
       line_item = create(:line_item, cart: user.cart, product: product, quantity: 1)
 
       allow(StripePayment).to receive(:checkout_session)
-        .and_return(double(url: "https://stripe.test/session/abc"))
+        .and_return(double(url: "https://stripe.test/session/abc", id: "cs_test_abc"))
 
       post orders_path, params: {
         order: { address_id: address.id, payment_method: "card", item_id: line_item.id.to_s }

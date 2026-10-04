@@ -28,6 +28,15 @@ class Order < ApplicationRecord
 		build_shipment(status: "ordered", expected_delivery: DateTime.current.to_date + 7.days).save
 	end
 
+	# Return reserved stock to inventory when a payment expires or fails. Atomic
+	# per product; safe to call only from the payment_failed transition (the
+	# webhook guards against calling it twice).
+	def restock!
+		order_items.each do |item|
+			Product.where(id: item.product_id).update_all("stock = stock + #{item.quantity.to_i}")
+		end
+	end
+
 	def show_model
 		add = self.address
 		s ="House No: #{add.house_no},<br /> Street: #{add.street},<br /> Landmark: #{add.landmark}, <br />City: #{add.city},<br />Pincode: #{add.pin},<br />State: #{add.state},<br /> Country: #{add.country}"

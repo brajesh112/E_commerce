@@ -40,6 +40,9 @@ class OrdersController < ApplicationController
 				rescue Stripe::StripeError
 					return redirect_to carts_path, alert: "Payment could not be started. Please try again."
 				end
+				# Record the attempt in the ledger. The webhook moves it to
+				# success/failed; this pending row is the audit trail of the attempt.
+				@order.payments.create(status: :pending, stripe_session_id: session.id, amount: @order.amount)
 				return redirect_to(session.url , :allow_other_host=> true, data: {turbo: false})
 			end
 			redirect_to order_path(@order)

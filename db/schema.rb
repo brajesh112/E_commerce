@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_04_120100) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_04_130000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -198,7 +198,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_04_120100) do
     t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "stripe_session_id"
+    t.decimal "amount"
     t.index ["order_id"], name: "index_payments_on_order_id"
+    t.index ["stripe_session_id"], name: "index_payments_on_stripe_session_id"
   end
 
   create_table "product_colors", force: :cascade do |t|
@@ -251,6 +254,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_04_120100) do
     t.datetime "updated_at", null: false
     t.index ["product_id"], name: "index_sizes_on_product_id"
     t.index ["product_size_id"], name: "index_sizes_on_product_size_id"
+  end
+
+  create_table "stripe_events", force: :cascade do |t|
+    t.string "event_id", null: false
+    t.string "event_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_stripe_events_on_event_id", unique: true
   end
 
   create_table "sub_categories", force: :cascade do |t|

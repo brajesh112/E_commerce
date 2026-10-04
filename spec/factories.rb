@@ -127,9 +127,16 @@ FactoryBot.define do
   end
 
   factory :payment do
-    payment_id { "pi_test_123" }
+    sequence(:payment_id) { |n| "pi_test_#{n}" }
+    sequence(:stripe_session_id) { |n| "cs_test_#{n}" }
+    amount { 100 }
     status { :success }
     association :order
+
+    trait :pending do
+      status { :pending }
+      payment_id { nil }
+    end
   end
 
   factory :transaction, class: "Transaction" do

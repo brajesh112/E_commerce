@@ -61,4 +61,14 @@ RSpec.describe Order, type: :model do
       expect(Order.default_per_page).to eq(1)
     end
   end
+
+  describe "#restock!" do
+    it "returns each order item's quantity to product stock" do
+      order = create(:order)
+      product = create(:product, stock: 8)
+      create(:order_item, order: order, product: product, quantity: 3)
+
+      expect { order.restock! }.to change { product.reload.stock }.from(8).to(11)
+    end
+  end
 end

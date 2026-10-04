@@ -6,77 +6,99 @@ RSpec.describe "StripeWebhooks", type: :request do
     { "HTTP_STRIPE_SIGNATURE" => "sig", "CONTENT_TYPE" => "application/json" }
   end
 
-  def event(type:, object:)
-    OpenStruct.new(type: type, data: OpenStruct.new(object: OpenStruct.new(object)))
+  # Build a fake Stripe event. `event_id` defaults to a unique value so the
+  # webhook's de-dup log treats each as new unless we reuse one on purpose.
+  def stub_event(type:, object:, event_id: "evt_#{SecureRandom.hex(4)}")
+    allow(Stripe::Webhook).to receive(:construct_event).and_return(
+      OpenStruct.new(id: event_id, type: type, data: OpenStruct.new(object: OpenStruct.new(object)))
+    )
+  end
+
+  def deliver
+    post "/stripe/webhook", params: "{}", headers: headers
   end
 
   describe "POST /stripe/webhook" do
     it "returns 400 on an invalid signature" do
       allow(Stripe::Webhook).to receive(:construct_event)
         .and_raise(Stripe::SignatureVerificationError.new("bad", "sig"))
-      post "/stripe/webhook", params: "{}", headers: headers
+      deliver
       expect(response).to have_http_status(:bad_request)
     end
 
     context "checkout.session.completed with payment_status paid" do
-      it "marks the order paid and creates a payment (200)" do
+      it "marks the order paid and records a success payment" do
         order = create(:order, status: :pending)
-        allow(Stripe::Webhook).to receive(:construct_event).and_return(
-          event(type: "checkout.session.completed",
-                object: { payment_status: "paid",
-                          client_reference_id: order.id,
-                          payment_intent: "pi_abc" })
-        )
+        stub_event(type: "checkout.session.completed",
+                   object: { id: "cs_1", payment_status: "paid",
+                             client_reference_id: order.id, payment_intent: "pi_abc" })
 
-        expect {
-          post "/stripe/webhook", params: "{}", headers: headers
-        }.to change { order.reload.status }.from("pending").to("paid")
+        expect { deliver }
+          .to change { order.reload.status }.from("pending").to("paid")
           .and change(order.payments, :count).by(1)
 
         expect(response).to have_http_status(:ok)
-        expect(order.payments.last.payment_id).to eq("pi_abc")
+        payment = order.payments.last
+        expect(payment.payment_id).to eq("pi_abc")
+        expect(payment.stripe_session_id).to eq("cs_1")
+        expect(payment).to be_success
       end
 
-      it "is idempotent (no duplicate payment on a second delivery)" do
+      it "updates the pending payment row rather than adding a new one" do
         order = create(:order, status: :pending)
-        allow(Stripe::Webhook).to receive(:construct_event).and_return(
-          event(type: "checkout.session.completed",
-                object: { payment_status: "paid",
-                          client_reference_id: order.id,
-                          payment_intent: "pi_abc" })
-        )
+        create(:payment, :pending, order: order, stripe_session_id: "cs_1")
+        stub_event(type: "checkout.session.completed",
+                   object: { id: "cs_1", payment_status: "paid",
+                             client_reference_id: order.id, payment_intent: "pi_abc" })
 
-        post "/stripe/webhook", params: "{}", headers: headers
-        expect {
-          post "/stripe/webhook", params: "{}", headers: headers
-        }.not_to change(Payment, :count)
+        expect { deliver }.not_to change(order.payments, :count)
+        expect(order.payments.last).to be_success
+      end
+
+      it "is idempotent on a redelivered event id" do
+        order = create(:order, status: :pending)
+        stub_event(type: "checkout.session.completed", event_id: "evt_same",
+                   object: { id: "cs_1", payment_status: "paid",
+                             client_reference_id: order.id, payment_intent: "pi_abc" })
+
+        deliver
+        expect { deliver }.not_to change(Payment, :count)
         expect(response).to have_http_status(:ok)
       end
 
       it "ignores an unpaid completed session" do
         order = create(:order, status: :pending)
-        allow(Stripe::Webhook).to receive(:construct_event).and_return(
-          event(type: "checkout.session.completed",
-                object: { payment_status: "unpaid",
-                          client_reference_id: order.id,
-                          payment_intent: "pi_abc" })
-        )
-        post "/stripe/webhook", params: "{}", headers: headers
+        stub_event(type: "checkout.session.completed",
+                   object: { id: "cs_1", payment_status: "unpaid",
+                             client_reference_id: order.id, payment_intent: "pi_abc" })
+        deliver
         expect(order.reload.status).to eq("pending")
-        expect(response).to have_http_status(:ok)
       end
     end
 
     context "checkout.session.expired" do
-      it "marks the order payment_failed" do
+      it "fails the order, records a failed payment, and restocks" do
         order = create(:order, status: :pending)
-        allow(Stripe::Webhook).to receive(:construct_event).and_return(
-          event(type: "checkout.session.expired",
-                object: { client_reference_id: order.id })
-        )
-        post "/stripe/webhook", params: "{}", headers: headers
+        product = create(:product, stock: 5)
+        create(:order_item, order: order, product: product, quantity: 3)
+        stub_event(type: "checkout.session.expired",
+                   object: { id: "cs_1", client_reference_id: order.id })
+
+        expect { deliver }.to change { product.reload.stock }.from(5).to(8)
         expect(order.reload.status).to eq("payment_failed")
-        expect(response).to have_http_status(:ok)
+        expect(order.payments.last).to be_failed
+      end
+    end
+
+    context "charge.refunded" do
+      it "marks the payment and order refunded" do
+        order = create(:order, status: :paid)
+        create(:payment, order: order, payment_id: "pi_abc", status: :success)
+        stub_event(type: "charge.refunded", object: { payment_intent: "pi_abc" })
+
+        deliver
+        expect(order.reload.status).to eq("refunded")
+        expect(order.payments.find_by(payment_id: "pi_abc")).to be_refunded
       end
     end
   end

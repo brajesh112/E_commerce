@@ -44,6 +44,15 @@ RSpec.describe "Addresses", type: :request do
       expect(response).to redirect_to(root_path)
       expect(flash[:alert]).to eq("Address not found")
     end
+
+    it "cannot update another user's address (IDOR)" do
+      sign_in user
+      other = create(:address, user: create(:user), street: "Original")
+      patch address_path(other), params: { address: { street: "Hacked" } }
+      expect(response).to redirect_to(root_path)
+      expect(flash[:alert]).to eq("Address not found")
+      expect(other.reload.street).to eq("Original")
+    end
   end
 
   describe "DELETE /addresses/:id (destroy)" do
@@ -54,6 +63,16 @@ RSpec.describe "Addresses", type: :request do
         delete address_path(address)
       }.to change(Address, :count).by(-1)
       expect(response).to redirect_to(addresses_path)
+    end
+
+    it "cannot destroy another user's address (IDOR)" do
+      sign_in user
+      other = create(:address, user: create(:user))
+      expect {
+        delete address_path(other)
+      }.not_to change(Address, :count)
+      expect(response).to redirect_to(root_path)
+      expect(flash[:alert]).to eq("Address not found")
     end
   end
 end

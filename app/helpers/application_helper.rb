@@ -38,7 +38,7 @@ module ApplicationHelper
 	end
 
 	def order_status(order)
-		order.status.eql?("cancel") || order.status.eql?("refunded")
+		order.status.eql?("cancel") || order.status.eql?("refunded") || order.status.eql?("refund_pending")
 	end
 
 	def failed_payment(order)

@@ -141,13 +141,22 @@ RSpec.describe "Orders", type: :request do
       expect(response).to redirect_to(orders_path)
     end
 
-    it "refunds a paid order via StripePayment.refund_payment" do
+    it "moves a paid order to refund_pending and calls StripePayment.refund_payment" do
       sign_in user
       order = create(:order, user: user, status: :paid)
       allow(StripePayment).to receive(:refund_payment)
       patch order_path(order)
-      expect(order.reload.status).to eq("refunded")
+      expect(order.reload.status).to eq("refund_pending") # confirmed refunded only by the webhook
       expect(StripePayment).to have_received(:refund_payment).with(order)
+    end
+
+    it "reverts to paid if the Stripe refund call fails" do
+      sign_in user
+      order = create(:order, user: user, status: :paid)
+      allow(StripePayment).to receive(:refund_payment).and_raise(Stripe::StripeError.new("boom"))
+      patch order_path(order)
+      expect(order.reload.status).to eq("paid")
+      expect(flash[:alert]).to be_present
     end
 
     it "redirects with alert for another user's order (IDOR)" do

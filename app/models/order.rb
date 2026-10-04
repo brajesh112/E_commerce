@@ -6,7 +6,10 @@ class Order < ApplicationRecord
 	belongs_to :user
 	belongs_to :address
 	enum :payment_method, [:cash, :card, :upi]
-	enum :status, [:pending, :payment_failed, :paid, :cancel, :refunded]
+	# refund_pending = buyer asked for a refund and Stripe was called, but the
+	# charge.refunded webhook hasn't confirmed yet. Appended so existing integer
+	# values are unchanged.
+	enum :status, [:pending, :payment_failed, :paid, :cancel, :refunded, :refund_pending]
 	has_one :shipment, dependent: :destroy
 	after_update :create_shipment
 	after_update :create_transaction

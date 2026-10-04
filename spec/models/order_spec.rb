@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Order, type: :model do
   describe "enums" do
     it { should define_enum_for(:payment_method).with_values([:cash, :card, :upi]) }
-    it { should define_enum_for(:status).with_values([:pending, :payment_failed, :paid, :cancel, :refunded]) }
+    it { should define_enum_for(:status).with_values([:pending, :payment_failed, :paid, :cancel, :refunded, :refund_pending]) }
   end
 
   describe "associations" do

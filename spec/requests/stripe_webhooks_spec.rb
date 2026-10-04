@@ -91,8 +91,8 @@ RSpec.describe "StripeWebhooks", type: :request do
     end
 
     context "charge.refunded" do
-      it "marks the payment and order refunded" do
-        order = create(:order, status: :paid)
+      it "confirms a refund_pending order as refunded" do
+        order = create(:order, status: :refund_pending)
         create(:payment, order: order, payment_id: "pi_abc", status: :success)
         stub_event(type: "charge.refunded", object: { payment_intent: "pi_abc" })
 

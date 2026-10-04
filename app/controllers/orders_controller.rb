@@ -63,11 +63,14 @@ class OrdersController < ApplicationController
 		@order = current_user.orders.find_by(id: params[:id])
 		return redirect_to orders_path, alert: "Order not found" unless @order.present?
 		if @order.status.eql?("paid")
-			@order.update(status: "refunded", track_id: nil)
+			# Initiate the refund; the order only becomes `refunded` once Stripe
+			# confirms it via the charge.refunded webhook.
+			@order.update(status: "refund_pending", track_id: nil)
 			begin
 				StripePayment.refund_payment(@order)
 			rescue Stripe::StripeError
-				flash[:alert] = "Order marked refunded, but the Stripe refund failed. Retry from the dashboard."
+				@order.update(status: "paid")
+				flash[:alert] = "Refund could not be started. Please try again."
 			end
 		else
 			@order.update(status: "cancel", track_id: nil)

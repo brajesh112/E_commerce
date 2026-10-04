@@ -11,6 +11,12 @@ ActiveAdmin.register User do
   scope ('buyer') {|scope| scope.where(role: 'buyer')}
    
   permit_params :email, :encrypted_password, :name, :phone_number, :role, :fssi_no, :notification_status, :stripe_id
+
+  # These columns are excluded from User.ransackable_attributes (auth/payment
+  # secrets), so drop ActiveAdmin's auto-generated filters for them — otherwise
+  # Ransack raises on the undefined search method.
+  remove_filter :encrypted_password, :reset_password_token,
+                :reset_password_sent_at, :remember_created_at, :stripe_id
   #
   # or
   #

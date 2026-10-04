@@ -48,6 +48,8 @@ gem "jbuilder"
  gem "letter_opener"
  gem 'stripe'
  gem 'razorpay', '~> 3.0'
+ gem 'roo', '~> 2.10'        # read .xlsx uploads
+ gem 'caxlsx', '~> 3.4'      # write .xlsx templates (rubyzip <3, compatible with roo)
  gem 'twilio-ruby'
  gem 'googleauth' # Firebase Cloud Messaging HTTP v1 auth
  gem "chartkick"

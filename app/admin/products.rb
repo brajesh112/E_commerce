@@ -1,4 +1,43 @@
 ActiveAdmin.register Product do
+  permit_params :product_name, :stock, :price, :description, :user_id, :category_id,
+                :product_type, :discount_price, :price_id, :variant_id, images: []
+
+  # Sellers only ever see/manage their own products.
+  controller do
+    def scoped_collection
+      current_user.seller? ? Product.where(user_id: current_user.id) : super
+    end
+  end
+
+  # --- Bulk upload (admin + seller) ---
+  action_item :bulk_upload, only: :index do
+    link_to "Bulk upload", bulk_upload_admin_products_path
+  end
+
+  collection_action :bulk_upload, method: :get do
+    # Renders app/views/admin/products/bulk_upload.html.erb
+  end
+
+  collection_action :download_template, method: :get do
+    authorize! :create, Product
+    send_data ProductTemplate.workbook.to_stream.read,
+              filename: "product_bulk_upload_template.xlsx",
+              type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  end
+
+  collection_action :import, method: :post do
+    authorize! :create, Product
+    if params[:file].blank?
+      redirect_to bulk_upload_admin_products_path, alert: "Please choose an .xlsx file."
+    else
+      result = ProductImporter.new(params[:file], current_user).call
+      first_errors = result.errors.first(5).map { |e| "Row #{e[:row] || '-'}: #{e[:messages].join(', ')}" }
+      flash_type = result.errors.any? ? :warning : :notice
+      redirect_to admin_products_path,
+                  flash_type => [result.summary, *first_errors].join(" | ")
+    end
+  end
+
   # See permitted parameters documentation:
   # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #

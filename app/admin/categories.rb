@@ -5,7 +5,15 @@ ActiveAdmin.register Category do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
-   permit_params :categories_type
+   permit_params :categories_type, :code
+
+   index do
+     selectable_column
+     id_column
+     column :categories_type
+     column :code
+     actions
+   end
   #
   # or
   #

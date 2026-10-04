@@ -5,7 +5,7 @@ ActiveAdmin.register Variant do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
-   permit_params :category_comission, :variant_name, :sub_category_id
+   permit_params :category_comission, :variant_name, :sub_category_id, :code
   #
   # or
   #
@@ -27,6 +27,7 @@ ActiveAdmin.register Variant do
     selectable_column
     id_column
     column :variant_name
+    column :code
     column :sub_category do |variant|
       variant.sub_category.name
     end

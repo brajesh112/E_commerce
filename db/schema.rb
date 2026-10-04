@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_04_140000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_04_150000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -93,6 +93,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_04_140000) do
     t.string "categories_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "code"
+    t.index ["code"], name: "index_categories_on_code", unique: true
   end
 
   create_table "device_tokens", force: :cascade do |t|
@@ -273,7 +275,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_04_140000) do
     t.bigint "category_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "code"
     t.index ["category_id"], name: "index_sub_categories_on_category_id"
+    t.index ["code"], name: "index_sub_categories_on_code", unique: true
   end
 
   create_table "terms_and_conditions", force: :cascade do |t|
@@ -331,6 +335,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_04_140000) do
     t.bigint "sub_category_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "code"
+    t.index ["code"], name: "index_variants_on_code", unique: true
     t.index ["sub_category_id"], name: "index_variants_on_sub_category_id"
   end
 

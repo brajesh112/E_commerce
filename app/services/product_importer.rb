@@ -1,4 +1,7 @@
 require "roo"
+require "net/http"
+require "resolv"
+require "ipaddr"
 
 # Bulk-creates products from an uploaded .xlsx (the "Products" sheet of the
 # template). Each row is processed independently: one bad row never aborts the
@@ -10,6 +13,9 @@ class ProductImporter
   MAX_ROWS = 1000
   SHEET    = "Products".freeze
   PLACEHOLDER_IMAGE = Rails.root.join("app/assets/images/profile.png")
+  MAX_IMAGE_BYTES = 5 * 1024 * 1024
+  MAX_IMAGES_PER_ROW = 5
+  IMAGE_URL_SEPARATOR = /[\s,|]+/
 
   Result = Struct.new(:created, :errors, keyword_init: true) do
     def summary
@@ -89,7 +95,7 @@ class ProductImporter
       category:     category,
       variant:      variant
     )
-    product.images.attach(io: File.open(PLACEHOLDER_IMAGE), filename: "product.png", content_type: "image/png")
+    attach_images(product, row["image_urls"])
 
     if product.save
       assign_price_id(product)
@@ -119,6 +125,57 @@ class ProductImporter
     else
       sub_category.variant.first
     end
+  end
+
+  # Attach images from the comma/space/pipe-separated image_urls cell. Falls back
+  # to the placeholder when none are given or all downloads fail, so product
+  # listings never hit the Cloudinary nil-attachment bug.
+  def attach_images(product, urls_cell)
+    urls = urls_cell.to_s.split(IMAGE_URL_SEPARATOR).map(&:strip).reject(&:blank?).first(MAX_IMAGES_PER_ROW)
+    attached = 0
+    urls.each do |url|
+      image = download_image(url)
+      next if image.nil?
+      product.images.attach(io: StringIO.new(image[:body]), filename: image[:filename], content_type: image[:content_type])
+      attached += 1
+    end
+    return unless attached.zero?
+    product.images.attach(io: File.open(PLACEHOLDER_IMAGE), filename: "product.png", content_type: "image/png")
+  end
+
+  # Fetch an image over HTTP(S) with SSRF guards (public hosts only), a size cap,
+  # and a content-type check. Returns nil on any problem — a bad image URL never
+  # fails the row.
+  def download_image(url)
+    uri = URI.parse(url)
+    return nil unless uri.is_a?(URI::HTTP) && uri.host.present?
+    return nil unless public_host?(uri.host)
+
+    response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == "https",
+                              open_timeout: 5, read_timeout: 10) do |http|
+      http.get(uri.request_uri)
+    end
+    return nil unless response.is_a?(Net::HTTPSuccess)
+
+    content_type = response.content_type.to_s
+    return nil unless content_type.start_with?("image/")
+    body = response.body.to_s
+    return nil if body.bytesize.zero? || body.bytesize > MAX_IMAGE_BYTES
+
+    { body: body, content_type: content_type,
+      filename: File.basename(uri.path).presence || "image" }
+  rescue StandardError
+    nil
+  end
+
+  # Reject loopback / private / link-local addresses to blunt SSRF.
+  def public_host?(host)
+    Resolv.getaddresses(host).any? do |ip|
+      addr = IPAddr.new(ip) rescue nil
+      addr && !addr.loopback? && !addr.private? && !addr.link_local?
+    end
+  rescue StandardError
+    false
   end
 
   def product_type_for(value)

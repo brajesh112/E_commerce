@@ -96,4 +96,51 @@ RSpec.describe ProductImporter do
     expect(result.created).to eq(0)
     expect(result.errors.first[:messages].join).to match(/variant/)
   end
+
+  describe "image_urls" do
+    let(:png) { File.binread(described_class::PLACEHOLDER_IMAGE) }
+
+    before do
+      # Bypass DNS/SSRF resolution in tests; only the HTTP fetch is stubbed.
+      allow_any_instance_of(described_class).to receive(:public_host?).and_return(true)
+    end
+
+    it "downloads and attaches images from the URLs (no placeholder)" do
+      stub_request(:get, "https://cdn.example.test/a.png")
+        .to_return(body: png, headers: { "Content-Type" => "image/png" })
+      stub_request(:get, "https://cdn.example.test/b.png")
+        .to_return(body: png, headers: { "Content-Type" => "image/png" })
+
+      path = xlsx_with([row("image_urls" => "https://cdn.example.test/a.png | https://cdn.example.test/b.png")])
+      result = described_class.new(path, seller).call
+
+      expect(result.created).to eq(1)
+      product = Product.last
+      expect(product.images.count).to eq(2)
+      expect(product.images.map(&:filename).map(&:to_s)).to contain_exactly("a.png", "b.png")
+    end
+
+    it "falls back to the placeholder when a download fails" do
+      stub_request(:get, "https://cdn.example.test/missing.png").to_return(status: 404)
+
+      path = xlsx_with([row("image_urls" => "https://cdn.example.test/missing.png")])
+      result = described_class.new(path, seller).call
+
+      expect(result.created).to eq(1)
+      product = Product.last
+      expect(product.images.count).to eq(1)
+      expect(product.images.first.filename.to_s).to eq("product.png")
+    end
+
+    it "rejects a non-public host without attempting the fetch" do
+      allow_any_instance_of(described_class).to receive(:public_host?).and_call_original
+      allow(Resolv).to receive(:getaddresses).and_return(["127.0.0.1"])
+
+      path = xlsx_with([row("image_urls" => "http://localhost/secret.png")])
+      result = described_class.new(path, seller).call
+
+      expect(result.created).to eq(1)
+      expect(Product.last.images.first.filename.to_s).to eq("product.png")
+    end
+  end
 end

@@ -6,7 +6,7 @@ require "caxlsx"
 class ProductTemplate
   PRODUCT_HEADERS = %w[
     product_name seller_email category_code sub_category_code variant_code
-    product_type price discount_price stock description
+    product_type price discount_price stock description image_urls
   ].freeze
 
   def self.workbook
@@ -55,7 +55,8 @@ class ProductTemplate
     [
       "Sample Product", "seller@example.com",
       category&.code, sub&.code, variant&.code,
-      "national", 999, 799, 25, "A short product description"
+      "national", 999, 799, 25, "A short product description",
+      "https://example.com/img1.jpg | https://example.com/img2.jpg"
     ]
   end
 end
